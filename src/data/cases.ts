@@ -312,46 +312,33 @@ export const CASES: CaseStudy[] = [
     country: "MX",
     links: [{ label: "Griver", href: "https://www.reco.com.mx/" }],
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
-    images: [
-      {
-        src: "/projects/reco/home.png",
-        width: 1920,
-        height: 1200,
-        alt: {
-          ES: "Página de inicio de RECO, la plataforma de comercio exterior",
-          EN: "Home page of RECO, the foreign trade platform",
-        },
-      },
-      {
-        src: "/projects/reco/home-mobile.png",
-        width: 780,
-        height: 1688,
-        alt: {
-          ES: "Página de inicio de RECO en celular",
-          EN: "RECO home page on a phone",
-        },
-      },
-    ],
+    images: [],
+    imagesPending: {
+      ES: "Foto del producto: la captura entregada para este caso es una pantalla interna de RECO Zero con una factura real de un cliente (Estée Lauder / Ultrafemme) y no se puede publicar. Falta una foto del producto sin datos de cliente.",
+      EN: "Product photo: the screenshot supplied for this case is an internal RECO Zero screen showing a real client's invoice (Estée Lauder / Ultrafemme) and cannot be published. A product photo without client data is still needed.",
+    },
     copy: {
       ES: {
         topic: "Inteligencia artificial",
         client: "Griver",
         about: "Grupo Inversor Veracruzano, México.",
         sector: "Comercio exterior",
-        problem: null,
+        problem:
+          "Las agencias aduaneras mexicanas revisan cada pedimento y factura a mano, un proceso que tomaba un día completo.",
         solution:
           "Una API de OCR con IA para el prevalidador RECO y un modelo de lenguaje auto hospedado; los datos no salen de la infraestructura del cliente ni se almacenan.",
-        why: null,
+        why: "Lo que tomaba un día entero de revisión ahora toma 10 minutos con el prevalidador RECO.",
       },
       EN: {
         topic: "Artificial intelligence",
         client: "Griver",
         about: "Grupo Inversor Veracruzano, Mexico.",
         sector: "Foreign trade",
-        problem: null,
+        problem:
+          "Mexican customs agencies review every pedimento and invoice by hand, a process that used to take a full day.",
         solution:
           "An AI OCR API for the RECO prevalidator and a self hosted language model; the data never leaves the client's infrastructure and is not stored.",
-        why: null,
+        why: "What used to take a full day of review now takes 10 minutes with the RECO prevalidator.",
       },
     },
   },
