@@ -8,13 +8,18 @@ import {
   SiFlutter,
   SiGooglecloud,
   SiGooglemaps,
+  SiInstagram,
+  SiLanggraph,
+  SiMeta,
   SiNestjs,
   SiNextdotjs,
+  SiOpenai,
   SiOpentelemetry,
   SiPostgresql,
   SiPosthog,
   SiRedis,
   SiSocketdotio,
+  SiWhatsapp,
 } from "react-icons/si";
 import type { Locale } from "@/lib/locale";
 
@@ -79,6 +84,14 @@ export const TOOLS = {
     name: "Cloudflare Tunnel",
     logo: { kind: "icon", icon: SiCloudflare, color: "#F38020" },
   },
+  openai: { name: "OpenAI", logo: { kind: "icon", icon: SiOpenai, color: "#000000" } },
+  langgraph: { name: "LangGraph", logo: { kind: "icon", icon: SiLanggraph, color: "#1C3C3C" } },
+  whatsappBusiness: {
+    name: "WhatsApp Business API",
+    logo: { kind: "icon", icon: SiWhatsapp, color: "#25D366" },
+  },
+  instagram: { name: "Instagram", logo: { kind: "icon", icon: SiInstagram, color: "#E4405F" } },
+  metaGraphApi: { name: "Meta Graph API", logo: { kind: "icon", icon: SiMeta, color: "#0866FF" } },
 } satisfies Record<string, Tool>;
 
 export type ToolId = keyof typeof TOOLS;

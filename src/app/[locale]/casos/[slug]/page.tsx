@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Contact } from "@/components/home/Contact";
-import { CaseBlocks, CaseCover, CaseFrame, caseTitle } from "@/components/cases/CaseParts";
+import { CaseBlocks, CaseCover, CaseFrame, CaseLinks, caseTitle } from "@/components/cases/CaseParts";
 import { TrackCaseOpen } from "@/components/cases/TrackCaseOpen";
 import { TrackedLink } from "@/components/ui/TrackedLink";
-import { ArrowRight, ArrowUpRight, Flag, Section, ToolList } from "@/components/ui/primitives";
+import { ArrowRight, Flag, Section, ToolList } from "@/components/ui/primitives";
 import { CASES, findCase } from "@/data/cases";
 import { TOOLS, toolName } from "@/data/tools";
 import { site } from "@/i18n/site";
@@ -121,7 +121,7 @@ export default async function CasePage({ params }: PageProps<"/[locale]/casos/[s
             </div>
           </dl>
 
-          <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-12 flex flex-wrap items-center gap-3">
             <TrackedLink
               href={href(locale, paths.home, "contact")}
               event="start_project_clicked"
@@ -131,12 +131,7 @@ export default async function CasePage({ params }: PageProps<"/[locale]/casos/[s
               {t.nav.startProject}
               <ArrowRight />
             </TrackedLink>
-            {study.url ? (
-              <a href={study.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                {t.cases.visit}
-                <ArrowUpRight />
-              </a>
-            ) : null}
+            <CaseLinks study={study} locale={locale} />
           </div>
         </div>
       </section>

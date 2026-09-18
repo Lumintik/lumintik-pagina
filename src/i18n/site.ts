@@ -70,7 +70,7 @@ const es = {
     pill: "Casos",
     title: "Problemas reales, resueltos con datos.",
     intro:
-      "Seis proyectos en producción. En cada uno, el problema que había, cómo lo resolvimos y por qué funcionó.",
+      "Siete proyectos en producción. En cada uno, el problema que había, cómo lo resolvimos y por qué funcionó.",
     caseTitle: "Cómo lo resolvimos con {client}",
     problem: "El problema",
     solution: "La solución",
@@ -282,7 +282,7 @@ const en: Site = {
     pill: "Case studies",
     title: "Real problems, solved with data.",
     intro:
-      "Six projects in production. For each one, the problem, how we solved it and why it worked.",
+      "Seven projects in production. For each one, the problem, how we solved it and why it worked.",
     caseTitle: "How we solved it with {client}",
     problem: "The problem",
     solution: "The solution",

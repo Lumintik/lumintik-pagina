@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { CaseBlocks, CaseCover, caseTitle } from "@/components/cases/CaseParts";
-import { ArrowRight, ArrowUpRight, Flag, Section, ToolList, type Tone } from "@/components/ui/primitives";
+import { CaseBlocks, CaseCover, CaseLinks, caseTitle } from "@/components/cases/CaseParts";
+import { ArrowRight, Flag, Section, ToolList, type Tone } from "@/components/ui/primitives";
 import { CASES, type CaseStudy } from "@/data/cases";
 import type { Locale } from "@/lib/locale";
 import { href, paths } from "@/lib/routes";
@@ -57,26 +57,20 @@ function CaseSection({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-12 flex flex-wrap items-center gap-3">
           <Link href={href(locale, paths.caseStudy(study.slug))} className="btn btn-primary">
             {t.cases.open}
             <span className="sr-only">: {copy.client}</span>
             <ArrowRight />
           </Link>
-          {study.url ? (
-            <a href={study.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-              {t.cases.visit}
-              <span className="sr-only">: {copy.client}</span>
-              <ArrowUpRight />
-            </a>
-          ) : null}
+          <CaseLinks study={study} locale={locale} />
         </div>
       </article>
     </Section>
   );
 }
 
-/** Six case studies, alternating tone, the first one opening with the section intro. */
+/** Seven case studies, alternating tone, the first one opening with the section intro. */
 export function Cases({ locale }: { locale: Locale }) {
   return (
     <>

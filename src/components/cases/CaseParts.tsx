@@ -1,12 +1,51 @@
 import Image from "next/image";
-import { Pending } from "@/components/ui/primitives";
-import type { CaseImage, CaseStudy } from "@/data/cases";
+import { ArrowUpRight, Pending } from "@/components/ui/primitives";
+import type { CaseStudy, CaseImage } from "@/data/cases";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/locale";
 import { fill, site } from "@/i18n/site";
 
 export function caseTitle(study: CaseStudy, locale: Locale) {
   return fill(site[locale].cases.caseTitle, { client: study.copy[locale].client });
+}
+
+/**
+ * The case's public sites. A single site reads as the generic "Visitar el
+ * sitio" button; more than one shows each site by its own name, since a
+ * generic label would no longer say which is which.
+ */
+export function CaseLinks({ study, locale }: { study: CaseStudy; locale: Locale }) {
+  const t = site[locale].cases;
+  if (!study.links.length) return null;
+  return (
+    <>
+      {study.links.length === 1 ? (
+        <a
+          href={study.links[0].href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-secondary"
+        >
+          {t.visit}
+          <span className="sr-only">: {study.links[0].label}</span>
+          <ArrowUpRight />
+        </a>
+      ) : (
+        study.links.map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary"
+          >
+            {link.label}
+            <ArrowUpRight />
+          </a>
+        ))
+      )}
+    </>
+  );
 }
 
 /** The three blocks every case has. Missing facts show a pending marker. */

@@ -12,7 +12,7 @@ import { fromSegment } from "@/lib/locale";
 
 /**
  * Dark and light bands alternate from top to bottom: hero (dark), figures,
- * clients, six cases, more projects, practices, services, public sector,
+ * clients, seven cases, more projects, practices, services, public sector,
  * contact, and the dark footer.
  */
 export default async function Home({ params }: PageProps<"/[locale]">) {

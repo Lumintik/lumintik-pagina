@@ -25,11 +25,15 @@ export type CaseImage = {
   alt: Record<Locale, string>;
 };
 
+/** A public site for the case. Rendered as "Visitar el sitio" when there is
+ * only one, or by its own label when a case links to more than one site. */
+export type CaseLink = { label: string; href: string };
+
 export type CaseStudy = {
   slug: string;
   country: Country;
-  /** Live product, when there is one to show. */
-  url?: string;
+  /** Public sites for this case. Empty when there is nothing to link to. */
+  links: CaseLink[];
   /** Null when the tool list has not been confirmed. */
   tools: ToolId[] | null;
   /** First image is the cover. An empty list shows a pending placeholder. */
@@ -43,7 +47,7 @@ export const CASES: CaseStudy[] = [
   {
     slug: "imagiq",
     country: "CO",
-    url: "https://www.imagiq.com/",
+    links: [{ label: "Imagiq", href: "https://www.imagiq.com/" }],
     tools: ["gcp", "aws", "nextjs", "nestjs", "posthog", "distanceMatrix", "redis", "postgresql"],
     images: [
       {
@@ -111,6 +115,7 @@ export const CASES: CaseStudy[] = [
   {
     slug: "ezmig",
     country: "US",
+    links: [{ label: "EZMig", href: "https://www.ezmig.ai/" }],
     tools: ["aws", "languageModels", "uscis", "posthog"],
     images: [
       {
@@ -147,6 +152,7 @@ export const CASES: CaseStudy[] = [
   {
     slug: "claro",
     country: "CO",
+    links: [{ label: "Claro", href: "https://www.claro.com.co/" }],
     tools: null,
     images: [],
     imagesPending: {
@@ -179,7 +185,7 @@ export const CASES: CaseStudy[] = [
   {
     slug: "futtem",
     country: "CO",
-    url: "https://www.futtem.com/",
+    links: [{ label: "FUTTEM", href: "https://www.futtem.com/" }],
     tools: ["aws", "nestjs", "flutter", "postgresql", "socketio", "firebase", "opentelemetry", "posthog"],
     images: [
       {
@@ -216,7 +222,7 @@ export const CASES: CaseStudy[] = [
   {
     slug: "ezdocuai",
     country: "US",
-    url: "https://www.ezdocu.ai/",
+    links: [{ label: "EZDocuAI", href: "https://www.ezdocu.ai/" }],
     tools: ["nextjs", "aws", "vanta"],
     images: [
       {
@@ -273,7 +279,7 @@ export const CASES: CaseStudy[] = [
   {
     slug: "griver",
     country: "MX",
-    url: "https://www.reco.com.mx/",
+    links: [{ label: "Griver", href: "https://www.reco.com.mx/" }],
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
     images: [
       {
@@ -315,6 +321,73 @@ export const CASES: CaseStudy[] = [
         solution:
           "An AI OCR API for the RECO prevalidator and a self hosted language model; the data never leaves the client's infrastructure and is not stored.",
         why: null,
+      },
+    },
+  },
+  {
+    slug: "ia-multicanal",
+    country: "CO",
+    links: [
+      { label: "Imagiq", href: "https://www.imagiq.com/" },
+      { label: "Accesify", href: "https://www.accesify.com/" },
+      { label: "Fridoom", href: "https://fridoom.com/" },
+    ],
+    tools: [
+      "openai",
+      "langgraph",
+      "whatsappBusiness",
+      "instagram",
+      "metaGraphApi",
+      "nestjs",
+      "postgresql",
+    ],
+    images: [
+      {
+        src: "/projects/ia-multicanal/imagiq.png",
+        width: 706,
+        height: 1453,
+        alt: {
+          ES: "Asistente de IA de Imagiq respondiendo en la web",
+          EN: "Imagiq's AI assistant answering on the web",
+        },
+      },
+      {
+        src: "/projects/ia-multicanal/accesify.png",
+        width: 706,
+        height: 1453,
+        alt: {
+          ES: "Asistente de IA de Accesify respondiendo por WhatsApp",
+          EN: "Accesify's AI assistant answering over WhatsApp",
+        },
+      },
+      {
+        src: "/projects/ia-multicanal/fridoom.png",
+        width: 706,
+        height: 1453,
+        alt: {
+          ES: "Asistente de IA de Fridoom respondiendo dentro de la app",
+          EN: "Fridoom's AI assistant answering inside the app",
+        },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "IA multicanal",
+        client: "Imagiq, Accesify y Fridoom",
+        about: "Comercio y finanzas personales en Colombia.",
+        sector: "Atención al cliente",
+        problem: "Clientes que escriben por WhatsApp, Instagram y la web a toda hora, con las mismas preguntas.",
+        solution: "Un agente de IA conectado al catálogo, al stock y a las tiendas, que responde en cada canal.",
+        why: "Una sola inteligencia para todos los canales, con respuestas al instante y el equipo libre para vender.",
+      },
+      EN: {
+        topic: "Multichannel AI",
+        client: "Imagiq, Accesify and Fridoom",
+        about: "Commerce and personal finance in Colombia.",
+        sector: "Customer support",
+        problem: "Customers writing on WhatsApp, Instagram and the web at all hours, with the same questions.",
+        solution: "An AI agent connected to the catalog, stock and stores, that answers on every channel.",
+        why: "One intelligence for every channel, with instant answers and the team free to sell.",
       },
     },
   },
