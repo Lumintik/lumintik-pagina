@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CaseBlocks, CaseCover, CaseLinks, caseTitle } from "@/components/cases/CaseParts";
+import { CaseBlocks, CaseCertification, CaseCover, CaseLinks, caseTitle } from "@/components/cases/CaseParts";
 import { ArrowRight, Flag, Section, ToolList, type Tone } from "@/components/ui/primitives";
 import { CASES, type CaseStudy } from "@/data/cases";
 import type { Locale } from "@/lib/locale";
@@ -49,6 +49,12 @@ function CaseSection({
         <div className="mt-12 md:mt-16">
           <CaseBlocks study={study} locale={locale} />
         </div>
+
+        {study.certification ? (
+          <div className="mt-12">
+            <CaseCertification certification={study.certification} locale={locale} />
+          </div>
+        ) : null}
 
         <div className="mt-12">
           <h3 className="text-lg font-semibold md:text-xl">{t.cases.tools}</h3>

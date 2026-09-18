@@ -48,6 +48,45 @@ export function CaseLinks({ study, locale }: { study: CaseStudy; locale: Locale 
   );
 }
 
+/** Official evidence for a case (e.g. a government certification), each item
+ * linking to its source document. */
+export function CaseCertification({
+  certification,
+  locale,
+}: {
+  certification: NonNullable<CaseStudy["certification"]>;
+  locale: Locale;
+}) {
+  return (
+    <div>
+      <h3 className="text-lg font-semibold md:text-xl">{certification.label[locale]}</h3>
+      <ul className="mt-4 flex flex-wrap gap-3">
+        {certification.items.map((item) => (
+          <li key={item.href}>
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 rounded-2xl border border-black/10 bg-white px-4 py-3 text-black"
+            >
+              <span
+                aria-hidden
+                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#0A0A0A] text-[11px] font-semibold tracking-wide text-white"
+              >
+                PASS
+              </span>
+              <span className="flex flex-col">
+                <span className="text-sm font-semibold">{item.title[locale]}</span>
+                <span className="text-sm">{item.date[locale]}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /** The three blocks every case has. Missing facts show a pending marker. */
 export function CaseBlocks({
   study,

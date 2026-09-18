@@ -29,11 +29,22 @@ export type CaseImage = {
  * only one, or by its own label when a case links to more than one site. */
 export type CaseLink = { label: string; href: string };
 
+/** Official evidence for a case, linking to its source document. */
+export type CaseCertification = {
+  label: Record<Locale, string>;
+  items: {
+    title: Record<Locale, string>;
+    date: Record<Locale, string>;
+    href: string;
+  }[];
+};
+
 export type CaseStudy = {
   slug: string;
   country: Country;
   /** Public sites for this case. Empty when there is nothing to link to. */
   links: CaseLink[];
+  certification?: CaseCertification;
   /** Null when the tool list has not been confirmed. */
   tools: ToolId[] | null;
   /** First image is the cover. An empty list shows a pending placeholder. */
@@ -117,6 +128,24 @@ export const CASES: CaseStudy[] = [
     country: "US",
     links: [{ label: "EZMig", href: "https://www.ezmig.ai/" }],
     tools: ["aws", "languageModels", "uscis", "posthog"],
+    certification: {
+      label: {
+        ES: "Evaluación técnica de USCIS superada",
+        EN: "USCIS technical evaluation passed",
+      },
+      items: [
+        {
+          title: { ES: "Resultados de la demo", EN: "Demo results" },
+          date: { ES: "30 de julio de 2026 · PASS", EN: "July 30, 2026 · PASS" },
+          href: "/documentos/ezmig-uscis-demo-results.pdf",
+        },
+        {
+          title: { ES: "Acceso a producción concedido", EN: "Production access granted" },
+          date: { ES: "9 de septiembre de 2026", EN: "September 9, 2026" },
+          href: "/documentos/ezmig-uscis-production-access.pdf",
+        },
+      ],
+    },
     images: [
       {
         src: "/projects/ezmig/home.png",

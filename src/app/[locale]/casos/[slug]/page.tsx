@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Contact } from "@/components/home/Contact";
-import { CaseBlocks, CaseCover, CaseFrame, CaseLinks, caseTitle } from "@/components/cases/CaseParts";
+import { CaseBlocks, CaseCertification, CaseCover, CaseFrame, CaseLinks, caseTitle } from "@/components/cases/CaseParts";
 import { TrackCaseOpen } from "@/components/cases/TrackCaseOpen";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ArrowRight, Flag, Section, ToolList } from "@/components/ui/primitives";
@@ -142,6 +142,11 @@ export default async function CasePage({ params }: PageProps<"/[locale]/casos/[s
         <div className="mt-16 md:mt-24">
           <CaseBlocks study={study} locale={locale} headingLevel="h3" large />
         </div>
+        {study.certification ? (
+          <div className="mt-16">
+            <CaseCertification certification={study.certification} locale={locale} />
+          </div>
+        ) : null}
         {/* Without a gallery the tools stay in this band, so the tones keep alternating. */}
         {gallery.length ? null : (
           <div className="mt-16">
