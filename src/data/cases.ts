@@ -1,0 +1,406 @@
+import type { Locale } from "@/lib/locale";
+import type { Country } from "@/data/clients";
+import type { ToolId } from "@/data/tools";
+
+/**
+ * Case studies. Every statement here was supplied by the team; nothing is
+ * inferred. A null field is rendered as a visible "[dato pendiente]" marker
+ * until the missing fact is confirmed.
+ */
+export type CaseCopy = {
+  topic: string;
+  client: string;
+  /** One line that says who the client is. */
+  about: string;
+  sector: string;
+  problem: string | null;
+  solution: string | null;
+  why: string | null;
+};
+
+export type CaseImage = {
+  src: string;
+  width: number;
+  height: number;
+  alt: Record<Locale, string>;
+};
+
+export type CaseStudy = {
+  slug: string;
+  country: Country;
+  /** Live product, when there is one to show. */
+  url?: string;
+  /** Null when the tool list has not been confirmed. */
+  tools: ToolId[] | null;
+  /** First image is the cover. An empty list shows a pending placeholder. */
+  images: CaseImage[];
+  /** What is still missing for the images, shown in the placeholder. */
+  imagesPending?: Record<Locale, string>;
+  copy: Record<Locale, CaseCopy>;
+};
+
+export const CASES: CaseStudy[] = [
+  {
+    slug: "imagiq",
+    country: "CO",
+    url: "https://www.imagiq.com/",
+    tools: ["gcp", "aws", "nextjs", "nestjs", "posthog", "distanceMatrix", "redis", "postgresql"],
+    images: [
+      {
+        src: "/projects/samsung/home-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: {
+          ES: "Página de inicio de la tienda Samsung de Imagiq en escritorio",
+          EN: "Home page of Imagiq's Samsung store on desktop",
+        },
+      },
+      {
+        src: "/projects/samsung/dashboard-orders.png",
+        width: 1200,
+        height: 1227,
+        alt: {
+          ES: "Panel interno de órdenes con el estado de cada envío",
+          EN: "Internal orders dashboard with the status of each shipment",
+        },
+      },
+      {
+        src: "/projects/samsung/pdp-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: {
+          ES: "Página de producto de la tienda Samsung de Imagiq",
+          EN: "Product page of Imagiq's Samsung store",
+        },
+      },
+      {
+        src: "/projects/samsung/cart-mobile.png",
+        width: 1179,
+        height: 1980,
+        alt: {
+          ES: "Carrito de compras de la tienda en celular",
+          EN: "Shopping cart of the store on a phone",
+        },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "Operación nacional",
+        client: "Imagiq",
+        about: "Distribuidor oficial de Samsung en Colombia.",
+        sector: "Comercio minorista",
+        problem:
+          "Más de 30 puntos de venta con inventario disperso; lo que se agotaba en una ciudad sobraba en otra.",
+        solution:
+          "Un algoritmo que cruza el stock de cada tienda con la distancia real al cliente, elige la tienda óptima y genera la guía de envío.",
+        why: "Toda la red trabaja como un solo inventario, con entregas en máximo 24 horas.",
+      },
+      EN: {
+        topic: "National operations",
+        client: "Imagiq",
+        about: "Official Samsung distributor in Colombia.",
+        sector: "Retail",
+        problem:
+          "More than 30 points of sale with scattered inventory; what sold out in one city sat unsold in another.",
+        solution:
+          "An algorithm that matches each store's stock against the real distance to the customer, picks the best store and generates the shipping label.",
+        why: "The whole network works as a single inventory, with deliveries in 24 hours at most.",
+      },
+    },
+  },
+  {
+    slug: "ezmig",
+    country: "US",
+    tools: ["aws", "languageModels", "uscis", "posthog"],
+    images: [
+      {
+        src: "/projects/ezmig/home.png",
+        width: 2880,
+        height: 1800,
+        alt: {
+          ES: "Página de inicio de EZMig con el formulario I 130 en pantalla",
+          EN: "EZMig home page showing the I 130 form",
+        },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "Experiencia y conversión",
+        client: "EZMig",
+        about: "Plataforma para abogados de inmigración en Estados Unidos.",
+        sector: "Servicios legales",
+        problem: "Abogados de inmigración llenando a mano formularios largos de USCIS.",
+        solution: "Un flujo guiado con IA que completa y valida los formularios en minutos.",
+        why: null,
+      },
+      EN: {
+        topic: "Experience and conversion",
+        client: "EZMig",
+        about: "Platform for immigration attorneys in the United States.",
+        sector: "Legal services",
+        problem: "Immigration attorneys filling out long USCIS forms by hand.",
+        solution: "An AI guided flow that completes and validates the forms in minutes.",
+        why: null,
+      },
+    },
+  },
+  {
+    slug: "claro",
+    country: "CO",
+    tools: null,
+    images: [],
+    imagesPending: {
+      ES: "Fotos del proyecto Mi Claro: mockup de la app sin fondo, foto del equipo y sala de trabajo.",
+      EN: "Mi Claro project photos: app mockup without background, team photo and workroom.",
+    },
+    copy: {
+      ES: {
+        topic: "Telemetría",
+        client: "Claro",
+        about: "Super app Mi Claro.",
+        sector: "Telecomunicaciones",
+        problem: "Entender cómo usan la app sus clientes para decidir qué mejorar.",
+        solution:
+          "Consultoría y telemetría: plan de eventos, embudos y tableros para análisis de datos.",
+        why: null,
+      },
+      EN: {
+        topic: "Telemetry",
+        client: "Claro",
+        about: "Mi Claro super app.",
+        sector: "Telecommunications",
+        problem: "Understanding how customers use the app in order to decide what to improve.",
+        solution:
+          "Consulting and telemetry: an event plan, funnels and dashboards for data analysis.",
+        why: null,
+      },
+    },
+  },
+  {
+    slug: "futtem",
+    country: "CO",
+    url: "https://www.futtem.com/",
+    tools: ["aws", "nestjs", "flutter", "postgresql", "socketio", "firebase", "opentelemetry", "posthog"],
+    images: [
+      {
+        src: "/projects/futtem/app.png",
+        width: 980,
+        height: 960,
+        alt: {
+          ES: "App de FUTTEM en Android y iPhone, en el ambiente de pruebas",
+          EN: "FUTTEM app on Android and iPhone, in the staging environment",
+        },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "Confiabilidad",
+        client: "FUTTEM",
+        about: "Aplicación móvil en producción, Colombia.",
+        sector: "Deporte",
+        problem: "Una app en producción con usuarios reales que no podía detenerse con cada cambio.",
+        solution: "Tres ambientes separados, despliegues controlados y trazas de extremo a extremo.",
+        why: null,
+      },
+      EN: {
+        topic: "Reliability",
+        client: "FUTTEM",
+        about: "Mobile app in production, Colombia.",
+        sector: "Sports",
+        problem: "An app in production with real users that could not stop every time something changed.",
+        solution: "Three separate environments, controlled deployments and end to end tracing.",
+        why: null,
+      },
+    },
+  },
+  {
+    slug: "ezdocuai",
+    country: "US",
+    url: "https://www.ezdocu.ai/",
+    tools: ["nextjs", "aws", "vanta"],
+    images: [
+      {
+        src: "/projects/ezdocu/home-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: {
+          ES: "Página de inicio de EZDocuAI en escritorio",
+          EN: "EZDocuAI home page on desktop",
+        },
+      },
+      {
+        src: "/projects/ezdocu/how-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: {
+          ES: "Sección de EZDocuAI que explica cómo funciona el servicio",
+          EN: "EZDocuAI section explaining how the service works",
+        },
+      },
+      {
+        src: "/projects/ezdocu/editor-mobile.png",
+        width: 780,
+        height: 1688,
+        alt: {
+          ES: "Editor de traducción de EZDocuAI en celular",
+          EN: "EZDocuAI translation editor on a phone",
+        },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "Seguridad y cifrado",
+        client: "EZDocuAI",
+        about: "Traducción de documentos con inteligencia artificial, Estados Unidos.",
+        sector: "Traducción",
+        problem: null,
+        solution:
+          "Cifrado TLS 1.3 en tránsito y AES 256 en reposo, borrado programado y certificado de eliminación con hash SHA 256.",
+        why: "Ningún documento queda guardado ni entrena modelos, y cada página pasa de 20 a 3 minutos.",
+      },
+      EN: {
+        topic: "Security and encryption",
+        client: "EZDocuAI",
+        about: "AI document translation, United States.",
+        sector: "Translation",
+        problem: null,
+        solution:
+          "TLS 1.3 encryption in transit and AES 256 at rest, scheduled deletion and a deletion certificate with a SHA 256 hash.",
+        why: "No document is kept or used to train models, and each page goes from 20 to 3 minutes.",
+      },
+    },
+  },
+  {
+    slug: "griver",
+    country: "MX",
+    url: "https://www.reco.com.mx/",
+    tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
+    images: [
+      {
+        src: "/projects/reco/home.png",
+        width: 1920,
+        height: 1200,
+        alt: {
+          ES: "Página de inicio de RECO, la plataforma de comercio exterior",
+          EN: "Home page of RECO, the foreign trade platform",
+        },
+      },
+      {
+        src: "/projects/reco/home-mobile.png",
+        width: 780,
+        height: 1688,
+        alt: {
+          ES: "Página de inicio de RECO en celular",
+          EN: "RECO home page on a phone",
+        },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "Inteligencia artificial",
+        client: "Griver",
+        about: "Grupo Inversor Veracruzano, México.",
+        sector: "Comercio exterior",
+        problem: null,
+        solution:
+          "Una API de OCR con IA para el prevalidador RECO y un modelo de lenguaje auto hospedado; los datos no salen de la infraestructura del cliente ni se almacenan.",
+        why: null,
+      },
+      EN: {
+        topic: "Artificial intelligence",
+        client: "Griver",
+        about: "Grupo Inversor Veracruzano, Mexico.",
+        sector: "Foreign trade",
+        problem: null,
+        solution:
+          "An AI OCR API for the RECO prevalidator and a self hosted language model; the data never leaves the client's infrastructure and is not stored.",
+        why: null,
+      },
+    },
+  },
+];
+
+export function findCase(slug: string): CaseStudy | undefined {
+  return CASES.find((c) => c.slug === slug);
+}
+
+export type MoreProject = {
+  key: string;
+  name: string;
+  image: { src: string; width: number; height: number };
+  href?: string;
+  desc: Record<Locale, string>;
+};
+
+export const MORE_PROJECTS: MoreProject[] = [
+  {
+    key: "attosound",
+    name: "Attosound",
+    image: { src: "/projects/atto/home.png", width: 2880, height: 1800 },
+    href: "https://www.attosound.com/",
+    desc: {
+      ES: "Plataforma de audio social que conecta la telefonía pública con la app en tiempo real.",
+      EN: "Social audio platform that connects the public phone network with the app in real time.",
+    },
+  },
+  {
+    key: "piebald",
+    name: "Piebald Capital",
+    image: { src: "/projects/piebald/loaded.png", width: 1600, height: 1100 },
+    href: "https://www.piebaldcapital.com/",
+    desc: {
+      ES: "Gestora de créditos hipotecarios en Miami.",
+      EN: "Mortgage lending firm in Miami.",
+    },
+  },
+  {
+    key: "minnesota",
+    name: "Minnesota",
+    image: { src: "/projects/minnesota/hero-desktop.png", width: 2880, height: 1800 },
+    href: "https://www.minnesotaent.net/",
+    desc: {
+      ES: "Estudio de grabación en Miami.",
+      EN: "Recording studio in Miami.",
+    },
+  },
+  {
+    key: "lenspr",
+    name: "LensPR",
+    image: { src: "/projects/lenspr/home.png", width: 2880, height: 1800 },
+    href: "https://www.lenspr.com/es",
+    desc: {
+      ES: "La agencia de relaciones públicas más grande de Latam.",
+      EN: "The largest public relations agency in Latin America.",
+    },
+  },
+  {
+    key: "fridoom",
+    name: "Fridoom",
+    image: { src: "/projects/fridoom/home.png", width: 2560, height: 1600 },
+    href: "https://fridoom.com/",
+    desc: {
+      ES: "Educación financiera con más de 200.000 seguidores.",
+      EN: "Financial education with more than 200,000 followers.",
+    },
+  },
+  {
+    key: "accesify",
+    name: "Accesify",
+    image: { src: "/projects/accesify/home.png", width: 2560, height: 1600 },
+    href: "https://www.accesify.com/",
+    desc: {
+      ES: "Tienda en línea de accesorios para celulares: fundas para iPhone y Samsung, protectores de pantalla y más.",
+      EN: "Online store for phone accessories: iPhone and Samsung cases, screen protectors and more.",
+    },
+  },
+  {
+    key: "relatos",
+    name: "Relatos por Venezuela",
+    image: { src: "/projects/relatos/home.png", width: 1920, height: 1200 },
+    href: "https://www.relatosporvenezuela.org/",
+    desc: {
+      ES: "Cortometrajes convertidos en ayuda humanitaria: dona desde US$5, accede a la colección y financia la asistencia tras el terremoto.",
+      EN: "Short films turned into humanitarian aid: donate from US$5, unlock the collection and fund relief after the earthquake.",
+    },
+  },
+];

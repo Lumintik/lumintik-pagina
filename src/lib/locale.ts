@@ -1,11 +1,12 @@
-export const LOCALES = ["EN", "ES"] as const;
+export const LOCALES = ["ES", "EN"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const DEFAULT_LOCALE: Locale = "EN";
+/** Spanish first: most of the audience, and every public sector reader, is in Colombia. */
+export const DEFAULT_LOCALE: Locale = "ES";
 
 /**
  * URL segment for each locale. The app speaks `EN`/`ES` internally but the
- * routes are lowercase (`/en`, `/es`) — that is the shape crawlers expect.
+ * routes are lowercase (`/en`, `/es`), the shape crawlers expect.
  */
 export const LOCALE_SEGMENTS = { EN: "en", ES: "es" } as const;
 export type LocaleSegment = (typeof LOCALE_SEGMENTS)[Locale];
@@ -14,7 +15,7 @@ export const LOCALE_SEGMENT_LIST = Object.values(LOCALE_SEGMENTS) as LocaleSegme
 
 /** BCP-47 tags used for `hreflang`, and their Open Graph equivalents. */
 export const LOCALE_TAGS: Record<Locale, string> = { EN: "en", ES: "es" };
-export const OG_LOCALES: Record<Locale, string> = { EN: "en_US", ES: "es_ES" };
+export const OG_LOCALES: Record<Locale, string> = { EN: "en_US", ES: "es_CO" };
 
 export function toSegment(locale: Locale): LocaleSegment {
   return LOCALE_SEGMENTS[locale];
@@ -30,20 +31,29 @@ const NAV_TO_LOCALE: Record<string, Locale> = {
   es: "ES",
 };
 
-export function detectLocaleFromNavigator(): Locale {
-  if (typeof navigator === "undefined") return DEFAULT_LOCALE;
-  const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
-  for (const raw of langs) {
-    const code = raw?.toLowerCase().split("-")[0];
-    if (code && code in NAV_TO_LOCALE) return NAV_TO_LOCALE[code];
-  }
-  return DEFAULT_LOCALE;
-}
+/**
+ * Countries whose visitors get Spanish even when their browser asks for
+ * English: Colombia first, and the rest of Spanish speaking America.
+ */
+const SPANISH_COUNTRIES = new Set([
+  "CO", "MX", "AR", "BO", "CL", "CR", "CU", "DO", "EC", "ES", "GT", "HN",
+  "NI", "PA", "PE", "PR", "PY", "SV", "UY", "VE",
+]);
 
 /**
- * Picks a locale from an `Accept-Language` header, so a first-time visitor is
- * routed to their language before any JS runs.
+ * Picks a locale for a first time visitor, before any JS runs. The country
+ * (from the hosting platform's geolocation header) wins over the browser
+ * language, so someone in Bogotá with an English browser still lands in /es.
  */
+export function detectLocale(
+  acceptLanguage: string | null,
+  country: string | null,
+): Locale {
+  if (country && SPANISH_COUNTRIES.has(country.toUpperCase())) return "ES";
+  return detectLocaleFromHeader(acceptLanguage);
+}
+
+/** Picks a locale from an `Accept-Language` header. */
 export function detectLocaleFromHeader(header: string | null): Locale {
   if (!header) return DEFAULT_LOCALE;
   const ranked = header
@@ -64,16 +74,9 @@ export function detectLocaleFromHeader(header: string | null): Locale {
 
 export const STORAGE_KEY = "lumintik:locale";
 
-export function readStoredLocale(): Locale | null {
-  if (typeof window === "undefined") return null;
-  const v = window.localStorage.getItem(STORAGE_KEY);
-  return v && (LOCALES as readonly string[]).includes(v) ? (v as Locale) : null;
-}
-
 export function writeStoredLocale(locale: Locale) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, locale);
-  // Mirrored into a cookie because the proxy runs on the server, where
-  // localStorage does not exist, and needs the choice to route locale-less URLs.
-  document.cookie = `${STORAGE_KEY}=${locale};path=/;max-age=31536000;samesite=lax`;
+  if (typeof document === "undefined") return;
+  // A cookie because the proxy runs on the server and needs the choice to
+  // route locale-less URLs.
+  document.cookie = `${STORAGE_KEY}=${toSegment(locale)};path=/;max-age=31536000;samesite=lax`;
 }
