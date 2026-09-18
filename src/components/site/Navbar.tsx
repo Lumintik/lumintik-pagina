@@ -65,7 +65,7 @@ export function Navbar({ locale, nav, a11y }: Props) {
   };
 
   return (
-    <header data-tone="dark" className="fixed inset-x-0 top-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-md">
+    <header data-tone="dark" className="fixed inset-x-0 top-0 z-50 print:hidden bg-[#0A0A0A]/90 backdrop-blur-md">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-black"

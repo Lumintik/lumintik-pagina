@@ -158,3 +158,37 @@ body {
     font-weight: 500;
   }
 }
+
+/*
+ * The public sector PDF is printed from its page as a 16:9 deck: one band
+ * per slide, both tones kept, the footer as the closing slide.
+ */
+@media print {
+  @page {
+    size: 1440px 810px;
+    margin: 0;
+  }
+
+  html,
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  main > section,
+  main > [data-tone],
+  body > footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 810px;
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+    break-inside: avoid;
+    break-after: page;
+  }
+
+  body > footer {
+    break-after: auto;
+  }
+}
