@@ -10,13 +10,13 @@ export function caseTitle(study: CaseStudy, locale: Locale) {
 }
 
 /**
- * The case's public sites. A single site reads as the generic "Visitar el
- * sitio" button; more than one shows each site by its own name, since a
- * generic label would no longer say which is which.
+ * The case's public sites and, if any, its store badges. A single site reads
+ * as the generic "Visitar el sitio" button; more than one shows each site by
+ * its own name, since a generic label would no longer say which is which.
  */
 export function CaseLinks({ study, locale }: { study: CaseStudy; locale: Locale }) {
   const t = site[locale].cases;
-  if (!study.links.length) return null;
+  if (!study.links.length && !study.badges?.length) return null;
   return (
     <>
       {study.links.length === 1 ? (
@@ -44,6 +44,24 @@ export function CaseLinks({ study, locale }: { study: CaseStudy; locale: Locale 
           </a>
         ))
       )}
+      {study.badges?.map((badge) => (
+        <a
+          key={badge.href}
+          href={badge.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center"
+        >
+          <Image
+            src={badge.src}
+            alt={badge.alt[locale]}
+            width={badge.width}
+            height={badge.height}
+            unoptimized
+            className="h-12 w-auto"
+          />
+        </a>
+      ))}
     </>
   );
 }

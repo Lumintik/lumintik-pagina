@@ -29,6 +29,15 @@ export type CaseImage = {
  * only one, or by its own label when a case links to more than one site. */
 export type CaseLink = { label: string; href: string };
 
+/** A store badge shown next to the case's links (App Store, Google Play). */
+export type CaseBadge = {
+  src: string;
+  width: number;
+  height: number;
+  href: string;
+  alt: Record<Locale, string>;
+};
+
 /** Official evidence for a case, linking to its source document. */
 export type CaseCertification = {
   label: Record<Locale, string>;
@@ -44,6 +53,7 @@ export type CaseStudy = {
   country: Country;
   /** Public sites for this case. Empty when there is nothing to link to. */
   links: CaseLink[];
+  badges?: CaseBadge[];
   certification?: CaseCertification;
   /** Null when the tool list has not been confirmed. */
   tools: ToolId[] | null;
@@ -215,6 +225,22 @@ export const CASES: CaseStudy[] = [
     slug: "futtem",
     country: "CO",
     links: [{ label: "FUTTEM", href: "https://www.futtem.com/" }],
+    badges: [
+      {
+        src: "/badges/appstore.png",
+        width: 810,
+        height: 240,
+        href: "https://apps.apple.com/app/id6739542468",
+        alt: { ES: "Descargar FUTTEM en el App Store", EN: "Download FUTTEM on the App Store" },
+      },
+      {
+        src: "/badges/googleplay.png",
+        width: 620,
+        height: 186,
+        href: "https://play.google.com/store/apps/details?id=com.futtem.app",
+        alt: { ES: "Disponible en Google Play", EN: "Get it on Google Play" },
+      },
+    ],
     tools: ["aws", "nestjs", "flutter", "postgresql", "socketio", "firebase", "opentelemetry", "posthog"],
     images: [
       {

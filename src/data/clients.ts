@@ -93,7 +93,7 @@ export const CLIENTS: Client[] = [
     key: "futtem",
     name: "FUTTEM",
     country: "CO",
-    logo: { kind: "image", src: "/clients/futtem.svg", width: 136, height: 25 },
+    logo: { kind: "image", src: "/clients/futtem.png", width: 900, height: 159 },
     href: "https://www.futtem.com/",
   },
   {
