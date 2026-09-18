@@ -385,6 +385,9 @@ export const CASES: CaseStudy[] = [
       "nestjs",
       "postgresql",
     ],
+    // The Accesify and Fridoom screenshots are held back: both show a real
+    // end customer's data (an order and a person's monthly spending). They go
+    // in once the team confirms they can be published.
     images: [
       {
         src: "/projects/ia-multicanal/imagiq.png",
@@ -393,24 +396,6 @@ export const CASES: CaseStudy[] = [
         alt: {
           ES: "Asistente de IA de Imagiq respondiendo en la web",
           EN: "Imagiq's AI assistant answering on the web",
-        },
-      },
-      {
-        src: "/projects/ia-multicanal/accesify.png",
-        width: 706,
-        height: 1453,
-        alt: {
-          ES: "Asistente de IA de Accesify respondiendo por WhatsApp",
-          EN: "Accesify's AI assistant answering over WhatsApp",
-        },
-      },
-      {
-        src: "/projects/ia-multicanal/fridoom.png",
-        width: 706,
-        height: 1453,
-        alt: {
-          ES: "Asistente de IA de Fridoom respondiendo dentro de la app",
-          EN: "Fridoom's AI assistant answering inside the app",
         },
       },
     ],
