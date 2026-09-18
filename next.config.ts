@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
   images: {
     // AVIF first, WebP as the fallback, for every image served by next/image.
     formats: ["image/avif", "image/webp"],
+    // Screenshots are shown at 1200 px at most; skipping the 3840 variant
+    // keeps first-request AVIF encoding short.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2400],
     // Whitelist the quality values used across the app (Next 16 requires this).
     qualities: [75, 80, 85],
     remotePatterns: [

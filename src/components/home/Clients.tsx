@@ -31,7 +31,8 @@ function ClientLogo({ client }: { client: Client }) {
       alt={name}
       width={logo.width}
       height={logo.height}
-      sizes="200px"
+      // Small files already sized for the card, served as they are.
+      unoptimized
       className={cn("w-auto max-w-[75%] object-contain", heightClass(logo.width, logo.height))}
     />
   );

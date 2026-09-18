@@ -46,20 +46,20 @@ export const CLIENTS: Client[] = [
     key: "griver",
     name: "Griver",
     country: "MX",
-    logo: { kind: "image", src: "/clients/griver.png", width: 400, height: 144 },
+    logo: { kind: "image", src: "/clients/griver.webp", width: 400, height: 144 },
   },
   {
     key: "ezdocuai",
     name: "EZDocuAI",
     country: "US",
-    logo: { kind: "image", src: "/clients/ezdocuai.png", width: 240, height: 235 },
+    logo: { kind: "image", src: "/clients/ezdocuai.webp", width: 240, height: 235 },
     href: "https://www.ezdocu.ai/",
   },
   {
     key: "ezmig",
     name: "EZMig",
     country: "US",
-    logo: { kind: "image", src: "/clients/ezmig.png", width: 320, height: 151 },
+    logo: { kind: "image", src: "/clients/ezmig.webp", width: 320, height: 151 },
   },
   {
     key: "piebald",
@@ -72,7 +72,7 @@ export const CLIENTS: Client[] = [
     key: "minnesota",
     name: "Minnesota",
     country: "US",
-    logo: { kind: "image", src: "/clients/minnesota.png", width: 177, height: 240 },
+    logo: { kind: "image", src: "/clients/minnesota.webp", width: 177, height: 240 },
     href: "https://www.minnesotaent.net/",
   },
   {
@@ -86,7 +86,7 @@ export const CLIENTS: Client[] = [
     key: "attosound",
     name: "Attosound",
     country: "US",
-    logo: { kind: "image", src: "/clients/attosound.png", width: 240, height: 238 },
+    logo: { kind: "image", src: "/clients/attosound.webp", width: 240, height: 238 },
     href: "https://www.attosound.com/",
   },
   {
@@ -100,7 +100,7 @@ export const CLIENTS: Client[] = [
     key: "accesify",
     name: "Accesify",
     country: "CO",
-    logo: { kind: "image", src: "/clients/accesify.png", width: 419, height: 240 },
+    logo: { kind: "image", src: "/clients/accesify.webp", width: 419, height: 240 },
     href: "https://www.accesify.com/",
   },
 ];
