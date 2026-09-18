@@ -35,6 +35,7 @@ export function Navbar({ locale, nav, a11y }: Props) {
 
   useEffect(() => {
     if (!open) return;
+    const toggle = toggleRef.current;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     panelRef.current?.querySelector<HTMLElement>("a,button")?.focus();
@@ -45,7 +46,7 @@ export function Navbar({ locale, nav, a11y }: Props) {
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
-      toggleRef.current?.focus();
+      toggle?.focus();
     };
   }, [open]);
 

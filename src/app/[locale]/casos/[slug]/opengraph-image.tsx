@@ -1,6 +1,5 @@
 import { caseTitle } from "@/components/cases/CaseParts";
 import { findCase } from "@/data/cases";
-import { site } from "@/i18n/site";
 import { fromSegment } from "@/lib/locale";
 import { OG_SIZE, ogCard } from "@/lib/og";
 

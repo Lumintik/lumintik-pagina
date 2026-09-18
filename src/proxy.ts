@@ -3,14 +3,16 @@ import type { NextRequest } from "next/server";
 import {
   LOCALE_SEGMENT_LIST,
   STORAGE_KEY,
-  detectLocaleFromHeader,
+  detectLocale,
   fromSegment,
   toSegment,
 } from "@/lib/locale";
 
 /**
  * Sends locale-less URLs to a language. A returning visitor keeps the language
- * they picked (cookie); everyone else gets their browser's preference.
+ * they picked (cookie). Everyone else is routed by country first (Colombia and
+ * the rest of Spanish speaking America get Spanish, from Vercel's geolocation
+ * header), then by the browser's Accept-Language, then Spanish by default.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -33,11 +35,19 @@ export function proxy(request: NextRequest) {
   if (hasLocale) return;
 
   const stored = fromSegment(request.cookies.get(STORAGE_KEY)?.value ?? "");
-  const locale = stored ?? detectLocaleFromHeader(request.headers.get("accept-language"));
+  const locale =
+    stored ??
+    detectLocale(
+      request.headers.get("accept-language"),
+      request.headers.get("x-vercel-ip-country"),
+    );
 
   const url = request.nextUrl.clone();
   url.pathname = `/${toSegment(locale)}${pathname === "/" ? "" : pathname}`;
-  return NextResponse.redirect(url);
+  const response = NextResponse.redirect(url);
+  // The redirect depends on these headers, so caches must key on them.
+  response.headers.set("Vary", "Accept-Language, Cookie, X-Vercel-IP-Country");
+  return response;
 }
 
 export const config = {
