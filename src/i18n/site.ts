@@ -175,7 +175,7 @@ const es = {
   },
   contact: {
     pill: "Contacto",
-    title: "Iniciar un proyecto.",
+    title: "¿Listos para agregar valor junto con Lumintik?",
     subtitle: "Cuéntanos qué necesitas. Te respondemos por correo.",
     required: "Los campos marcados con * son obligatorios.",
     name: "Nombre *",
@@ -387,7 +387,7 @@ const en: Site = {
   },
   contact: {
     pill: "Contact",
-    title: "Start a project.",
+    title: "Ready to add value with Lumintik?",
     subtitle: "Tell us what you need. We reply by email.",
     required: "Fields marked with * are required.",
     name: "Name *",
