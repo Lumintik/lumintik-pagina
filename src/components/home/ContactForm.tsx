@@ -160,7 +160,7 @@ export function ContactForm({ t, serviceOptions, privacyHref, email }: Props) {
         {message}
       </p>
 
-      <button type="submit" disabled={pending} className="btn btn-primary self-start disabled:cursor-not-allowed disabled:opacity-60">
+      <button type="submit" disabled={pending} className="btn btn-primary self-start disabled:cursor-wait">
         {pending ? t.sending : t.submit}
       </button>
     </form>

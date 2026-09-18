@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ArrowUpRight, Section } from "@/components/ui/primitives";
 import { MORE_PROJECTS } from "@/data/cases";
 import type { Locale } from "@/lib/locale";
-import { fill, site } from "@/i18n/site";
+import { site } from "@/i18n/site";
 
 export function MoreProjects({ locale }: { locale: Locale }) {
   const t = site[locale].more;
@@ -28,7 +28,12 @@ export function MoreProjects({ locale }: { locale: Locale }) {
               <span className="flex flex-col gap-1">
                 <span className="inline-flex items-center gap-2 text-lg font-semibold">
                   {p.name}
-                  {p.href ? <ArrowUpRight /> : null}
+                  {p.href ? (
+                    <>
+                      <ArrowUpRight />
+                      <span className="sr-only">, {t.visit}</span>
+                    </>
+                  ) : null}
                 </span>
                 <span className="text-base leading-relaxed">{p.desc[locale]}</span>
               </span>
@@ -41,7 +46,6 @@ export function MoreProjects({ locale }: { locale: Locale }) {
                   href={p.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={fill(t.visit, { name: p.name })}
                   className="group flex items-start gap-5"
                 >
                   {body}

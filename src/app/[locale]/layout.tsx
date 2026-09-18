@@ -21,7 +21,10 @@ const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  display: "swap",
+  // "optional": the title paints once, in Poppins when the preloaded font
+  // arrives in time, otherwise in the metric matched fallback. "swap" painted
+  // it twice, and the second paint pushed the mobile LCP past three seconds.
+  display: "optional",
 });
 
 export function generateStaticParams() {

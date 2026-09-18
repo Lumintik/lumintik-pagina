@@ -21,7 +21,7 @@ export function Footer({ locale }: { locale: Locale }) {
   return (
     <footer data-tone="dark" className="w-full px-5 pb-12 pt-24 md:px-10 md:pt-32">
       <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-14 md:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col items-start gap-5">
           <Logo tone="dark" />
           <p className="max-w-[28ch] text-base leading-relaxed">{f.tagline}</p>
         </div>

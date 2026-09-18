@@ -91,7 +91,7 @@ const es = {
   more: {
     pill: "Más proyectos",
     title: "Otros proyectos que hemos construido.",
-    visit: "Visitar el sitio de {name}",
+    visit: "abre su sitio en una pestaña nueva",
   },
   practices: {
     pill: "Buenas prácticas",
@@ -303,7 +303,7 @@ const en: Site = {
   more: {
     pill: "More projects",
     title: "Other projects we have built.",
-    visit: "Visit the {name} site",
+    visit: "opens their site in a new tab",
   },
   practices: {
     pill: "Good practices",
