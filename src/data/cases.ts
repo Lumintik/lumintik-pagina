@@ -288,20 +288,22 @@ export const CASES: CaseStudy[] = [
         client: "EZDocuAI",
         about: "Traducción de documentos con inteligencia artificial, Estados Unidos.",
         sector: "Traducción",
-        problem: null,
+        problem:
+          "Los traductores certificados dedican horas a formatear a mano cada documento escaneado antes de poder traducirlo.",
         solution:
-          "Cifrado TLS 1.3 en tránsito y AES 256 en reposo, borrado programado y certificado de eliminación con hash SHA 256.",
-        why: "Ningún documento queda guardado ni entrena modelos, y cada página pasa de 20 a 3 minutos.",
+          "OCR con inteligencia artificial que extrae y formatea el documento automáticamente: cada página pasa de 20 a 3 minutos para el traductor certificado.",
+        why: "El cifrado TLS 1.3 en tránsito y AES 256 en reposo, el borrado programado y el certificado de eliminación con hash SHA 256 respaldan el dato: ningún documento queda guardado ni entrena modelos.",
       },
       EN: {
         topic: "Security and encryption",
         client: "EZDocuAI",
         about: "AI document translation, United States.",
         sector: "Translation",
-        problem: null,
+        problem:
+          "Certified translators spend hours manually formatting each scanned document before they can translate it.",
         solution:
-          "TLS 1.3 encryption in transit and AES 256 at rest, scheduled deletion and a deletion certificate with a SHA 256 hash.",
-        why: "No document is kept or used to train models, and each page goes from 20 to 3 minutes.",
+          "AI powered OCR that extracts and formats the document automatically: each page goes from 20 to 3 minutes for the certified translator.",
+        why: "TLS 1.3 encryption in transit and AES 256 at rest, scheduled deletion and a deletion certificate with a SHA 256 hash back up the data: no document is kept or used to train models.",
       },
     },
   },
