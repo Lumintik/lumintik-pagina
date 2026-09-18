@@ -26,7 +26,7 @@ export function ServiceDetail({ locale, service, content, next }: ServiceDetailP
     <>
       <section data-tone="dark" aria-labelledby="service-title" className="w-full px-5 pb-20 pt-36 md:px-10 md:pb-28 md:pt-44">
         <div className="mx-auto w-full max-w-[1200px]">
-          <Link href={href(locale, paths.home, "services")} className="inline-flex items-center gap-2 text-base hover:underline underline-offset-4">
+          <Link href={href(locale, paths.home, "services")} className="flex w-fit items-center gap-2 text-base hover:underline underline-offset-4">
             <ArrowRight className="rotate-180" />
             {d.back}
           </Link>

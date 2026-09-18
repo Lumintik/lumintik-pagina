@@ -1,4 +1,4 @@
-import { LOCALES, toSegment, type Locale } from "@/lib/locale";
+import { LOCALES, toSegment, type Locale } from "./locale";
 
 /**
  * Route segments that read differently in each language. The files live under

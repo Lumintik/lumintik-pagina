@@ -16,7 +16,7 @@ type Props = {
 };
 
 const field =
-  "h-12 w-full rounded-xl border border-black/20 bg-white px-4 text-base text-black focus:border-black focus:outline-none focus-visible:outline-2";
+  "h-12 w-full min-w-0 rounded-xl border border-black/20 bg-white px-4 text-base text-black focus:border-black focus:outline-none focus-visible:outline-2";
 const label = "text-sm font-medium text-black";
 
 export function ContactForm({ t, serviceOptions, privacyHref, email }: Props) {
@@ -104,7 +104,7 @@ export function ContactForm({ t, serviceOptions, privacyHref, email }: Props) {
               name="countryCode"
               defaultValue="+57"
               aria-label={t.countryCode}
-              className={`${field} w-28 shrink-0 px-3`}
+              className={`${field.replace("w-full", "")} w-28 shrink-0 px-3`}
             >
               <option value="+57">CO +57</option>
               <option value="+1">US +1</option>
