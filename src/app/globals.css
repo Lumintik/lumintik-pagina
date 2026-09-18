@@ -1,76 +1,24 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif,
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
-  --color-ink: #0a0a0a;
-  --color-paper: #fafafa;
-  --color-fg: var(--fg);
-  --color-bg: var(--bg);
-}
-
-/*
- * Two tones only. Every section declares data-tone and everything inside it
- * reads these variables: text is always pure black or pure white, never grey.
- * Soft fills and hairline borders are the only intermediate values, and they
- * never carry text on their own.
- */
-:root,
-[data-tone="light"] {
-  --bg: #fafafa;
-  --fg: #0a0a0a;
-  --soft: rgba(10, 10, 10, 0.04);
-  --hairline: rgba(10, 10, 10, 0.12);
-  --card: #ffffff;
-}
-
-[data-tone="dark"] {
-  --bg: #0a0a0a;
-  --fg: #ffffff;
-  --soft: rgba(255, 255, 255, 0.08);
-  --hairline: rgba(255, 255, 255, 0.2);
-  --card: #161616;
-}
-
-[data-tone] {
-  background-color: var(--bg);
-  color: var(--fg);
+  --font-manrope: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-times: ui-serif, "Times New Roman", Times, serif;
+  --font-neue-montreal: var(--font-manrope), ui-sans-serif, system-ui,
+    sans-serif;
 }
 
 html,
 body {
-  background: #0a0a0a;
-  color: #0a0a0a;
+  background: #ffffff;
+  color: #0f172a;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html {
   scroll-behavior: smooth;
-  /* Anchored sections land below the fixed navbar. */
-  scroll-padding-top: 5rem;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  font-feature-settings: "rlig" 1, "calt" 1;
-  text-rendering: optimizeLegibility;
-}
-
-::selection {
-  background: #0a0a0a;
-  color: #ffffff;
-}
-
-[data-tone="dark"] ::selection {
-  background: #ffffff;
-  color: #0a0a0a;
-}
-
-/* One visible focus style for every interactive element, in both tones. */
-:focus-visible {
-  outline: 2px solid var(--fg);
-  outline-offset: 3px;
-  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -78,6 +26,8 @@ body {
     scroll-behavior: auto;
   }
 
+  /* Honor the user's reduced-motion preference: stop the infinite marquees,
+     the splash "breathe" loop, count-ups and long transitions (WCAG 2.2.2). */
   *,
   *::before,
   *::after {
@@ -87,109 +37,14 @@ body {
   }
 }
 
-@layer components {
-  /* Small label above a title: a capsule, lowercase as written, never spaced out. */
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 9999px;
-    border: 1px solid var(--hairline);
-    background: var(--soft);
-    padding: 0.3rem 0.85rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    font-weight: 500;
-    color: var(--fg);
-  }
-
-  .display {
-    font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 1.02;
-    text-wrap: balance;
-  }
-
-  .heading {
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1.06;
-    text-wrap: balance;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-height: 3rem;
-    border-radius: 9999px;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: transform 200ms ease;
-  }
-
-  /* Hover moves the button instead of fading it: text stays pure black or white. */
-  .btn:hover {
-    transform: translateY(-1px);
-  }
-
-  .btn-primary {
-    background: var(--fg);
-    color: var(--bg);
-  }
-
-  .btn-secondary {
-    border: 1px solid var(--fg);
-    color: var(--fg);
-  }
-
-  .link {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
-  }
-
-  .pending {
-    display: inline-block;
-    border-radius: 0.375rem;
-    border: 1px dashed var(--fg);
-    padding: 0 0.4rem;
-    font-weight: 500;
-  }
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-/*
- * The public sector PDF is printed from its page as a 16:9 deck: one band
- * per slide, both tones kept, the footer as the closing slide.
- */
-@media print {
-  @page {
-    size: 1440px 810px;
-    margin: 0;
-  }
-
-  html,
-  body {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  main > section,
-  main > [data-tone],
-  body > footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 810px;
-    padding-top: 56px !important;
-    padding-bottom: 56px !important;
-    break-inside: avoid;
-    break-after: page;
-  }
-
-  body > footer {
-    break-after: auto;
-  }
+body {
+  font-feature-settings: "rlig" 1, "calt" 1;
 }

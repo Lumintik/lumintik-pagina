@@ -1,9 +1,8 @@
 import { permanentRedirect } from "next/navigation";
-import { fromSegment } from "@/lib/locale";
-import { href, paths } from "@/lib/routes";
+import { fromSegment, toSegment } from "@/lib/locale";
 
-/** The case studies live on the home page; this address points there. */
+/** The case studies live in the work section of the home page. */
 export default async function CasesIndex({ params }: PageProps<"/[locale]/casos">) {
   const locale = fromSegment((await params).locale) ?? "ES";
-  permanentRedirect(href(locale, paths.home, "cases"));
+  permanentRedirect(`/${toSegment(locale)}#work`);
 }

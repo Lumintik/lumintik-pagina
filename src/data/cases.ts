@@ -1,6 +1,8 @@
 import type { Locale } from "@/lib/locale";
-import type { Country } from "@/data/clients";
 import type { ToolId } from "@/data/tools";
+
+/** Countries the studio has delivered work in. */
+export type Country = "CO" | "US" | "MX";
 
 /**
  * Case studies. Every statement here was supplied by the team; nothing is

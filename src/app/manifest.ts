@@ -2,18 +2,27 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Lumintik",
-    short_name: "Lumintik",
+    name: "Lumintik SAS — Software studio",
+    short_name: "Lumintik SAS",
     description:
-      "Ingeniería de software para operar a escala real. Productos digitales, inteligencia artificial y datos.",
+      "Lumintik SAS — software engineering studio for companies that care about craft.",
     start_url: "/",
-    lang: "es",
     display: "standalone",
-    background_color: "#0A0A0A",
-    theme_color: "#0A0A0A",
+    background_color: "#ffffff",
+    theme_color: "#ffffff",
     icons: [
-      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      {
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
     ],
   };
 }

@@ -1,14 +1,8 @@
 # Lumintik — website
 
-Site for **Lumintik Developers SAS**. Built with Next.js 16 (App Router),
-React 19 and Tailwind CSS v4. Spanish (`/es`) is the default and English
-(`/en`) mirrors it page for page. Pages are server components; copy lives in
-`src/i18n/` and facts in `src/data/`.
-
-Design rules: two tones (#0A0A0A and #FAFAFA), Poppins, text pure black or
-white, colour only in client logos, tool logos and project photos, no dashes as
-punctuation and no horizontal rules. A fact the team has not confirmed is set
-to `null` and renders as a visible "[dato pendiente]" marker.
+Marketing site for **Lumintik SAS**, a software engineering studio. Built with
+Next.js 16 (App Router), React 19, Tailwind CSS v4 and a Spline 3D hero. UI copy
+is bilingual (EN/ES) via a lightweight client-side locale provider.
 
 ## Getting started
 
@@ -39,29 +33,15 @@ same variables under **Project → Settings → Environment Variables**.
 
 ```
 src/
-  app/[locale]/   Home, casos/[slug], gobierno, privacidad, services/[slug]
+  app/            App Router entry, metadata, sitemap/robots/manifest, actions
   components/
-    home/         Home page sections
-    cases/        Case study building blocks
-    site/         Navbar, Footer, Logo, LanguageSwitcher
-    ui/           Section, Pill, Flag, ToolPill, TrackedLink
-  data/           Cases, clients, tools, services, company legal data
-  i18n/           Spanish and English copy (site, government, privacy, services)
-  lib/            Locale, localized routes, SEO, analytics, share cards
-scripts/          build-deck-pdf.mjs
-```
-
-English URLs (`/en/cases`, `/en/government`, `/en/privacy`) are rewritten onto
-the Spanish folders in `next.config.ts`.
-
-## Public sector PDF
-
-`public/documentos/lumintik-sector-publico-{es,en}.pdf` is printed from the
-public sector page. After changing that page, regenerate it:
-
-```bash
-npm run build && npm start
-node scripts/build-deck-pdf.mjs http://localhost:3000
+    sections/     Page sections (Hero, Navbar, ProjectsShowcase, Footer, …)
+    effects/      Splash, LogoLoop marquee
+    ui/           Small shared UI (LanguageSwitcher, MarqueeRow)
+    providers/    LocaleProvider (EN/ES)
+  data/           Projects and services content
+  i18n/           EN/ES message catalogs
+  lib/            Small helpers (cn, locale)
 ```
 
 ## Scripts

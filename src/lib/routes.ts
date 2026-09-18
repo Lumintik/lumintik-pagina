@@ -8,8 +8,6 @@ import { LOCALES, toSegment, type Locale } from "./locale";
  */
 export const SECTION_SEGMENTS = {
   cases: { ES: "casos", EN: "cases" },
-  government: { ES: "gobierno", EN: "government" },
-  privacy: { ES: "privacidad", EN: "privacy" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type Section = keyof typeof SECTION_SEGMENTS;
@@ -22,8 +20,6 @@ export const paths = {
   cases: ((locale) => `/${SECTION_SEGMENTS.cases[locale]}`) as PagePath,
   caseStudy: (slug: string): PagePath => (locale) =>
     `/${SECTION_SEGMENTS.cases[locale]}/${slug}`,
-  government: ((locale) => `/${SECTION_SEGMENTS.government[locale]}`) as PagePath,
-  privacy: ((locale) => `/${SECTION_SEGMENTS.privacy[locale]}`) as PagePath,
   service: (slug: string): PagePath => () => `/services/${slug}`,
 };
 
