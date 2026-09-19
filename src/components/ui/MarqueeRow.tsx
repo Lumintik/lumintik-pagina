@@ -41,14 +41,14 @@ export function MarqueeRow({
             className="flex items-center gap-8 shrink-0"
           >
             <span
-              className={`block text-[24px] md:text-[56px] font-semibold tracking-[0.56px] leading-[48px] md:leading-[56px] ${
+              className={`block text-[24px] md:text-[56px] font-semibold leading-[48px] md:leading-[56px] ${
                 primary ? "text-slate-900" : "text-slate-300"
               }`}
             >
               {item}
             </span>
             <span
-              className={`text-[24px] md:text-[56px] ${primary ? "text-blue-500" : "text-slate-300"}`}
+              className={`text-[24px] md:text-[56px] ${primary ? "text-slate-500" : "text-slate-300"}`}
             >
               ✻
             </span>

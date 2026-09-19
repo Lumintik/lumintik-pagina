@@ -44,7 +44,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
           className="relative w-full flex justify-center px-5 pt-32 pb-16 md:px-12 md:pt-44 md:pb-24"
           style={{
             background:
-              "linear-gradient(180deg, #000000 0%, #0f172a 45%, #1e3a8a 100%)",
+              "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)",
           }}
         >
           <div className="mx-auto max-w-[1600px] w-full">
@@ -59,7 +59,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               {t.cases.back}
             </Link>
 
-            <p className="mt-10 text-[11px] font-medium tracking-[0.18em] uppercase text-blue-300">
+            <p className="mt-10 text-xs font-medium text-slate-400">
               {copy.topic}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
@@ -76,7 +76,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
                 { label: t.cases.sector, value: copy.sector },
               ].map((item) => (
                 <div key={item.label}>
-                  <dt className="text-[11px] font-medium tracking-[0.18em] uppercase text-blue-300">
+                  <dt className="text-xs font-medium text-slate-400">
                     {item.label}
                   </dt>
                   <dd className="mt-2 text-white text-lg font-semibold">{item.value}</dd>
@@ -87,7 +87,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <a
                 href={`${home}#contact`}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-blue-300 transition-colors duration-300"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-slate-200 transition-colors duration-300"
               >
                 {t.detail.cta}
                 <ArrowRight />
@@ -118,7 +118,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             ) : null}
 
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                 {t.cases.tools}
               </h2>
               <div className="md:col-span-8">
@@ -128,7 +128,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
 
             {gallery.length ? (
               <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-                <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+                <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                   {t.cases.gallery}
                 </h2>
                 <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
@@ -148,12 +148,12 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               <p className="mt-4 text-slate-500 text-lg max-w-[50ch]">{t.cases.ctaBody}</p>
             </section>
 
-            <section className="mt-20 md:mt-28 border-t border-slate-200 pt-10">
+            <section className="mt-20 md:mt-28">
               <Link href={href(locale, paths.caseStudy(next.slug))} className="group inline-flex flex-col gap-2">
-                <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+                <span className="text-xs font-medium text-slate-400">
                   {t.cases.next}
                 </span>
-                <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-blue-500">
+                <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-slate-500">
                   {nextTitle}
                   <ArrowRight className="size-7 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
@@ -175,7 +175,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
         className="relative w-full flex justify-center overflow-clip -mt-[100vh] md:-mt-[90vh] lg:-mt-[96vh] xl:-mt-[100vh] h-[200vh] md:h-[185vh] lg:h-[195vh] xl:h-[200vh]"
         style={{
           background:
-            "linear-gradient(180deg, #ffffff 0%, #93c5fd 12%, #3b82f6 26%, #1e3a8a 42%, #0f172a 65%, #0a0a0a 100%)",
+            "linear-gradient(180deg, #ffffff 0%, #d4d4d4 12%, #737373 26%, #262626 42%, #111111 65%, #0a0a0a 100%)",
         }}
       >
         <div className="sticky top-0 w-full h-screen flex flex-col items-stretch overflow-hidden">

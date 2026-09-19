@@ -64,11 +64,11 @@ export function MarqueeTape() {
         }
       `}</style>
 
-      <div className="relative overflow-hidden py-3 md:py-5 bg-blue-500 rotate-[6deg] scale-110">
+      <div className="relative overflow-hidden py-3 md:py-5 bg-slate-900 rotate-[6deg] scale-110">
         <Row items={t.tape} duration={26} />
       </div>
 
-      <div className="relative overflow-hidden py-3 md:py-5 bg-blue-500 -rotate-[6deg] scale-110">
+      <div className="relative overflow-hidden py-3 md:py-5 bg-slate-900 -rotate-[6deg] scale-110">
         <Row items={t.tape} duration={32} reverse />
       </div>
     </section>

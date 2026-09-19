@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LOCALES, LOCALE_TAGS, fromSegment, toSegment } from "@/lib/locale";
+import { LOCALES, LOCALE_TAGS, fromSegment, toSegment, type Locale } from "@/lib/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { SECTION_SEGMENTS } from "@/lib/routes";
 
 type Props = {
   className?: string;
@@ -13,13 +14,17 @@ type Props = {
  * Swaps the locale segment of the current path, keeping the reader on the same
  * page. These are real links, so crawlers can follow them to the translation.
  */
-function swapLocale(pathname: string, target: string): string {
+function swapLocale(pathname: string, target: Locale): string {
   const parts = pathname.split("/").filter(Boolean);
-  if (parts.length && fromSegment(parts[0])) {
-    parts[0] = target;
+  const current = parts.length ? fromSegment(parts[0]) : null;
+  if (current) {
+    parts[0] = toSegment(target);
+    // The section segment is translated too, so the link lands without a redirect.
+    const section = Object.values(SECTION_SEGMENTS).find((seg) => seg[current] === parts[1]);
+    if (section) parts[1] = section[target];
     return `/${parts.join("/")}`;
   }
-  return `/${target}${pathname === "/" ? "" : pathname}`;
+  return `/${toSegment(target)}${pathname === "/" ? "" : pathname}`;
 }
 
 export function LanguageSwitcher({ className }: Props) {
@@ -28,7 +33,7 @@ export function LanguageSwitcher({ className }: Props) {
 
   return (
     <ul
-      className={`flex items-center gap-1 text-[11px] font-medium tracking-[0.18em] uppercase ${className ?? ""}`}
+      className={`flex items-center gap-1 text-xs font-medium ${className ?? ""}`}
       role="list"
       aria-label="Language"
     >
@@ -37,7 +42,7 @@ export function LanguageSwitcher({ className }: Props) {
         return (
           <li key={code}>
             <Link
-              href={swapLocale(pathname, toSegment(code))}
+              href={swapLocale(pathname, code)}
               hrefLang={LOCALE_TAGS[code]}
               aria-current={isActive ? "true" : undefined}
               className={`relative block px-2 py-1 cursor-pointer transition-colors duration-200 ${

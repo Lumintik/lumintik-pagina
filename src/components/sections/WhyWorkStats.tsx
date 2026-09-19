@@ -65,7 +65,7 @@ function StatCard({ value, suffix, desc, active, delay }: CardProps) {
     >
       <h3 className="text-slate-900 text-[44px] md:text-[64px] font-semibold tracking-tight leading-none">
         {count}
-        <span className="text-blue-500">{suffix}</span>
+        <span className="text-slate-500">{suffix}</span>
       </h3>
       <p className="text-slate-600 text-sm md:text-base leading-snug">
         {desc}

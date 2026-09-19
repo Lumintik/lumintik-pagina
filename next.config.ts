@@ -6,7 +6,8 @@ import { SECTION_SEGMENTS } from "./src/lib/routes";
  * English URL is rewritten onto it, and the mixed forms redirect, so each page
  * has one address per language.
  */
-const sections = Object.values(SECTION_SEGMENTS);
+// Sections with the same segment in both languages need no rewrite.
+const sections = Object.values(SECTION_SEGMENTS).filter(({ ES, EN }) => ES !== EN);
 
 const nextConfig: NextConfig = {
   images: {
@@ -16,6 +17,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
       },
     ],
   },

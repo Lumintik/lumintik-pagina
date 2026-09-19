@@ -1,5 +1,8 @@
 import type { Locale } from "@/lib/locale";
 
+/** How the services are grouped for the filters on the home page. */
+export type ServiceGroup = "product" | "engineering" | "ai" | "growth";
+
 /** Section labels shared by every service detail page. */
 export type DetailChrome = {
   back: string;
@@ -27,15 +30,77 @@ export type Messages = {
     join: string;
     contact: string;
     team: string;
+    blog: string;
+    industries: string;
+    cases: string;
+    ethics: string;
+    education: string;
+    governance: string;
+    company: string;
+    companyData: string;
+    resources: string;
+  };
+  /** The header dropdowns: a line per panel and a line per entry. */
+  menu: {
+    viewAll: string;
+    services: string;
+    industries: string;
+    cases: string;
+    company: string;
+    resources: string;
+    items: Record<"team" | "governance" | "companyData" | "ethics" | "blog" | "news" | "education", string>;
   };
   pages: {
     services: { title: string; titleAccent: string; intro: string };
     projects: { title: string; titleAccent: string; intro: string };
     team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string> };
+    blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string };
     contact: { title: string; titleAccent: string; intro: string };
+    industries: { title: string; titleAccent: string; intro: string };
+    cases: { title: string; titleAccent: string; intro: string };
+    ethics: {
+      title: string;
+      titleAccent: string;
+      intro: string;
+      whatTitle: string;
+      what: string[];
+      howTitle: string;
+      how: string[];
+      cta: string;
+      /** The channel is still to be confirmed by the team. */
+      channel: string;
+    };
+    news: { title: string; titleAccent: string; intro: string; empty: string; cta: string };
+    education: {
+      title: string;
+      titleAccent: string;
+      intro: string;
+      formatsTitle: string;
+      formats: { title: string; desc: string }[];
+      datesTitle: string;
+      dates: string;
+      cta: string;
+    };
+    governance: {
+      title: string;
+      titleAccent: string;
+      intro: string;
+      structureTitle: string;
+      structure: { role: string; name: string; scope: string }[];
+      principlesTitle: string;
+      principles: { title: string; desc: string }[];
+      policiesTitle: string;
+      policies: { title: string; desc: string; link: "ethics" | "contact" }[];
+      companyTitle: string;
+      companyIntro: string;
+      companyFields: Record<"name" | "nit" | "registry" | "domicile" | "address" | "activity", string>;
+      documentsTitle: string;
+      documents: Record<"rut" | "rub" | "certificate", { title: string; desc: string }>;
+      download: string;
+    };
   };
   hero: {
-    eyebrow: string;
+    rail: string;
     titleParts: string[];
     titleAccent: string;
     titleAccentRotations: string[];
@@ -52,12 +117,16 @@ export type Messages = {
     title: string;
     titleAccent: string;
     aria: string;
+    all: string;
   };
   tape: string[];
   services: {
     eyebrow: string;
     title: string;
     titleAccent: string;
+    /** The filter buttons; keyed by the group in `src/data/services.ts`, plus "all". */
+    filters: Record<"all" | ServiceGroup, string>;
+    open: string;
     items: {
       productDevelopment: { title: string; desc: string };
       uxui: { title: string; desc: string };
@@ -71,6 +140,18 @@ export type Messages = {
   projects: {
     marquee: string[];
     badge: { live: string };
+  };
+  industries: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    intro: string;
+    previous: string;
+    next: string;
+    close: string;
+    seeCase: string;
+    /** Keyed by the industry id in `src/data/industries.ts`. */
+    items: Record<string, { category: string; title: string; body: string[] }>;
   };
   cases: {
     eyebrow: string;
@@ -148,11 +229,11 @@ export type Messages = {
 const en: Messages = {
   seo: {
     home: {
-      title: "Lumintik SAS — Software studio that builds inevitable products",
+      title: "Lumintik SAS, software studio that builds inevitable products",
       description:
         "Lumintik SAS is a software engineering studio for companies that care about craft. Headless commerce, applied AI, web engineering and design systems for Samsung, Claro, Coca-Cola, EZDocuAI and more.",
     },
-    service: { titleTemplate: "%s — Services" },
+    service: { titleTemplate: "%s, Services" },
   },
   detail: {
     back: "All services",
@@ -173,6 +254,32 @@ const en: Messages = {
     join: "Join",
     contact: "Contact",
     team: "Our team",
+    blog: "Blog",
+    industries: "Industries",
+    cases: "Success stories",
+    ethics: "Ethics line",
+    governance: "Corporate governance",
+    company: "Company",
+    companyData: "Company details",
+    resources: "Resources",
+    education: "Education",
+  },
+  menu: {
+    viewAll: "See all",
+    services: "Everything we build, from the idea to the platform it runs on.",
+    industries: "The sectors we have already shipped for.",
+    cases: "Real projects with the result each one produced.",
+    company: "Who we are and how we govern ourselves.",
+    resources: "What we write, announce and teach.",
+    items: {
+      team: "The people who design and build.",
+      governance: "Structure, principles and policies.",
+      companyData: "Tax ID, registry and documents to download.",
+      ethics: "A confidential channel to report concerns.",
+      blog: "Notes from the projects.",
+      news: "Announcements from the studio.",
+      education: "Workshops and talks for teams.",
+    },
   },
   pages: {
     services: {
@@ -191,14 +298,108 @@ const en: Messages = {
       intro: "A small team that designs and builds in the same room.",
       roles: { ceo: "Chief Executive Officer", coo: "Chief Operating Officer" },
     },
+    blog: {
+      title: "What we learn",
+      titleAccent: "while building.",
+      intro: "Notes from the projects: what the problem was, what we built and what it changed.",
+      read: "Read the post",
+      back: "Back to the blog",
+      more: "More posts",
+      empty: "No posts yet.",
+    },
     contact: {
       title: "Let's talk about",
       titleAccent: "your project.",
       intro: "Tell us what you need. We reply by email.",
     },
+    industries: {
+      title: "Where we have",
+      titleAccent: "shipped.",
+      intro: "Every industry has its own rules, data and pace. These are the ones we have already built for, with the project behind each one.",
+    },
+    cases: {
+      title: "Results with",
+      titleAccent: "a name on them.",
+      intro: "The problem, what we built and what it changed, for each client that let us tell it.",
+    },
+    ethics: {
+      title: "A channel to",
+      titleAccent: "speak up.",
+      intro: "If something in how we work does not sit right with you, this is the place to say it. Reports are received confidentially and every one gets an answer.",
+      whatTitle: "What you can report",
+      what: [
+        "Conduct that goes against the law or against what we agreed with a client.",
+        "Misuse of data, credentials or infrastructure entrusted to us.",
+        "Conflicts of interest, discrimination or harassment involving our team.",
+        "Any situation you would rather raise outside the regular channels.",
+      ],
+      howTitle: "How it works",
+      how: [
+        "Write to us with as much detail as you can. You may do it anonymously.",
+        "Reports are read only by the leadership team and handled in confidence.",
+        "We confirm receipt, look into it and reply with what was done.",
+      ],
+      cta: "Send a report",
+      channel: "[pending: dedicated ethics line email]",
+    },
+    news: {
+      title: "What is",
+      titleAccent: "new.",
+      intro: "Announcements from the studio: launches, partnerships and where we will be.",
+      empty: "No news published yet. The first announcements will appear here.",
+      cta: "Write to us to hear first",
+    },
+    education: {
+      title: "Learning to",
+      titleAccent: "build better.",
+      intro: "Workshops, talks and material for teams that want to understand the software they depend on.",
+      formatsTitle: "Formats",
+      formats: [
+        { title: "Team workshops", desc: "Half a day or a full day with your team on one topic: applied AI, observability, product delivery. Hands on, with your own product as the material." },
+        { title: "Talks", desc: "Forty minutes on what we have learned building for real operations, for events, universities and internal sessions." },
+        { title: "Technical mentoring", desc: "Recurring sessions with a tech lead or founding team: architecture reviews, roadmap and hiring decisions." },
+      ],
+      datesTitle: "Upcoming dates",
+      dates: "[pending: first published dates]",
+      cta: "Request a session",
+    },
+    governance: {
+      title: "How we",
+      titleAccent: "govern ourselves.",
+      intro: "A small studio still needs clear rules: who decides what, what we promise every client, and where to go when something is not right.",
+      structureTitle: "Structure",
+      structure: [
+        { role: "Chief Executive Officer", name: "David Espejo", scope: "Strategy, clients and the technical direction of every project." },
+        { role: "Chief Operating Officer", name: "Andrey Plazas", scope: "Operations, delivery, finance and the team." },
+      ],
+      principlesTitle: "Principles",
+      principles: [
+        { title: "The client owns what we build", desc: "Code, infrastructure and accounts are set up in the client's name from the first day. Leaving us never means losing the product." },
+        { title: "Their cloud, their constraints", desc: "We work on top of the client's cloud, data residency and compliance rules instead of imposing a stack of our own." },
+        { title: "Data stays where it belongs", desc: "We process the minimum data needed, in the client's infrastructure whenever it is sensitive, and we never use it to train models." },
+        { title: "One truth about the state of a project", desc: "Scope, budget and risks are written down and visible to the client at all times; there is no version of the project only we know." },
+        { title: "No conflicts of interest", desc: "We do not take engagements that compete with an active client's core business without telling both sides." },
+      ],
+      policiesTitle: "Policies and channels",
+      policies: [
+        { title: "Ethics line", desc: "A confidential channel for anyone, inside or outside the studio, to report conduct that goes against these principles.", link: "ethics" },
+        { title: "Data protection", desc: "Requests about personal data we hold, from a client, a candidate or a visitor, are answered through the contact channel.", link: "contact" },
+        { title: "Security incidents", desc: "If you believe you found a vulnerability in something we built or run, write to us; we acknowledge every report.", link: "contact" },
+      ],
+      companyTitle: "Company details",
+      companyIntro: "As registered with the Colombian tax authority (DIAN) and the Bogotá Chamber of Commerce.",
+      companyFields: { name: "Legal name", nit: "Tax ID (NIT)", registry: "Commercial registration", domicile: "Domicile", address: "Registered address", activity: "Main activity" },
+      documentsTitle: "Documents",
+      documents: {
+        rut: { title: "Tax registry (RUT)", desc: "DIAN single tax registry form, updated September 3, 2026." },
+        rub: { title: "Beneficial owners report", desc: "Report of beneficial owners filed with DIAN on June 2, 2026." },
+        certificate: { title: "Certificate of existence and legal representation", desc: "Issued by the Bogotá Chamber of Commerce on September 7, 2026. Verification code B26583477B5F84." },
+      },
+      download: "Download PDF",
+    },
   },
   hero: {
-    eyebrow: "Software studio · 2026",
+    rail: "What we do",
     titleParts: ["We", "build", "software", "that", "feels"],
     titleAccent: "intuitive.",
     titleAccentRotations: ["intuitive.", "scalable.", "indispensable."],
@@ -215,6 +416,7 @@ const en: Messages = {
     title: "Who we",
     titleAccent: "build for.",
     aria: "Companies we build for",
+    all: "See every client",
   },
   tape: [
     "Software that feels inevitable",
@@ -227,10 +429,12 @@ const en: Messages = {
     eyebrow: "Our services",
     title: "Our",
     titleAccent: "services.",
+    filters: { all: "All", product: "Product and design", engineering: "Engineering", ai: "AI and data", growth: "Growth" },
+    open: "See the service",
     items: {
       productDevelopment: {
         title: "Product Development",
-        desc: "From discovery to ship — software products that earn trust.",
+        desc: "From discovery to ship: software products that earn trust.",
       },
       uxui: {
         title: "UX / UI",
@@ -238,11 +442,11 @@ const en: Messages = {
       },
       webEngineering: {
         title: "Web Engineering",
-        desc: "Performant, accessible web at the edge — sub-second LCP by default.",
+        desc: "Performant, accessible web at the edge, with sub-second LCP by default.",
       },
       appliedAI: {
         title: "Applied AI",
-        desc: "Practical AI pipelines — RAG, agents, streaming LLM workflows.",
+        desc: "Practical AI pipelines: RAG, agents, streaming LLM workflows.",
       },
       performanceSEO: {
         title: "Performance & SEO",
@@ -255,6 +459,87 @@ const en: Messages = {
       platformInfra: {
         title: "Platform & Infra",
         desc: "Multi-region, observability-first platforms ready for prime time.",
+      },
+    },
+  },
+  industries: {
+    eyebrow: "Industries",
+    title: "Where we have",
+    titleAccent: "shipped.",
+    intro: "Every industry has its own rules, data and pace. These are the ones we have already built for, with the project behind each one.",
+    previous: "Previous",
+    next: "Next",
+    close: "Close",
+    seeCase: "See the project",
+    items: {
+      aerospace: {
+        category: "Aerospace",
+        title: "[pending: aerospace project title]",
+        body: ["[pending: what the problem was, what we built and what it changed. Photos to come.]"],
+      },
+      retail: {
+        category: "Retail and e-commerce",
+        title: "The whole network working as one inventory.",
+        body: [
+          "For Samsung's official distributor in Colombia, more than 30 points of sale had scattered stock: what ran out in one city was left over in another.",
+          "We built an algorithm that matches each store's stock against the real distance to the customer, picks the best store and generates the shipping label. Deliveries now take 24 hours at most.",
+        ],
+      },
+      telecom: {
+        category: "Telecommunications",
+        title: "Deciding with data in the Mi Claro super app.",
+        body: [
+          "Claro needed to understand how customers use the Mi Claro app to decide what to improve.",
+          "We did the consulting and the telemetry: an event plan, funnels and dashboards for data analysis.",
+        ],
+      },
+      trade: {
+        category: "Foreign trade and logistics",
+        title: "Customs documents reviewed by AI.",
+        body: [
+          "For Griver we built an AI OCR pipeline that reads customs entries and invoices, cross-checks them and flags the differences, with a self hosted model so the data never leaves their infrastructure.",
+          "A review that took a full day now takes about ten minutes.",
+        ],
+      },
+      legal: {
+        category: "Legal and immigration",
+        title: "USCIS forms completed in minutes.",
+        body: [
+          "Immigration attorneys in the United States were filling in long USCIS forms by hand.",
+          "EZMig is a guided flow with AI that completes and validates the forms in minutes, with output certified by USCIS.",
+        ],
+      },
+      translation: {
+        category: "Translation and documents",
+        title: "Translators editing instead of retyping.",
+        body: [
+          "EZDocuAI translates documents keeping the original layout, so a translator's time per page went from about twenty minutes to three.",
+          "Document parsing, layout reconstruction and a review editor built for professionals.",
+        ],
+      },
+      sports: {
+        category: "Sports and communities",
+        title: "A live app that could not stop for each change.",
+        body: [
+          "FUTTEM is a mobile app in production in Colombia, on the App Store and Google Play, with real users who could not be interrupted by every release.",
+          "We set up three separate environments, controlled deployments and end to end tracing.",
+        ],
+      },
+      support: {
+        category: "Customer support",
+        title: "One AI agent on every channel.",
+        body: [
+          "Customers in commerce and personal finance writing on WhatsApp, Instagram and the web at all hours, with the same questions.",
+          "An AI agent connected to the catalog, the stock and the stores answers on every channel: one intelligence, instant answers and the team free to sell.",
+        ],
+      },
+      fintech: {
+        category: "Fintech",
+        title: "Financial education at the scale of a community.",
+        body: [
+          "Fridoom is a financial education brand with more than 200,000 followers.",
+          "It is one of the clients of the multichannel AI agent, which answers its users inside the app.",
+        ],
       },
     },
   },
@@ -307,7 +592,7 @@ const en: Messages = {
       { value: 100, suffix: "%", label: "Work completed in house" },
       { value: 2, suffix: "+", label: "Years crafting digital products" },
       { value: 15, suffix: "+", label: "Happy clients across 3 continents" },
-      { value: 12, suffix: "+", label: "Industries shipped — fintech, AI, telecom, e-commerce" },
+      { value: 12, suffix: "+", label: "Industries shipped: fintech, AI, telecom, e-commerce" },
     ],
   },
   footer: {
@@ -315,7 +600,7 @@ const en: Messages = {
     tagline: "Software engineering studio for companies that care about craft.",
     sitemap: "Sitemap",
     elsewhere: "Elsewhere",
-    line: "Lumintik SAS · Software studio · 2026",
+    line: "Lumintik Developers SAS, NIT 902069502-5, Bogotá, 2026",
     rights: "",
   },
   mobileMenu: {
@@ -337,7 +622,7 @@ const en: Messages = {
     terms: "By submitting you agree to our privacy policy and terms and conditions",
     submit: "Send",
     sending: "Sending…",
-    success: "Thanks! Your message is on its way — we'll be in touch shortly.",
+    success: "Thanks! Your message is on its way. We'll be in touch shortly.",
     error: "Something went wrong sending your message. Please try again or email us directly.",
     errorRequired: "Please complete the required fields.",
     errorEmail: "Please enter a valid email address.",
@@ -348,11 +633,11 @@ const en: Messages = {
 const es: Messages = {
   seo: {
     home: {
-      title: "Lumintik SAS — Estudio de software que construye productos inevitables",
+      title: "Lumintik SAS, estudio de software que construye productos inevitables",
       description:
         "Lumintik SAS es un estudio de ingeniería de software para empresas que cuidan el detalle. Headless commerce, IA aplicada, ingeniería web y design systems para Samsung, Claro, Coca-Cola, EZDocuAI y más.",
     },
-    service: { titleTemplate: "%s — Servicios" },
+    service: { titleTemplate: "%s, Servicios" },
   },
   detail: {
     back: "Todos los servicios",
@@ -367,12 +652,38 @@ const es: Messages = {
     work: "Proyectos",
     approach: "Enfoque",
     services: "Servicios",
-    news: "Novedades",
+    news: "Noticias",
     about: "Nosotros",
     home: "Inicio",
     join: "Únete",
     contact: "Contacto",
     team: "Nuestro equipo",
+    blog: "Blog",
+    industries: "Industrias",
+    cases: "Casos de éxito",
+    ethics: "Línea ética",
+    governance: "Gobierno corporativo",
+    company: "Empresa",
+    companyData: "Datos de la empresa",
+    resources: "Recursos",
+    education: "Educación",
+  },
+  menu: {
+    viewAll: "Ver todo",
+    services: "Todo lo que construimos, de la idea a la plataforma donde corre.",
+    industries: "Los sectores en los que ya hemos entregado.",
+    cases: "Proyectos reales con el resultado que produjo cada uno.",
+    company: "Quiénes somos y cómo nos gobernamos.",
+    resources: "Lo que escribimos, anunciamos y enseñamos.",
+    items: {
+      team: "Las personas que diseñan y construyen.",
+      governance: "Estructura, principios y políticas.",
+      companyData: "NIT, matrícula y documentos para descargar.",
+      ethics: "Un canal confidencial para reportar inquietudes.",
+      blog: "Notas desde los proyectos.",
+      news: "Anuncios del estudio.",
+      education: "Talleres y charlas para equipos.",
+    },
   },
   pages: {
     services: {
@@ -391,14 +702,108 @@ const es: Messages = {
       intro: "Un equipo pequeño que diseña y construye en la misma sala.",
       roles: { ceo: "Director ejecutivo", coo: "Director de operaciones" },
     },
+    blog: {
+      title: "Lo que aprendemos",
+      titleAccent: "construyendo.",
+      intro: "Notas desde los proyectos: cuál era el problema, qué construimos y qué cambió.",
+      read: "Leer la entrada",
+      back: "Volver al blog",
+      more: "Más entradas",
+      empty: "Aún no hay entradas.",
+    },
     contact: {
       title: "Hablemos de",
       titleAccent: "tu proyecto.",
       intro: "Cuéntanos qué necesitas. Te respondemos por correo.",
     },
+    industries: {
+      title: "Donde ya hemos",
+      titleAccent: "construido.",
+      intro: "Cada industria tiene sus reglas, sus datos y su ritmo. Estas son en las que ya hemos trabajado, con el proyecto detrás de cada una.",
+    },
+    cases: {
+      title: "Resultados con",
+      titleAccent: "nombre propio.",
+      intro: "El problema, lo que construimos y lo que cambió, por cada cliente que nos dejó contarlo.",
+    },
+    ethics: {
+      title: "Un canal para",
+      titleAccent: "hablar.",
+      intro: "Si algo en nuestra forma de trabajar no te parece correcto, este es el lugar para decirlo. Los reportes se reciben de forma confidencial y todos tienen respuesta.",
+      whatTitle: "Qué puedes reportar",
+      what: [
+        "Conductas contrarias a la ley o a lo acordado con un cliente.",
+        "Uso indebido de datos, credenciales o infraestructura que se nos confió.",
+        "Conflictos de interés, discriminación o acoso que involucren a nuestro equipo.",
+        "Cualquier situación que prefieras plantear fuera de los canales habituales.",
+      ],
+      howTitle: "Cómo funciona",
+      how: [
+        "Escríbenos con todo el detalle que puedas. Puedes hacerlo de forma anónima.",
+        "Los reportes los lee únicamente el equipo directivo y se manejan con confidencialidad.",
+        "Confirmamos el recibo, investigamos y te respondemos con lo que se hizo.",
+      ],
+      cta: "Enviar un reporte",
+      channel: "[dato pendiente: correo de la línea ética]",
+    },
+    news: {
+      title: "Lo que hay",
+      titleAccent: "de nuevo.",
+      intro: "Anuncios del estudio: lanzamientos, alianzas y dónde vamos a estar.",
+      empty: "Aún no hay noticias publicadas. Los primeros anuncios aparecerán aquí.",
+      cta: "Escríbenos para enterarte primero",
+    },
+    education: {
+      title: "Aprender a",
+      titleAccent: "construir mejor.",
+      intro: "Talleres, charlas y material para equipos que quieren entender el software del que dependen.",
+      formatsTitle: "Formatos",
+      formats: [
+        { title: "Talleres para equipos", desc: "Media jornada o un día completo con tu equipo sobre un tema: IA aplicada, observabilidad, entrega de producto. Prácticos, con tu propio producto como material." },
+        { title: "Charlas", desc: "Cuarenta minutos sobre lo que hemos aprendido construyendo para operaciones reales, en eventos, universidades y sesiones internas." },
+        { title: "Mentoría técnica", desc: "Sesiones recurrentes con un líder técnico o un equipo fundador: revisiones de arquitectura, hoja de ruta y decisiones de contratación." },
+      ],
+      datesTitle: "Próximas fechas",
+      dates: "[dato pendiente: primeras fechas publicadas]",
+      cta: "Solicitar una sesión",
+    },
+    governance: {
+      title: "Cómo nos",
+      titleAccent: "gobernamos.",
+      intro: "Un estudio pequeño también necesita reglas claras: quién decide qué, qué le prometemos a cada cliente y a dónde acudir cuando algo no está bien.",
+      structureTitle: "Estructura",
+      structure: [
+        { role: "Director ejecutivo", name: "David Espejo", scope: "Estrategia, clientes y la dirección técnica de cada proyecto." },
+        { role: "Director de operaciones", name: "Andrey Plazas", scope: "Operación, entrega, finanzas y el equipo." },
+      ],
+      principlesTitle: "Principios",
+      principles: [
+        { title: "El cliente es dueño de lo que construimos", desc: "Código, infraestructura y cuentas quedan a nombre del cliente desde el primer día. Dejar de trabajar con nosotros nunca significa perder el producto." },
+        { title: "Su nube, sus restricciones", desc: "Trabajamos sobre la nube del cliente, su residencia de datos y sus reglas de cumplimiento, en lugar de imponer un stack propio." },
+        { title: "Los datos se quedan donde deben", desc: "Procesamos el mínimo de datos necesario, dentro de la infraestructura del cliente cuando son sensibles, y nunca los usamos para entrenar modelos." },
+        { title: "Una sola verdad sobre el estado del proyecto", desc: "Alcance, presupuesto y riesgos quedan por escrito y visibles para el cliente en todo momento; no existe una versión del proyecto que solo nosotros conocemos." },
+        { title: "Sin conflictos de interés", desc: "No tomamos trabajos que compitan con el negocio principal de un cliente activo sin decírselo a ambas partes." },
+      ],
+      policiesTitle: "Políticas y canales",
+      policies: [
+        { title: "Línea ética", desc: "Un canal confidencial para que cualquier persona, dentro o fuera del estudio, reporte conductas contrarias a estos principios.", link: "ethics" },
+        { title: "Protección de datos", desc: "Las solicitudes sobre datos personales que tengamos, de un cliente, un candidato o un visitante, se atienden por el canal de contacto.", link: "contact" },
+        { title: "Incidentes de seguridad", desc: "Si crees haber encontrado una vulnerabilidad en algo que construimos u operamos, escríbenos; confirmamos todos los reportes.", link: "contact" },
+      ],
+      companyTitle: "Datos de la empresa",
+      companyIntro: "Tal como constan en la DIAN y en la Cámara de Comercio de Bogotá.",
+      companyFields: { name: "Razón social", nit: "NIT", registry: "Matrícula mercantil", domicile: "Domicilio", address: "Dirección registrada", activity: "Actividad principal" },
+      documentsTitle: "Documentos",
+      documents: {
+        rut: { title: "Registro Único Tributario (RUT)", desc: "Formulario del RUT de la DIAN, actualizado el 3 de septiembre de 2026." },
+        rub: { title: "Reporte de beneficiarios finales", desc: "Reporte presentado ante la DIAN el 2 de junio de 2026." },
+        certificate: { title: "Certificado de existencia y representación legal", desc: "Expedido por la Cámara de Comercio de Bogotá el 7 de septiembre de 2026. Código de verificación B26583477B5F84." },
+      },
+      download: "Descargar PDF",
+    },
   },
   hero: {
-    eyebrow: "Estudio de software · 2026",
+    rail: "Lo que hacemos",
     titleParts: ["Creamos", "software", "que", "se", "siente"],
     titleAccent: "intuitivo.",
     titleAccentRotations: ["intuitivo.", "escalable.", "indispensable."],
@@ -415,6 +820,7 @@ const es: Messages = {
     title: "Para quién",
     titleAccent: "construimos.",
     aria: "Empresas para las que construimos",
+    all: "Ver todos los clientes",
   },
   tape: [
     "Software que se siente inevitable",
@@ -427,10 +833,12 @@ const es: Messages = {
     eyebrow: "Nuestros servicios",
     title: "Nuestros",
     titleAccent: "servicios.",
+    filters: { all: "Todos", product: "Producto y diseño", engineering: "Ingeniería", ai: "IA y datos", growth: "Crecimiento" },
+    open: "Ver el servicio",
     items: {
       productDevelopment: {
         title: "Desarrollo de Producto",
-        desc: "De la idea al lanzamiento — productos de software que se ganan la confianza.",
+        desc: "De la idea al lanzamiento: productos de software que se ganan la confianza.",
       },
       uxui: {
         title: "UX / UI",
@@ -438,11 +846,11 @@ const es: Messages = {
       },
       webEngineering: {
         title: "Ingeniería Web",
-        desc: "Web rápida y accesible en el edge — LCP sub-segundo por defecto.",
+        desc: "Web rápida y accesible en el edge, con LCP por debajo de un segundo por defecto.",
       },
       appliedAI: {
         title: "IA Aplicada",
-        desc: "Pipelines de IA prácticos — RAG, agentes y flujos LLM en streaming.",
+        desc: "Pipelines de IA prácticos: RAG, agentes y flujos LLM en streaming.",
       },
       performanceSEO: {
         title: "Performance y SEO",
@@ -455,6 +863,87 @@ const es: Messages = {
       platformInfra: {
         title: "Plataforma e Infraestructura",
         desc: "Plataformas multi-región con observabilidad lista para producción.",
+      },
+    },
+  },
+  industries: {
+    eyebrow: "Industrias",
+    title: "Donde ya hemos",
+    titleAccent: "construido.",
+    intro: "Cada industria tiene sus reglas, sus datos y su ritmo. Estas son en las que ya hemos trabajado, con el proyecto detrás de cada una.",
+    previous: "Anterior",
+    next: "Siguiente",
+    close: "Cerrar",
+    seeCase: "Ver el proyecto",
+    items: {
+      aerospace: {
+        category: "Aeroespacial",
+        title: "[dato pendiente: título del proyecto aeroespacial]",
+        body: ["[dato pendiente: cuál era el problema, qué construimos y qué cambió. Fotos por llegar.]"],
+      },
+      retail: {
+        category: "Retail y e-commerce",
+        title: "Toda la red trabajando como un solo inventario.",
+        body: [
+          "Para el distribuidor oficial de Samsung en Colombia, más de 30 puntos de venta tenían el inventario disperso: lo que se agotaba en una ciudad sobraba en otra.",
+          "Construimos un algoritmo que cruza el stock de cada tienda con la distancia real al cliente, elige la tienda óptima y genera la guía de envío. Las entregas ahora toman máximo 24 horas.",
+        ],
+      },
+      telecom: {
+        category: "Telecomunicaciones",
+        title: "Decidir con datos en la super app Mi Claro.",
+        body: [
+          "Claro necesitaba entender cómo usan la app sus clientes para decidir qué mejorar.",
+          "Hicimos la consultoría y la telemetría: plan de eventos, embudos y tableros para análisis de datos.",
+        ],
+      },
+      trade: {
+        category: "Comercio exterior y logística",
+        title: "Documentos aduaneros revisados con IA.",
+        body: [
+          "Para Griver construimos un pipeline de OCR con IA que lee pedimentos y facturas, los cruza y marca las diferencias, con un modelo auto hospedado para que los datos no salgan de su infraestructura.",
+          "Una revisión que tomaba un día completo ahora toma unos diez minutos.",
+        ],
+      },
+      legal: {
+        category: "Legal y migración",
+        title: "Formularios de USCIS completos en minutos.",
+        body: [
+          "Abogados de inmigración en Estados Unidos llenaban a mano formularios largos de USCIS.",
+          "EZMig es un flujo guiado con IA que completa y valida los formularios en minutos, con salida certificada por USCIS.",
+        ],
+      },
+      translation: {
+        category: "Traducción y documentos",
+        title: "Traductores que editan en vez de transcribir.",
+        body: [
+          "EZDocuAI traduce documentos conservando el diseño original, así que el tiempo de un traductor por página pasó de unos veinte minutos a tres.",
+          "Lectura de documentos, reconstrucción del diseño y un editor de revisión hecho para profesionales.",
+        ],
+      },
+      sports: {
+        category: "Deporte y comunidades",
+        title: "Una app en producción que no podía detenerse.",
+        body: [
+          "FUTTEM es una app móvil en producción en Colombia, en App Store y Google Play, con usuarios reales que no podían interrumpirse con cada cambio.",
+          "Montamos tres ambientes separados, despliegues controlados y trazas de extremo a extremo.",
+        ],
+      },
+      support: {
+        category: "Atención al cliente",
+        title: "Un agente de IA en todos los canales.",
+        body: [
+          "Clientes de comercio y finanzas personales que escriben por WhatsApp, Instagram y la web a toda hora, con las mismas preguntas.",
+          "Un agente de IA conectado al catálogo, al stock y a las tiendas responde en cada canal: una sola inteligencia, respuestas al instante y el equipo libre para vender.",
+        ],
+      },
+      fintech: {
+        category: "Fintech",
+        title: "Educación financiera a escala de comunidad.",
+        body: [
+          "Fridoom es una marca de educación financiera con más de 200.000 seguidores.",
+          "Es uno de los clientes del agente de IA multicanal, que responde a sus usuarios dentro de la app.",
+        ],
       },
     },
   },
@@ -507,7 +996,7 @@ const es: Messages = {
       { value: 100, suffix: "%", label: "Trabajo realizado in-house" },
       { value: 2, suffix: "+", label: "Años creando productos digitales" },
       { value: 15, suffix: "+", label: "Clientes felices en 3 continentes" },
-      { value: 12, suffix: "+", label: "Industrias atendidas — fintech, IA, telco, e-commerce" },
+      { value: 12, suffix: "+", label: "Industrias atendidas: fintech, IA, telco, e-commerce" },
     ],
   },
   footer: {
@@ -515,7 +1004,7 @@ const es: Messages = {
     tagline: "Estudio de ingeniería de software para empresas que valoran el oficio.",
     sitemap: "Mapa del sitio",
     elsewhere: "En otros lugares",
-    line: "Lumintik SAS · Estudio de software · 2026",
+    line: "Lumintik Developers SAS, NIT 902069502-5, Bogotá, 2026",
     rights: "",
   },
   mobileMenu: {
@@ -537,7 +1026,7 @@ const es: Messages = {
     terms: "Al enviar aceptas la política de tratamiento de datos personales y los términos y condiciones",
     submit: "Enviar",
     sending: "Enviando…",
-    success: "¡Gracias! Tu mensaje va en camino — te contactaremos muy pronto.",
+    success: "¡Gracias! Tu mensaje va en camino. Te contactaremos muy pronto.",
     error: "Hubo un problema al enviar tu mensaje. Inténtalo de nuevo o escríbenos directamente.",
     errorRequired: "Por favor completa los campos obligatorios.",
     errorEmail: "Por favor ingresa un correo electrónico válido.",

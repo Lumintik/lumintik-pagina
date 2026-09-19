@@ -117,7 +117,7 @@ export async function sendContact(
 
   const html = `
     <div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:560px">
-      <h2 style="margin:0 0 4px">New contact request — lumintik.com</h2>
+      <h2 style="margin:0 0 4px">New contact request, lumintik.com</h2>
       <p style="color:#64748b;margin:0 0 16px">Sent from the website contact form.</p>
       <table style="border-collapse:collapse;width:100%">
         ${rows
@@ -149,7 +149,7 @@ export async function sendContact(
       from: `"Lumintik Website" <${user}>`,
       to,
       replyTo: `"${name}" <${email}>`,
-      subject: `New contact request — ${name}${company ? ` · ${company}` : ""}`,
+      subject: `New contact request: ${name}${company ? ` (${company})` : ""}`,
       text,
       html,
       attachments,

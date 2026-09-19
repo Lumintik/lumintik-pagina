@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Lumintik SAS — software studio";
+export const alt = "Lumintik SAS, software studio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -27,7 +27,7 @@ export default async function OpenGraphImage() {
             alignItems: "center",
             fontSize: 32,
             color: "#0f172a",
-            letterSpacing: 6,
+            letterSpacing: 0,
             fontWeight: 700,
           }}
         >
@@ -38,13 +38,13 @@ export default async function OpenGraphImage() {
           <div
             style={{
               fontSize: 24,
-              color: "#3b82f6",
-              letterSpacing: 4,
+              color: "#a3a3a3",
+              letterSpacing: 0,
               textTransform: "uppercase",
               fontWeight: 500,
             }}
           >
-            Software studio · 2026
+            Software studio, 2026
           </div>
           <div
             style={{
@@ -59,7 +59,7 @@ export default async function OpenGraphImage() {
             }}
           >
             <span>We build software that feels&nbsp;</span>
-            <span style={{ color: "#3b82f6" }}>inevitable.</span>
+            <span style={{ color: "#a3a3a3" }}>inevitable.</span>
           </div>
         </div>
 
@@ -72,7 +72,7 @@ export default async function OpenGraphImage() {
             fontSize: 24,
           }}
         >
-          <div>Samsung · Claro · Coca-Cola · EZDocuAI</div>
+          <div>Samsung, Claro, Coca-Cola, EZDocuAI</div>
           <div>lumintik.com</div>
         </div>
       </div>

@@ -1,175 +1,121 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useT } from "@/components/providers/LocaleProvider";
-import Spline from "@splinetool/react-spline";
+import { useCallback, useEffect, useState } from "react";
+import { useLocale, useT } from "@/components/providers/LocaleProvider";
+import { HeroDemo } from "@/components/hero/HeroDemo";
+import { NoiseBackground } from "@/components/ui/noise-background";
+import { HERO_SCENES } from "@/data/heroScenes";
+import { cn } from "@/lib/cn";
 
 /**
- * The opening screen. It scrolls away like any other section: the text is
- * white on the dark gradient, and the accent word rotates on a timer rather
- * than being driven by the scroll position.
+ * The opening screen. On the right, a product demo plays on a loop (a cursor
+ * wiring tools together until a result card flips in); on the left, the title
+ * and the line follow whichever scene is playing.
  */
 export function Hero() {
   const t = useT();
+  const { locale } = useLocale();
   const [started, setStarted] = useState(false);
-  const [accentIndex, setAccentIndex] = useState(0);
+  const [sceneIndex, setSceneIndex] = useState(0);
+  const [textVisible, setTextVisible] = useState(true);
+  // The rail fills over the scene's length; a new run key restarts the fill.
+  const [progress, setProgress] = useState<{ index: number; duration: number; run: number }>({ index: 0, duration: 0, run: 0 });
+  const [request, setRequest] = useState<{ index: number; nonce: number }>();
+  const scene = HERO_SCENES[sceneIndex];
 
-  const accents = t.hero.titleAccentRotations ?? [t.hero.titleAccent];
-
-  // Word entrance on load. Switching language navigates to another URL, so
-  // the page mounts again and the entrance plays again on its own.
   useEffect(() => {
     const id = setTimeout(() => setStarted(true), 80);
     return () => clearTimeout(id);
   }, []);
 
-  // Rotate the accent word every few seconds.
-  useEffect(() => {
-    if (accents.length < 2) return;
-    const id = setInterval(() => {
-      setAccentIndex((i) => (i + 1) % accents.length);
-    }, 2800);
-    return () => clearInterval(id);
-  }, [accents.length]);
+  // Crossfade the text when the demo moves to the next scene.
+  const onScene = useCallback((i: number, duration: number) => {
+    setProgress((p) => ({ index: i, duration, run: p.run + 1 }));
+    setTextVisible(false);
+    setTimeout(() => {
+      setSceneIndex(i);
+      setTextVisible(true);
+    }, 260);
+  }, []);
+
+  const goTo = (i: number) => setRequest((r) => ({ index: i, nonce: (r?.nonce ?? 0) + 1 }));
+
+  const reveal = (delay: number) => ({
+    opacity: started ? 1 : 0,
+    transform: started ? "translateY(0)" : "translateY(24px)",
+    transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+  });
 
   return (
     <header
       id="hero"
-      className="relative flex flex-col w-full min-h-screen px-6 md:px-20 pt-28 md:pt-32 pb-10 md:pb-6 overflow-hidden z-[2]"
+      className="relative flex flex-col justify-start w-full px-6 md:px-12 xl:px-20 pt-24 md:pt-28 pb-14 overflow-hidden z-[2]"
     >
-      <div className="relative flex flex-col flex-1 justify-between w-full max-w-[1880px] mx-auto pt-6 md:pt-6 xl:pt-16 pb-8 md:pb-12">
-        <div className="xl:max-w-[60%] text-center xl:text-left">
-          <span
-            className="block uppercase tracking-[0.2em] text-xs md:text-sm font-medium mb-5 md:mb-6 text-blue-300"
-            style={{
-              opacity: started ? 1 : 0,
-              transition: "opacity 0.6s ease 60ms",
-            }}
-          >
-            {t.hero.eyebrow}
-          </span>
-
-          <h1 className="text-white text-[40px] leading-[1.05] md:text-7xl md:leading-[1.05] xl:text-[clamp(5rem,5.3vw,6.75rem)] xl:leading-[1.04] font-semibold tracking-tight text-balance">
-            {t.hero.titleParts.map((text, i) => {
-              const delay = i * 60;
-              return (
-                <span
-                  key={text + i}
-                  className="inline-block overflow-hidden align-bottom"
-                  style={{ verticalAlign: "bottom" }}
+      {/* The rail: one stop per scene, the active one filling as it plays. */}
+      <nav aria-label={t.hero.rail} className="w-full max-w-[1600px] mx-auto mb-8 md:mb-10" style={reveal(200)}>
+        {/* On phones only the active label fits, so it sits above the tracks. */}
+        <p className="md:hidden mb-3 text-xs font-medium text-white text-center">{HERO_SCENES[progress.index].eyebrow[locale]}</p>
+        {/* One row always: every stop gets an equal column and the labels wrap instead. */}
+        <ol className="grid gap-x-3 md:gap-x-4" style={{ gridTemplateColumns: `repeat(${HERO_SCENES.length}, minmax(0, 1fr))` }}>
+          {HERO_SCENES.map((sc, i) => {
+            const active = i === progress.index;
+            return (
+              <li key={sc.id}>
+                <button
+                  type="button"
+                  onClick={() => goTo(i)}
+                  aria-current={active ? "step" : undefined}
+                  aria-label={sc.eyebrow[locale]}
+                  className={cn(
+                    "group flex h-full w-full flex-col justify-end text-left transition-colors duration-300",
+                    active ? "text-white" : "text-slate-500 hover:text-slate-300",
+                  )}
                 >
-                  <span
-                    className="inline-block"
-                    style={{
-                      opacity: started ? 1 : 0,
-                      transform: started ? "translateY(0)" : "translateY(100%)",
-                      transition: `opacity 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
-                    }}
-                  >
-                    {text}&nbsp;
+                  <span className="hidden md:flex min-h-[2.5em] items-end text-sm leading-tight font-medium text-balance">{sc.eyebrow[locale]}</span>
+                  <span className="md:mt-2.5 block h-[3px] w-full rounded-full bg-white/15 overflow-hidden">
+                    {active ? (
+                      <span
+                        key={progress.run}
+                        className="block h-full rounded-full bg-blue-300 hero-rail-fill"
+                        style={{ animationDuration: `${progress.duration}ms` }}
+                      />
+                    ) : null}
                   </span>
-                </span>
-              );
-            })}
-            <span className="text-blue-300">
-              <span
-                className="relative block xl:inline-block overflow-hidden align-bottom"
-                style={{
-                  verticalAlign: "bottom",
-                  minWidth: `${Math.max(...accents.map((w) => w.length))}ch`,
-                  height: "1.1em",
-                }}
-              >
-                {accents.map((word, i) => {
-                  const isActive = started && i === accentIndex;
-                  const isPast = i < accentIndex;
-                  let accentTransform = "translateY(110%)";
-                  if (isActive) accentTransform = "translateY(0)";
-                  else if (isPast) accentTransform = "translateY(-110%)";
-                  return (
-                    <span
-                      key={word + i}
-                      className="absolute inset-x-0 top-0 block whitespace-nowrap text-center xl:text-left"
-                      style={{
-                        opacity: isActive ? 1 : 0,
-                        transform: accentTransform,
-                        transition:
-                          "opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)",
-                      }}
-                    >
-                      {word}
-                    </span>
-                  );
-                })}
-              </span>
-            </span>
-          </h1>
-        </div>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
 
-        <style dangerouslySetInnerHTML={{ __html: `
-          spline-viewer::part(logo) { display: none !important; }
-          #logo { display: none !important; }
-        `}} />
-        <div
-          className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between xl:gap-8 mt-[300px] xl:mt-0 relative"
-          style={{
-            opacity: started ? 1 : 0,
-            transform: started ? "translateY(0)" : "translateY(30px)",
-            transition:
-              "opacity 0.8s cubic-bezier(0.22,1,0.36,1) 1100ms, transform 0.8s cubic-bezier(0.22,1,0.36,1) 1100ms",
-          }}
-        >
-          {/* Spline 3D scene anchored to the top of the description block so it pushes up on mobile */}
+      <div className="grid w-full max-w-[1600px] mx-auto gap-12 xl:grid-cols-[1.05fr_1fr] xl:gap-16 items-center">
+        {/* Text: the scene's eyebrow, title and line */}
+        <div className="text-center xl:text-left">
+
           <div
-            className="absolute left-1/2 flex items-center justify-center -translate-x-[50%] bottom-[100%] xl:left-auto xl:-translate-x-0 xl:right-[-80px] xl:bottom-full w-[390px] h-[480px] md:w-[460px] md:h-[560px] xl:w-[clamp(730px,48vw,940px)] xl:h-[clamp(730px,48vw,940px)] mb-[-75px] xl:mb-[-100px] pointer-events-none z-0"
             style={{
-              clipPath: "polygon(0% 0%, 100% 0%, 100% calc(100% - 70px), max(50%, calc(100% - 180px)) calc(100% - 70px), max(50%, calc(100% - 180px)) 100%, min(50%, 180px) 100%, min(50%, 180px) calc(100% - 70px), 0% calc(100% - 70px))"
+              opacity: started && textVisible ? 1 : 0,
+              transform: started && textVisible ? "translateY(0)" : "translateY(10px)",
+              transition: "opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)",
             }}
           >
-            {/* pointer-events-auto restores drag controls. scaleX(-1) mirrors the model. touch-none lets fingers orbit without scrolling the page. onWheelCapture stops zooming. */}
-            <div
-              className="absolute inset-0 w-full h-full pointer-events-none xl:pointer-events-auto xl:cursor-grab xl:active:cursor-grabbing xl:touch-none"
-              style={{ transform: "scaleX(-1)" }}
-              onWheelCapture={(e) => e.stopPropagation()}
-            >
-              <Spline scene="https://prod.spline.design/Hic65A1wo9S7zyNu/scene.splinecode?v=7" />
-            </div>
+            <h1 className="text-white text-[40px] leading-[1.05] md:text-6xl md:leading-[1.05] xl:text-[clamp(3.75rem,4.6vw,5.5rem)] xl:leading-[1.04] font-semibold tracking-tight text-balance max-w-[14ch] mx-auto xl:mx-0">
+              {scene.title[locale]}
+            </h1>
+            <p className="mt-6 text-slate-300 text-base md:text-xl leading-relaxed max-w-[46ch] mx-auto xl:mx-0">
+              {scene.line[locale]}
+            </p>
           </div>
 
-          <p className="text-slate-300 text-sm md:text-xl xl:text-[clamp(1.25rem,1.2vw,1.55rem)] leading-relaxed xl:max-w-[60%] z-10 relative pointer-events-auto">
-            {t.hero.description.lead}{" "}
-            <span className="font-medium text-white">{t.hero.description.matters}</span>
-            . {t.hero.description.buildingWith}{" "}
-            <a
-              href="https://www.samsung.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-300 hover:opacity-70 transition-opacity"
+          <div className="mt-10 flex flex-col sm:flex-row sm:items-stretch gap-3 justify-center xl:justify-start" style={reveal(520)}>
+            <NoiseBackground
+              containerClassName="w-full sm:w-fit rounded-full p-1.5"
+              gradientColors={["rgb(147, 197, 253)", "rgb(59, 130, 246)", "rgb(255, 255, 255)"]}
+              noiseIntensity={0.25}
             >
-              Samsung
-            </a>
-            ,{" "}
-            <a
-              href="https://www.claro.com.co/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-300 hover:opacity-70 transition-opacity"
-            >
-              Claro
-            </a>
-            {" "}
-            {t.hero.description.and}{" "}
-            <a href="#work" className="text-blue-300 hover:opacity-70 transition-opacity">
-              EZDocuAI
-            </a>
-            {"."}
-          </p>
-
-          <div className="flex flex-col items-start xl:items-end gap-2 xl:gap-4 relative w-full xl:w-auto">
-            <div className="flex flex-wrap flex-col xl:flex-row items-center gap-3 z-10 w-full xl:w-auto">
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 md:px-6 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-blue-300 transition-colors duration-300 w-full xl:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-slate-100 via-slate-100 to-white px-6 py-3 text-sm font-medium text-slate-900 shadow-[0px_2px_0px_0px_#ffffff_inset,0px_0.5px_1px_0px_#94a3b8] transition-all duration-100 active:scale-[0.98]"
               >
                 {t.hero.startProject}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -177,16 +123,26 @@ export function Hero() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </a>
-              <a
-                href="#services"
-                className="hidden xl:inline-flex items-center justify-center gap-2 px-5 py-3 md:px-6 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white/10 transition-colors duration-300 w-full xl:w-auto"
-              >
-                {t.hero.howWeWork}
-              </a>
-            </div>
+            </NoiseBackground>
+            <a
+              href="#services"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white/10 transition-colors duration-300 w-full sm:w-auto"
+            >
+              {t.hero.howWeWork}
+            </a>
           </div>
         </div>
+
+        {/* The demo */}
+        <div className="w-full max-w-[560px] mx-auto xl:max-w-none" style={reveal(300)}>
+          <HeroDemo locale={locale} onScene={onScene} request={request} />
+        </div>
       </div>
+
+      <style>{`
+        @keyframes hero-rail { from { width: 0; } to { width: 100%; } }
+        .hero-rail-fill { animation: hero-rail linear forwards; }
+      `}</style>
     </header>
   );
 }

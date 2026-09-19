@@ -155,7 +155,7 @@ export const CASES: CaseStudy[] = [
       items: [
         {
           title: { ES: "Resultados de la demo", EN: "Demo results" },
-          date: { ES: "30 de julio de 2026 · PASS", EN: "July 30, 2026 · PASS" },
+          date: { ES: "30 de julio de 2026, PASS", EN: "July 30, 2026, PASS" },
           href: "/documentos/ezmig-uscis-demo-results.pdf",
         },
         {

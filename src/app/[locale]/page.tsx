@@ -1,5 +1,7 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Hero } from "@/components/sections/Hero";
+import { ClientWall } from "@/components/sections/ClientWall";
+import { IndustriesSection } from "@/components/sections/IndustriesSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProjectsShowcase } from "@/components/sections/ProjectsShowcase";
 import { Footer } from "@/components/sections/Footer";
@@ -18,12 +20,16 @@ export default function Home() {
               "linear-gradient(180deg, #000000 0%, #0f172a 55%, #1e3a8a 100%)",
           }}
         >
-          <Hero />
+          <div className="w-full flex flex-col items-center">
+            <Hero />
+            <ClientWall />
+          </div>
         </div>
         <div
           id="content-rise"
           className="relative w-full bg-white z-[2] flex flex-col items-center"
         >
+          <IndustriesSection />
           <ServicesSection />
           <ProjectsShowcase />
           <MarqueeTape />
@@ -35,7 +41,7 @@ export default function Home() {
         className="relative w-full flex justify-center overflow-clip -mt-[100vh] md:-mt-[90vh] lg:-mt-[96vh] xl:-mt-[100vh] h-[200vh] md:h-[185vh] lg:h-[195vh] xl:h-[200vh]"
         style={{
           background:
-            "linear-gradient(180deg, #ffffff 0%, #93c5fd 12%, #3b82f6 26%, #1e3a8a 42%, #0f172a 65%, #0a0a0a 100%)",
+            "linear-gradient(180deg, #ffffff 0%, #d4d4d4 12%, #737373 26%, #262626 42%, #111111 65%, #0a0a0a 100%)",
         }}
       >
         <div className="sticky top-0 w-full h-screen flex flex-col items-stretch overflow-hidden">

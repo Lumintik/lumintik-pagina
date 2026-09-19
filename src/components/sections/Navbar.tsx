@@ -6,6 +6,14 @@ import { useLocale, useT } from "@/components/providers/LocaleProvider";
 import { toSegment } from "@/lib/locale";
 import { href, paths } from "@/lib/routes";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { MegaMenu, type MenuPanel } from "@/components/sections/MegaMenu";
+import { services } from "@/data/services";
+import { INDUSTRIES } from "@/data/industries";
+import { CASES } from "@/data/cases";
+import { POSTS } from "@/data/posts";
+import { FaBalanceScale, FaFileAlt, FaGraduationCap, FaNewspaper, FaShieldAlt, FaUsers } from "react-icons/fa";
+
+type NavEntry = { key: string; label: string; href: string; panel?: MenuPanel };
 
 export function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -18,14 +26,124 @@ export function Navbar() {
   // Every entry is a page of its own, in the language being read.
   const home = `/${toSegment(locale)}`;
   const contactHref = href(locale, paths.contact);
-  const navItems = [
-    { label: t.nav.home, href: home },
-    { label: t.nav.services, href: href(locale, paths.services) },
-    { label: t.nav.work, href: href(locale, paths.projects) },
-    { label: t.nav.team, href: href(locale, paths.team) },
+  const navItems: NavEntry[] = [
+    { key: "home", label: t.nav.home, href: home },
+    {
+      key: "services",
+      label: t.nav.services,
+      href: href(locale, paths.services),
+      panel: {
+        intro: t.menu.services,
+        columns: 4,
+        viewAll: { label: t.menu.viewAll, href: href(locale, paths.services) },
+        items: services.map((svc) => ({
+          key: svc.key,
+          label: t.services.items[svc.key].title,
+          desc: t.services.items[svc.key].desc,
+          href: href(locale, paths.service(svc.slug)),
+          image: svc.posterSrc,
+        })),
+      },
+    },
+    {
+      key: "industries",
+      label: t.nav.industries,
+      href: href(locale, paths.industries),
+      panel: {
+        intro: t.menu.industries,
+        columns: 4,
+        viewAll: { label: t.menu.viewAll, href: href(locale, paths.industries) },
+        items: INDUSTRIES.map((ind) => ({
+          key: ind.id,
+          label: t.industries.items[ind.id].category,
+          desc: t.industries.items[ind.id].title,
+          href: href(locale, paths.industries),
+          image: ind.image,
+        })),
+      },
+    },
+    {
+      key: "cases",
+      label: t.nav.cases,
+      href: href(locale, paths.cases),
+      panel: {
+        intro: t.menu.cases,
+        columns: 4,
+        viewAll: { label: t.menu.viewAll, href: href(locale, paths.cases) },
+        items: CASES.map((c) => {
+          const copy = c.copy[locale];
+          const cover = c.images[0] ?? c.cardImage;
+          return {
+            key: c.slug,
+            label: copy.client,
+            desc: copy.headline ?? copy.solution ?? undefined,
+            href: href(locale, paths.caseStudy(c.slug)),
+            image: cover?.src,
+          };
+        }),
+      },
+    },
+    { key: "projects", label: t.nav.work, href: href(locale, paths.projects) },
+    {
+      key: "company",
+      label: t.nav.company,
+      href: href(locale, paths.team),
+      panel: {
+        intro: t.menu.company,
+        columns: 4,
+        viewAll: { label: t.nav.team, href: href(locale, paths.team) },
+        items: [
+          { key: "team", label: t.nav.team, desc: t.menu.items.team, href: href(locale, paths.team), icon: <FaUsers /> },
+          { key: "governance", label: t.nav.governance, desc: t.menu.items.governance, href: href(locale, paths.governance), icon: <FaBalanceScale /> },
+          { key: "companyData", label: t.nav.companyData, desc: t.menu.items.companyData, href: href(locale, paths.governance, "datos"), icon: <FaFileAlt /> },
+          { key: "ethics", label: t.nav.ethics, desc: t.menu.items.ethics, href: href(locale, paths.ethics), icon: <FaShieldAlt /> },
+        ],
+      },
+    },
+    {
+      key: "resources",
+      label: t.nav.resources,
+      href: href(locale, paths.blog),
+      panel: {
+        intro: t.menu.resources,
+        columns: 4,
+        viewAll: { label: t.nav.blog, href: href(locale, paths.blog) },
+        items: [
+          { key: "blog", label: t.nav.blog, desc: t.menu.items.blog, href: href(locale, paths.blog), image: POSTS[0]?.cover.src },
+          { key: "news", label: t.nav.news, desc: t.menu.items.news, href: href(locale, paths.news), icon: <FaNewspaper /> },
+          { key: "education", label: t.nav.education, desc: t.menu.items.education, href: href(locale, paths.education), icon: <FaGraduationCap /> },
+        ],
+      },
+    },
   ];
 
-  const mobileNavItems = [...navItems, { label: t.nav.contact, href: contactHref }];
+  const [panelKey, setPanelKey] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openPanel = (key: string | null) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setPanelKey(key);
+  };
+  const closePanelSoon = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setPanelKey(null), 120);
+  };
+  const activePanel = navItems.find((n) => n.key === panelKey)?.panel ?? null;
+
+  // The mobile menu lists every entry, with a panel's cards nested under it.
+  const mobileNavItems = [
+    ...navItems.map((n) => ({ label: n.label, href: n.href, children: n.panel?.items.filter((i) => !i.image || n.key === "company" || n.key === "resources").map((i) => ({ label: i.label, href: i.href })) })),
+    { label: t.nav.contact, href: contactHref },
+  ];
+
+  // Close the panel with Escape.
+  useEffect(() => {
+    if (!panelKey) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPanelKey(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [panelKey]);
 
 
   useEffect(() => {
@@ -51,7 +169,8 @@ export function Navbar() {
     };
   }, []);
 
-  const scrolled = darkText;
+  // The bar reads dark on white while a panel is open, whatever the scroll.
+  const scrolled = darkText || panelKey !== null;
 
   // Lock body scroll when menu is open and close on Escape.
   useEffect(() => {
@@ -71,10 +190,9 @@ export function Navbar() {
   return (
     <>
       <header
+        onMouseLeave={closePanelSoon}
         className={`fixed top-0 left-0 right-0 z-[50] transition-all duration-500 ${
-          bgVisible
-            ? "bg-white/70 backdrop-blur-md border-b border-slate-200/60"
-            : "bg-transparent"
+          panelKey ? "bg-white" : bgVisible ? "bg-white/70 backdrop-blur-md" : "bg-transparent"
         }`}
         style={{
           opacity: mounted ? 1 : 0,
@@ -83,10 +201,10 @@ export function Navbar() {
             "opacity 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, background-color 0.4s, backdrop-filter 0.4s, border-color 0.4s",
         }}
       >
-        <div className="mx-auto flex items-center justify-between max-w-[1600px] w-full pl-10 pr-6 md:pl-20 md:pr-12 py-3 md:py-3">
+        <div className="mx-auto flex items-center justify-between max-w-[1600px] w-full pl-10 pr-6 md:pl-20 md:pr-12 min-[1400px]:pl-12 min-[1400px]:pr-8 py-3 md:py-3">
           <a
             href={home}
-            aria-label="Lumintik — home"
+            aria-label="Lumintik, home"
             className="inline-flex items-center select-none"
           >
             <span
@@ -109,27 +227,39 @@ export function Navbar() {
             </span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden min-[1400px]:flex items-center gap-1.5">
             {navItems.map((item) => (
               <a
-                key={item.label}
+                key={item.key}
                 href={item.href}
-                className={`relative text-sm font-medium px-4 py-2 rounded-full transition-colors duration-300 ${
-                  scrolled
-                    ? "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
+                onMouseEnter={() => openPanel(item.panel ? item.key : null)}
+                onFocus={() => openPanel(item.panel ? item.key : null)}
+                aria-haspopup={item.panel ? "true" : undefined}
+                aria-expanded={item.panel ? panelKey === item.key : undefined}
+                className={`relative inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium px-3.5 py-2 rounded-full transition-colors duration-300 ${
+                  panelKey === item.key
+                    ? "bg-slate-100 text-slate-900"
+                    : scrolled
+                      ? "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
                 {item.label}
+                {item.panel ? (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className={`transition-transform duration-300 ${panelKey === item.key ? "rotate-180" : ""}`}>
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                ) : null}
               </a>
             ))}
 
             <a
               href={contactHref}
-              className={`ml-1 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
+              onMouseEnter={() => openPanel(null)}
+              className={`ml-3 inline-flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full text-[13px] font-medium transition-colors duration-300 ${
                 scrolled
-                  ? "bg-slate-900 text-white hover:bg-blue-500"
-                  : "bg-white text-slate-900 hover:bg-blue-300"
+                  ? "bg-slate-900 text-white hover:bg-slate-700"
+                  : "bg-white text-slate-900 hover:bg-slate-200"
               }`}
             >
               {t.nav.contact}
@@ -153,8 +283,8 @@ export function Navbar() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
-            className={`md:hidden relative inline-flex items-center justify-center w-12 h-12 rounded-full z-[110] transition-colors duration-300 ${
-              scrolled ? "bg-transparent text-blue-500" : "bg-transparent text-white"
+            className={`min-[1400px]:hidden relative inline-flex items-center justify-center w-12 h-12 rounded-full z-[110] transition-colors duration-300 ${
+              scrolled ? "bg-transparent text-slate-500" : "bg-transparent text-white"
             }`}
           >
             <span
@@ -180,6 +310,13 @@ export function Navbar() {
             />
           </button>
         </div>
+
+        {/* The dropdown lives inside the bar so the pointer can travel into it */}
+        {activePanel ? (
+          <div onMouseEnter={() => openPanel(panelKey)} className="hidden min-[1400px]:block">
+            <MegaMenu panel={activePanel} open={panelKey !== null} onNavigate={() => setPanelKey(null)} />
+          </div>
+        ) : null}
       </header>
 
       <MobileMenu
@@ -197,7 +334,7 @@ export function Navbar() {
 type MobileMenuProps = {
   open: boolean;
   onClose: () => void;
-  items: { label: string; href: string }[];
+  items: { label: string; href: string; children?: { label: string; href: string }[] }[];
   contactHref: string;
   startLabel: string;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -245,7 +382,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
       aria-hidden={!open}
       inert={!open}
       onKeyDown={trapFocus}
-      className="md:hidden fixed inset-0 z-[100]"
+      className="min-[1400px]:hidden fixed inset-0 z-[100]"
       style={{
         pointerEvents: open ? "auto" : "none",
       }}
@@ -292,27 +429,35 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
           </button>
         </div>
 
-        <nav className="flex-1 flex flex-col justify-center px-8 gap-2">
+        <nav className="flex-1 overflow-y-auto flex flex-col justify-start px-8 py-4 gap-1">
           {items.map((item, i) => (
-            <a
+            <div
               key={item.label}
-              href={item.href}
-              onClick={onClose}
-              className="group flex items-center justify-between py-4 border-b border-slate-100"
               style={{
                 opacity: open ? 1 : 0,
                 transform: open ? "translateX(0)" : "translateX(20px)",
-                transition: `opacity 500ms cubic-bezier(0.22,1,0.36,1) ${200 + i * 60}ms, transform 500ms cubic-bezier(0.22,1,0.36,1) ${200 + i * 60}ms`,
+                transition: `opacity 500ms cubic-bezier(0.22,1,0.36,1) ${200 + i * 50}ms, transform 500ms cubic-bezier(0.22,1,0.36,1) ${200 + i * 50}ms`,
               }}
             >
-              <span className="text-slate-900 text-4xl font-semibold tracking-tight">
-                {item.label}
-              </span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-blue-500 transition-colors" aria-hidden>
-                <line x1="7" y1="17" x2="17" y2="7" />
-                <polyline points="7 7 17 7 17 17" />
-              </svg>
-            </a>
+              <a href={item.href} onClick={onClose} className="group flex items-center justify-between py-3">
+                <span className="text-slate-900 text-3xl font-semibold tracking-tight">{item.label}</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-slate-500 transition-colors" aria-hidden>
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </a>
+              {item.children?.length ? (
+                <ul className="mb-2 flex flex-wrap gap-x-5 gap-y-1 pl-1">
+                  {item.children.map((c) => (
+                    <li key={c.href + c.label}>
+                      <a href={c.href} onClick={onClose} className="text-slate-500 text-base hover:text-slate-900">
+                        {c.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           ))}
         </nav>
 
@@ -326,7 +471,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
           <a
             href={contactHref}
             onClick={onClose}
-            className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-slate-900 text-white text-base font-medium hover:bg-blue-500 transition-colors duration-300"
+            className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-slate-900 text-white text-base font-medium hover:bg-slate-700 transition-colors duration-300"
           >
             {startLabel}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

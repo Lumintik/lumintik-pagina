@@ -1,0 +1,761 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/cn";
+import type { Locale } from "@/lib/locale";
+import { FaBox, FaHome, FaStore, FaTruck } from "react-icons/fa";
+import { HERO_SCENES, type ChatLine, type Chip, type Field, type Pt, type Scene, type Stat, type Step, type Target } from "@/data/heroScenes";
+
+type Line = { id: string; from: Pt; to: Target };
+
+type Doc = { id: string; at: Pt; scanning: boolean; scanned: boolean };
+type Tag = Field & { key: string };
+type Chat = { at: Pt; lines: ChatLine[]; shown: number };
+type Shop = { id: string; at: Pt; product: string; price: string; button: string; done: string | null };
+type Route = { from: Pt; to: Pt; truckAt: Pt; arrived: boolean };
+type Form = { id: string; at: Pt; title: string; fields: string[]; filled: number };
+type Page = { id: string; at: Pt; /** Which block the visitor is on, 0 before they start. */ block: number; pressed: boolean };
+type Analytics = { at: Pt; title: string; kpis: { label: string; value: string }[]; series: number[]; bars: number[]; steps: string[]; shown: number };
+
+type Frame = {
+  chips: Chip[];
+  lines: Line[];
+  docs: Doc[];
+  fields: Tag[];
+  chat: Chat | null;
+  shop: Shop | null;
+  route: Route | null;
+  form: Form | null;
+  page: Page | null;
+  analytics: Analytics | null;
+  cursor: Pt;
+  cursorVisible: boolean;
+  clicking: boolean;
+  dragging: string | null;
+  stats: Stat[] | null;
+  /** Where the result card is: it starts in a corner and the cursor drags it to the centre. */
+  cardAt: Pt;
+  cardDragging: boolean;
+  leaving: boolean;
+};
+
+const CARD_CORNER: Pt = [86, 84];
+const CARD_CENTER: Pt = [50, 50];
+
+const EMPTY: Frame = {
+  chips: [],
+  lines: [],
+  docs: [],
+  fields: [],
+  chat: null,
+  shop: null,
+  route: null,
+  form: null,
+  page: null,
+  analytics: null,
+  cursor: [50, 90],
+  cursorVisible: false,
+  clicking: false,
+  dragging: null,
+  stats: null,
+  cardAt: CARD_CORNER,
+  cardDragging: false,
+  leaving: false,
+};
+
+const DEFAULT_DUR: Record<Step["t"], number> = {
+  chip: 400,
+  doc: 500,
+  scan: 1200,
+  extract: 900,
+  chat: 2400,
+  shop: 500,
+  buy: 700,
+  route: 2400,
+  form: 2600,
+  page: 500,
+  browse: 2600,
+  analytics: 3400,
+  cursor: 700,
+  click: 350,
+  lines: 800,
+  drag: 1100,
+  flip: 5400,
+  wait: 500,
+};
+
+/** How long a scene takes end to end, so a progress rail can follow it. */
+export function sceneDuration(scene: Scene, reduced = false): number {
+  const clamp = (ms: number) => (reduced ? Math.min(ms, 200) : ms);
+  const steps = scene.steps.reduce((sum, step) => {
+    const dur = step.dur ?? DEFAULT_DUR[step.t];
+    // A click pauses briefly before its own duration; a drag pauses inside it.
+    return sum + clamp(dur) + (step.t === "click" ? clamp(180) : 0);
+  }, 0);
+  return clamp(350) + steps + clamp(450);
+}
+
+/**
+ * Plays the hero scenes on a loop: chips appear, a cursor clicks and drags
+ * them, lines draw out to services, and a card flips in with the result.
+ * Reports the active scene so the text beside it can follow.
+ */
+export function HeroDemo({
+  locale,
+  onScene,
+  request,
+  className,
+}: {
+  locale: Locale;
+  /** Called when a scene starts, with how long it will play. */
+  onScene?: (index: number, duration: number) => void;
+  /** A scene someone asked for; a new `nonce` restarts there even if it is the same scene. */
+  request?: { index: number; nonce: number };
+  className?: string;
+}) {
+  const [frame, setFrame] = useState<Frame>(EMPTY);
+  const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  // The lines are drawn in pixels, so the stage's size is measured.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setSize({ w: width, h: height });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // One token per run: a strict-mode remount must not leave the first loop alive.
+    const cancelled = { current: false };
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let sceneI = request?.index ?? 0;
+
+    const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, reduced ? Math.min(ms, 200) : ms));
+
+    async function playScene(i: number) {
+      const scene = HERO_SCENES[i];
+      onScene?.(i, sceneDuration(scene, reduced));
+      let f: Frame = { ...EMPTY };
+      const chipAt = (id: string) =>
+        f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? (f.shop?.id === id ? f.shop.at : undefined) ?? (f.form?.id === id ? f.form.at : undefined) ?? (f.page?.id === id ? f.page.at : undefined) ?? f.cursor;
+      setFrame(f);
+      await sleep(350);
+
+      for (const step of scene.steps) {
+        if (cancelled.current) return;
+        const dur = step.dur ?? DEFAULT_DUR[step.t];
+        switch (step.t) {
+          case "chip":
+            f = { ...f, chips: [...f.chips, step.chip] };
+            break;
+          case "cursor":
+            f = { ...f, cursor: step.to, cursorVisible: true };
+            break;
+          case "click":
+            f = { ...f, clicking: true };
+            setFrame(f);
+            await sleep(180);
+            f = { ...f, clicking: false };
+            break;
+          case "doc":
+            f = { ...f, docs: [...f.docs, { id: step.id, at: step.at, scanning: false, scanned: false }] };
+            break;
+          case "scan":
+            f = { ...f, docs: f.docs.map((d) => (d.id === step.id ? { ...d, scanning: true } : d)) };
+            setFrame(f);
+            await sleep(dur);
+            f = { ...f, docs: f.docs.map((d) => (d.id === step.id ? { ...d, scanning: false, scanned: true } : d)) };
+            setFrame(f);
+            continue;
+          case "extract": {
+            // The tags start on the document and slide out to their places.
+            const from = chipAt(step.from);
+            const base = f.fields.length;
+            const key = (k: number) => `${step.from}-${k}-${base}`;
+            f = { ...f, fields: [...f.fields, ...step.fields.map((fl, k) => ({ ...fl, at: from, key: key(k) }))] };
+            setFrame(f);
+            await sleep(60);
+            if (cancelled.current) return;
+            f = { ...f, fields: f.fields.map((fl) => { const i = step.fields.findIndex((_, k) => key(k) === fl.key); return i >= 0 ? { ...fl, at: step.fields[i].at } : fl; }) };
+            break;
+          }
+          case "chat": {
+            f = { ...f, chat: { at: step.at, lines: step.lines, shown: 0 } };
+            setFrame(f);
+            const each = dur / (step.lines.length + 1);
+            for (let k = 1; k <= step.lines.length; k++) {
+              await sleep(each);
+              if (cancelled.current) return;
+              f = { ...f, chat: f.chat ? { ...f.chat, shown: k } : null };
+              setFrame(f);
+            }
+            await sleep(each);
+            continue;
+          }
+          case "shop":
+            f = { ...f, shop: { id: step.id, at: step.at, product: step.product[locale], price: step.price, button: step.button[locale], done: null } };
+            break;
+          case "buy":
+            f = { ...f, shop: f.shop && f.shop.id === step.id ? { ...f.shop, done: step.done[locale] } : f.shop };
+            break;
+          case "route": {
+            // Markers first, then the truck drives over.
+            f = { ...f, route: { from: step.from, to: step.to, truckAt: step.from, arrived: false } };
+            setFrame(f);
+            await sleep(400);
+            if (cancelled.current) return;
+            f = { ...f, route: { ...f.route!, truckAt: step.to } };
+            setFrame(f);
+            await sleep(dur - 400);
+            if (cancelled.current) return;
+            f = { ...f, route: { ...f.route!, arrived: true } };
+            setFrame(f);
+            await sleep(300);
+            continue;
+          }
+          case "form": {
+            f = { ...f, form: { id: step.id, at: step.at, title: step.title[locale], fields: step.fields.map((fl) => fl[locale]), filled: 0 } };
+            setFrame(f);
+            const each = dur / (step.fields.length + 1);
+            await sleep(each);
+            for (let k = 1; k <= step.fields.length; k++) {
+              if (cancelled.current) return;
+              f = { ...f, form: f.form ? { ...f.form, filled: k } : null };
+              setFrame(f);
+              await sleep(each);
+            }
+            continue;
+          }
+          case "page":
+            f = { ...f, page: { id: step.id, at: step.at, block: 0, pressed: false } };
+            break;
+          case "browse": {
+            // The visitor reads three blocks, then presses the button.
+            const each = dur / 4;
+            for (let k = 1; k <= 3; k++) {
+              f = { ...f, page: f.page ? { ...f.page, block: k } : null };
+              setFrame(f);
+              await sleep(each);
+              if (cancelled.current) return;
+            }
+            f = { ...f, page: f.page ? { ...f.page, pressed: true } : null };
+            setFrame(f);
+            await sleep(each);
+            continue;
+          }
+          case "analytics": {
+            f = { ...f, analytics: { at: step.at, title: step.title[locale], kpis: step.kpis.map((k) => ({ label: k.label[locale], value: k.value })), series: step.series, bars: step.bars, steps: step.steps.map((st) => st[locale]), shown: 0 } };
+            setFrame(f);
+            const each = dur / (step.steps.length + 2);
+            await sleep(each);
+            for (let k = 1; k <= step.steps.length; k++) {
+              if (cancelled.current) return;
+              f = { ...f, analytics: f.analytics ? { ...f.analytics, shown: k } : null };
+              setFrame(f);
+              await sleep(each);
+            }
+            await sleep(each);
+            continue;
+          }
+          case "lines": {
+            const from = chipAt(step.from);
+            const fresh = step.to.map((to, k) => ({ id: `${step.from}-${k}-${f.lines.length}`, from, to }));
+            f = { ...f, lines: [...f.lines, ...fresh] };
+            break;
+          }
+          case "drag": {
+            // Cursor goes to the chip, grabs it, and both move to the target.
+            f = { ...f, chips: [...f.chips, step.chip], cursor: step.chip.at, cursorVisible: true };
+            setFrame(f);
+            await sleep(600);
+            if (cancelled.current) return;
+            f = {
+              ...f,
+              dragging: step.chip.id,
+              cursor: step.to,
+              chips: f.chips.map((c) => (c.id === step.chip.id ? { ...c, at: step.to } : c)),
+            };
+            setFrame(f);
+            await sleep(dur - 600);
+            f = { ...f, dragging: null };
+            setFrame(f);
+            continue;
+          }
+          case "flip": {
+            // The cursor goes to the corner, the card appears under it, and
+            // both travel to the centre; the wiring stays on the stage behind.
+            f = { ...f, cursor: CARD_CORNER, cursorVisible: true };
+            setFrame(f);
+            await sleep(650);
+            if (cancelled.current) return;
+            f = { ...f, stats: step.stats, cardAt: CARD_CORNER, cardDragging: true };
+            setFrame(f);
+            await sleep(300);
+            if (cancelled.current) return;
+            f = { ...f, cardAt: CARD_CENTER, cursor: CARD_CENTER };
+            setFrame(f);
+            await sleep(950);
+            if (cancelled.current) return;
+            f = { ...f, cardDragging: false, cursorVisible: false };
+            setFrame(f);
+            await sleep(Math.max(0, dur - 1900));
+            continue;
+          }
+          case "wait":
+            break;
+        }
+        setFrame(f);
+        await sleep(dur);
+      }
+
+      if (cancelled.current) return;
+      setFrame({ ...f, leaving: true });
+      await sleep(700);
+    }
+
+    (async () => {
+      while (!cancelled.current) {
+        await playScene(sceneI);
+        sceneI = (sceneI + 1) % HERO_SCENES.length;
+      }
+    })();
+
+    return () => {
+      cancelled.current = true;
+    };
+  }, [onScene, request, locale]);
+
+  const pct = (p: Pt) => ({ left: `${p[0]}%`, top: `${p[1]}%` });
+  // Everything on the stage dims behind the result card and blurs away when the scene leaves.
+  const fade = frame.leaving ? "opacity-0 blur-[3px]" : frame.stats ? "opacity-60" : "opacity-100";
+  const px = (p: Pt): Pt => [(p[0] / 100) * size.w, (p[1] / 100) * size.h];
+
+  return (
+    <div
+      ref={stageRef}
+      aria-hidden
+      className={cn(
+        "relative w-full aspect-[4/3] overflow-hidden rounded-2xl border border-white/10",
+        "bg-[radial-gradient(120%_90%_at_30%_10%,rgba(59,130,246,0.22),rgba(15,23,42,0)_60%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]",
+        "shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]",
+        className,
+      )}
+    >
+      {/* Faint grid, like a canvas */}
+      <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)] [background-size:32px_32px]" />
+
+      {/* Lines drawn out to services, in pixels so they land exactly on the chips */}
+      <svg
+        className={cn("absolute inset-0 h-full w-full transition-[opacity,filter] duration-500", fade)}
+        viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}
+      >
+        {size.w > 0 &&
+          frame.lines.map((l) => {
+            const [x1, y1] = px(l.from);
+            const [x2, y2] = px(l.to.at);
+            const mx = (x1 + x2) / 2;
+            const d = `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+            return (
+              <g key={l.id}>
+                <path
+                  d={d}
+                  pathLength={1}
+                  fill="none"
+                  stroke="rgba(147,197,253,0.9)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  style={{ strokeDasharray: 1, strokeDashoffset: 1, animation: "hero-draw 700ms ease-out forwards" }}
+                />
+                {/* A bare end gets a dot; a labelled one gets the service chip below. */}
+                {l.to.label ? null : (
+                  <circle cx={x2} cy={y2} r="4" fill="#93c5fd" style={{ animation: "hero-fade 300ms 500ms ease-out both" }} />
+                )}
+              </g>
+            );
+          })}
+      </svg>
+
+      {/* The services at the end of the lines, popping in once the line gets there */}
+      {frame.lines.map((l) =>
+        l.to.label ? (
+          <div
+            key={`${l.id}-svc`}
+            className={cn(
+              "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap",
+              "bg-slate-950/70 border-blue-300/25 text-blue-100 backdrop-blur transition-all duration-400",
+              fade,
+            )}
+            style={{ ...pct(l.to.at), animation: "hero-pop 380ms 520ms cubic-bezier(.22,1,.36,1) backwards" }}
+          >
+            {l.to.icon}
+            {l.to.label}
+          </div>
+        ) : null,
+      )}
+
+      {/* Documents, with a scan line while they are read */}
+      {frame.docs.map((d) => (
+        <div
+          key={d.id}
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[22%] min-w-[96px] aspect-[3/4] overflow-hidden rounded-lg bg-white p-2.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(d.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="h-1.5 w-1/2 rounded bg-slate-800" />
+          {[0.9, 0.75, 0.85, 0.6, 0.8, 0.5].map((w, i) => (
+            <div key={i} className={cn("mt-1.5 h-1 rounded transition-colors duration-500", d.scanned ? "bg-blue-200" : "bg-slate-200")} style={{ width: `${w * 100}%` }} />
+          ))}
+          {d.scanned ? (
+            <span className="absolute right-1.5 bottom-1.5 flex size-4 items-center justify-center rounded-full bg-emerald-500 text-white" style={{ animation: "hero-pop 300ms both" }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+            </span>
+          ) : null}
+          {d.scanning ? (
+            <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-transparent via-blue-300/40 to-blue-400 hero-scan" />
+          ) : null}
+        </div>
+      ))}
+
+      {/* Fields pulled out of a document */}
+      {frame.fields.map((fl) => (
+        <div
+          key={fl.key}
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-md border border-emerald-300/30 bg-slate-950/70 px-2.5 py-1 text-[11px] font-medium text-emerald-100 backdrop-blur whitespace-nowrap",
+            fade,
+          )}
+          style={{ ...pct(fl.at), transition: "left 700ms cubic-bezier(.22,1,.36,1), top 700ms cubic-bezier(.22,1,.36,1), opacity 400ms, filter 400ms" }}
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+          {fl.label[locale]}
+        </div>
+      ))}
+
+      {/* Chat panel: the lines type in one at a time */}
+      {frame.chat ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] flex flex-col gap-1.5 rounded-xl border border-black/10 bg-[#efe7dd] p-2.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.chat.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          {frame.chat.lines.slice(0, frame.chat.shown).map((line, i) => (
+            <div
+              key={i}
+              className={cn(
+                "max-w-[92%] rounded-lg px-2.5 py-1.5 text-[11px] leading-snug",
+                line.who === "user" && "self-end bg-white text-slate-900 shadow-[0_1px_1px_rgba(0,0,0,0.08)]",
+                line.who === "bot" && "self-start bg-[#d9fdd3] text-slate-900 shadow-[0_1px_1px_rgba(0,0,0,0.08)]",
+                line.who === "done" && "self-center inline-flex items-center gap-1.5 bg-[#fff5c4] text-slate-700 text-[10px]",
+              )}
+              style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}
+            >
+              {line.who === "done" ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+              ) : null}
+              {line.text[locale]}
+            </div>
+          ))}
+          {frame.chat.shown < frame.chat.lines.length ? (
+            <div className="self-start flex gap-1 px-2 py-1.5">
+              {[0, 1, 2].map((k) => <span key={k} className="size-1 rounded-full bg-slate-500 hero-dot" style={{ animationDelay: `${k * 160}ms` }} />)}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {/* Storefront screen */}
+      {frame.shop ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[30%] min-w-[140px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.shop.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="flex items-center gap-1 bg-slate-100 px-2 py-1.5">
+            {[0, 1, 2].map((k) => <span key={k} className="size-1.5 rounded-full bg-slate-300" />)}
+          </div>
+          <div className="p-2.5">
+            <div className="h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300" />
+            <p className="mt-2 text-[11px] font-semibold leading-tight">{frame.shop.product}</p>
+            <p className="text-[11px] text-slate-500">{frame.shop.price}</p>
+            <div
+              className={cn(
+                "mt-2 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-[11px] font-medium text-white transition-colors duration-300",
+                frame.shop.done ? "bg-emerald-500" : "bg-slate-950",
+                frame.clicking && !frame.shop.done ? "scale-95" : "",
+              )}
+            >
+              {frame.shop.done ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+              ) : null}
+              {frame.shop.done ?? frame.shop.button}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Route: the store, the customer and the truck between them */}
+      {frame.route ? (
+        <>
+          <svg className={cn("absolute inset-0 h-full w-full transition-[opacity,filter] duration-500", fade)} viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}>
+            {size.w > 0 ? (() => {
+              const [x1, y1] = px(frame.route!.from);
+              const [x2, y2] = px(frame.route!.to);
+              return (
+                <path
+                  d={`M ${x1} ${y1} C ${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2} ${y2}`}
+                  fill="none"
+                  stroke="rgba(147,197,253,0.6)"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 5"
+                  strokeLinecap="round"
+                  style={{ animation: "hero-fade 300ms ease-out both" }}
+                />
+              );
+            })() : null}
+          </svg>
+          {[
+            { at: frame.route.from, icon: <FaStore />, key: "a" },
+            { at: frame.route.to, icon: <FaHome />, key: "b" },
+          ].map((m) => (
+            <span
+              key={m.key}
+              className={cn(
+                "absolute -translate-x-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full border border-blue-300/40 bg-slate-950/80 text-blue-200 text-xs transition-[opacity,filter] duration-500",
+                fade,
+                m.key === "b" && frame.route?.arrived ? "border-emerald-300/60 text-emerald-300" : "",
+              )}
+              style={{ ...pct(m.at), animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}
+            >
+              {m.icon}
+            </span>
+          ))}
+          <span
+            className={cn(
+              "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-slate-900 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+              fade,
+            )}
+            style={{
+              ...pct(frame.route.truckAt),
+              transition: "left 2000ms cubic-bezier(.45,0,.2,1), top 2000ms cubic-bezier(.45,0,.2,1), opacity 500ms",
+              animation: "hero-pop 300ms 200ms cubic-bezier(.22,1,.36,1) backwards",
+            }}
+          >
+            <FaTruck className="text-sm text-blue-600" />
+            <FaBox className="text-[10px] text-amber-600" />
+          </span>
+        </>
+      ) : null}
+
+      {/* Form: each row fills in and gets its check */}
+      {frame.form ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.form.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="bg-slate-100 px-3 py-1.5 text-[11px] font-semibold">{frame.form.title}</div>
+          <div className="flex flex-col gap-2 p-3">
+            {frame.form.fields.map((label, i) => {
+              const done = i < frame.form!.filled;
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <p className="text-[9px] text-slate-500">{label}</p>
+                    <div className="mt-0.5 h-2 w-full rounded-sm bg-slate-100 overflow-hidden">
+                      <div className="h-full rounded-sm bg-blue-400 transition-[width] duration-500 ease-out" style={{ width: done ? `${70 + ((i * 13) % 30)}%` : "0%" }} />
+                    </div>
+                  </div>
+                  <span className={cn("flex size-4 items-center justify-center rounded-full text-white transition-colors duration-300", done ? "bg-emerald-500" : "bg-slate-200")}>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Website in a browser window; the block being read lights up */}
+      {frame.page ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[32%] min-w-[150px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.page.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="flex items-center gap-1 bg-slate-100 px-2 py-1.5">
+            {[0, 1, 2].map((k) => <span key={k} className="size-1.5 rounded-full bg-slate-300" />)}
+            <span className="ml-2 h-2 flex-1 rounded-sm bg-white" />
+          </div>
+          <div className="p-2.5">
+            {/* The page scrolls as the visitor reads on */}
+            <div className="flex flex-col gap-2 transition-transform duration-500 ease-out" style={{ transform: `translateY(-${Math.max(0, frame.page.block - 1) * 14}px)` }}>
+              <div className={cn("flex items-center justify-between rounded-md px-2 py-1 transition-colors duration-300", frame.page.block === 1 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
+                <span className="h-1.5 w-8 rounded bg-slate-800" />
+                <span className="flex gap-1">{[0, 1, 2].map((k) => <span key={k} className="h-1 w-4 rounded bg-slate-300" />)}</span>
+              </div>
+              <div className={cn("rounded-md p-2 transition-colors duration-300", frame.page.block === 2 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
+                <div className="h-2 w-3/4 rounded bg-slate-800" />
+                <div className="mt-1 h-1.5 w-1/2 rounded bg-slate-300" />
+                <div className="mt-2 h-8 rounded bg-gradient-to-br from-slate-200 to-slate-300" />
+              </div>
+              <div className={cn("grid grid-cols-3 gap-1.5 rounded-md p-2 transition-colors duration-300", frame.page.block === 3 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
+                {[0, 1, 2].map((k) => (
+                  <div key={k} className={cn("rounded border p-1.5", k === 1 ? "border-slate-800" : "border-slate-200")}>
+                    <div className="h-1 w-2/3 rounded bg-slate-400" />
+                    <div className="mt-1 h-1.5 w-1/2 rounded bg-slate-800" />
+                  </div>
+                ))}
+              </div>
+              <div className={cn("mx-auto w-2/3 rounded-md py-1.5 text-center text-[10px] font-medium text-white transition-all duration-300", frame.page.pressed ? "bg-emerald-500" : "bg-slate-950")}>
+                {frame.page.pressed ? "✓" : "→"}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Analytics: metrics, a trend line, a funnel and the visitor's steps */}
+      {frame.analytics ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[44%] min-w-[200px] rounded-xl border border-white/10 bg-slate-950/85 p-3 text-white backdrop-blur transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.analytics.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <p className="text-[11px] font-semibold">{frame.analytics.title}</p>
+          <div className="mt-2 grid grid-cols-3 gap-1.5">
+            {frame.analytics.kpis.map((k, i) => (
+              <div key={k.label} className="rounded-md bg-white/5 px-2 py-1.5" style={{ animation: `hero-pop 300ms ${i * 120}ms cubic-bezier(.22,1,.36,1) backwards` }}>
+                <p className="text-[9px] text-white/60">{k.label}</p>
+                <p className="text-sm font-semibold leading-tight">{k.value}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 grid grid-cols-[1.4fr_1fr] gap-2">
+            <svg viewBox="0 0 100 40" className="h-12 w-full" preserveAspectRatio="none">
+              {(() => {
+                const pts = frame.analytics!.series.map((v, i, a) => [(i / (a.length - 1)) * 100, 38 - (v / 100) * 36] as const);
+                const d = pts.map(([x, y], i) => `${i ? "L" : "M"} ${x} ${y}`).join(" ");
+                return (
+                  <>
+                    <path d={`${d} L 100 40 L 0 40 Z`} fill="rgba(96,165,250,0.15)" style={{ animation: "hero-fade 600ms 400ms both" }} />
+                    <path d={d} fill="none" stroke="#93c5fd" strokeWidth="1.5" vectorEffect="non-scaling-stroke" pathLength={1} style={{ strokeDasharray: 1, strokeDashoffset: 1, animation: "hero-draw 1400ms 300ms ease-out forwards" }} />
+                  </>
+                );
+              })()}
+            </svg>
+            <div className="flex h-12 items-end gap-1">
+              {frame.analytics.bars.map((v, i) => (
+                <div key={i} className="flex-1 rounded-t-sm bg-gradient-to-t from-emerald-500 to-emerald-300 transition-[height] duration-500 ease-out" style={{ height: frame.analytics!.shown > 0 ? `${v}%` : "0%", transitionDelay: `${i * 120}ms` }} />
+              ))}
+            </div>
+          </div>
+          <ol className="mt-2 flex flex-col gap-1">
+            {frame.analytics.steps.slice(0, frame.analytics.shown).map((st, i) => (
+              <li key={st} className="flex items-center gap-1.5 text-[10px] text-white/80" style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}>
+                <span className="size-1.5 rounded-full bg-blue-300" />
+                <span className="text-white/40 tabular-nums">{`0${i + 1}`}</span>
+                {st}
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : null}
+
+      {/* Chips */}
+      {frame.chips.map((c) => (
+        <div
+          key={c.id}
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-medium whitespace-nowrap",
+            "bg-slate-900/80 border-white/15 text-white backdrop-blur",
+            frame.dragging === c.id ? "scale-105 border-blue-300/60 shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]" : "",
+            fade,
+          )}
+          style={{
+            ...pct(c.at),
+            transition: "left 900ms cubic-bezier(.22,1,.36,1), top 900ms cubic-bezier(.22,1,.36,1), opacity 400ms, filter 400ms, transform 400ms",
+            animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards",
+          }}
+        >
+          {c.icon}
+          {c.label}
+        </div>
+      ))}
+
+      {/* Result card, dragged in from the corner */}
+      <div
+        className={cn(
+          "absolute -translate-x-1/2 -translate-y-1/2 w-[78%] max-w-[360px] overflow-hidden rounded-3xl p-6 text-white",
+          // Liquid glass: what is behind shows through blurred and saturated,
+          // a bright rim on top, a soft one below, and a sheen across the face.
+          "border border-white/30 bg-white/[0.12] backdrop-blur-2xl backdrop-saturate-[1.8]",
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(255,255,255,0.12),inset_1px_0_0_rgba(255,255,255,0.18),0_30px_60px_-20px_rgba(0,0,0,0.6)]",
+          "transition-[left,top,scale,opacity,filter,translate] duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)]",
+          frame.stats && !frame.leaving ? "opacity-100" : "opacity-0",
+          frame.leaving ? "scale-90 blur-md -translate-y-[60%]" : frame.stats && frame.cardDragging ? "scale-[0.55]" : "scale-100",
+        )}
+        style={{ ...pct(frame.cardAt), pointerEvents: "none", transformOrigin: "center" }}
+      >
+        <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.35)_0%,rgba(255,255,255,0.08)_35%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.12)_100%)]" />
+        <span className="pointer-events-none absolute -top-1/2 -left-1/4 h-full w-1/2 rotate-12 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)] blur-md hero-sheen" />
+        <div className="relative flex flex-col gap-4">
+          {(frame.stats ?? []).map((s, i) => (
+            <div key={i}>
+              <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">{typeof s.big === "string" ? s.big : s.big[locale]}</p>
+              <p className="mt-1.5 text-sm text-white/75">{s.small[locale]}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Cursor */}
+      <div
+        className="absolute z-10"
+        style={{
+          ...pct(frame.cursor),
+          opacity: frame.cursorVisible ? 1 : 0,
+          transition: "left 650ms cubic-bezier(.22,1,.36,1), top 650ms cubic-bezier(.22,1,.36,1), opacity 300ms",
+        }}
+      >
+        <span
+          className={cn(
+            "absolute -left-3 -top-3 size-6 rounded-full border-2 border-blue-300 transition-all duration-300",
+            frame.clicking ? "scale-150 opacity-0" : "scale-50 opacity-0",
+          )}
+        />
+        <svg width="22" height="22" viewBox="0 0 24 24" className={cn("drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)] transition-transform duration-150", frame.clicking ? "scale-90" : "")}>
+          <path d="M5 3l14 8-6 1.5L16 19l-2.5 1-3-6.5L6 18z" fill="#fff" stroke="#0f172a" strokeWidth="1.2" strokeLinejoin="round" />
+        </svg>
+      </div>
+
+      <style>{`
+        @keyframes hero-draw { to { stroke-dashoffset: 0; } }
+        @keyframes hero-pop { from { opacity: 0; scale: 0.7; } to { opacity: 1; scale: 1; } }
+        @keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes hero-scan { from { transform: translateY(-100%); } to { transform: translateY(300%); } }
+        .hero-scan { animation: hero-scan 1200ms ease-in-out infinite; }
+        @keyframes hero-dot { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+        .hero-dot { animation: hero-dot 1s infinite; }
+        @keyframes hero-sheen { from { transform: translate(-60%, 0) rotate(12deg); } to { transform: translate(340%, 60%) rotate(12deg); } }
+        .hero-sheen { animation: hero-sheen 2.8s 600ms ease-in-out infinite; }
+      `}</style>
+    </div>
+  );
+}
