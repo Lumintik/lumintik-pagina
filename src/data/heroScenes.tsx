@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FaAws, FaBoxes, FaDatabase, FaServer, FaStore, FaTruck } from "react-icons/fa";
+import { FaAws, FaBoxes, FaDatabase, FaServer, FaStore } from "react-icons/fa";
 import {
   SiClaude,
   SiCloudflare,
@@ -58,6 +58,12 @@ export type Step =
   | { t: "extract"; from: string; fields: Field[]; dur?: number }
   /** A chat panel where the lines type in one by one. */
   | { t: "chat"; at: Pt; lines: ChatLine[]; dur?: number }
+  /** A small storefront screen with one product and a buy button. */
+  | { t: "shop"; id: string; at: Pt; product: Record<Locale, string>; price: string; button: Record<Locale, string>; dur?: number }
+  /** The storefront confirms the order. */
+  | { t: "buy"; id: string; done: Record<Locale, string>; dur?: number }
+  /** A truck with a box drives from the store to the customer. */
+  | { t: "route"; from: Pt; to: Pt; dur?: number }
   | { t: "cursor"; to: Pt; dur?: number }
   | { t: "click"; dur?: number }
   | { t: "lines"; from: string; to: Target[]; dur?: number }
@@ -177,23 +183,28 @@ export const HERO_SCENES: Scene[] = [
     eyebrow: { ES: "Operación a escala real", EN: "Operations at real scale" },
     title: { ES: "Toda la red, un solo inventario", EN: "The whole network, one inventory" },
     line: {
-      ES: "Un algoritmo cruza el stock de cada tienda con la distancia real al cliente y elige la tienda óptima.",
-      EN: "An algorithm matches each store's stock against the real distance to the customer and picks the best store.",
+      ES: "Una compra en línea, el algoritmo elige la tienda con stock más cercana y el pedido sale hacia el cliente.",
+      EN: "An online purchase, the algorithm picks the closest store with stock and the order leaves for the customer.",
     },
     steps: [
-      { t: "chip", chip: { id: "next", label: "Next.js", icon: icon(<SiNextdotjs style={{ color: "#fff" }} />), at: [22, 28] }, dur: 400 },
-      { t: "chip", chip: { id: "nest", label: "NestJS", icon: icon(<SiNestjs style={{ color: "#E0234E" }} />), at: [22, 52] }, dur: 400 },
-      { t: "cursor", to: [22, 52], dur: 700 },
-      { t: "click", dur: 350 },
+      // Someone buys on the store.
+      { t: "shop", id: "shop", at: [22, 34], product: { ES: "Smartphone 256 GB", EN: "Smartphone 256 GB" }, price: "$ 1.299.000", button: { ES: "Comprar", EN: "Buy" }, dur: 500 },
+      { t: "cursor", to: [22, 46], dur: 700 },
+      { t: "click", dur: 300 },
+      { t: "buy", id: "shop", done: { ES: "Pedido confirmado", EN: "Order confirmed" }, dur: 700 },
+      // The back end takes it and works out where it ships from.
+      { t: "chip", chip: { id: "nest", label: "NestJS", icon: icon(<SiNestjs style={{ color: "#E0234E" }} />), at: [22, 72] }, dur: 300 },
+      { t: "lines", from: "shop", to: [{ at: [22, 72] }], dur: 400 },
       { t: "lines", from: "nest", to: [
-        { at: [56, 30], label: "Inventario", icon: icon(<FaBoxes style={{ color: "#93c5fd" }} />) },
-        { at: [60, 52], label: "Tiendas", icon: icon(<FaStore style={{ color: "#93c5fd" }} />) },
-        { at: [56, 74], label: "Pedidos", icon: icon(<FaTruck style={{ color: "#93c5fd" }} />) },
-      ], dur: 900 },
-      { t: "drag", chip: { id: "maps", label: "Distance Matrix", icon: icon(<SiGooglemaps style={{ color: "#4285F4" }} />), at: [70, 88] }, to: [72, 60], dur: 1100 },
-      { t: "chip", chip: { id: "redis", label: "Redis", icon: icon(<SiRedis style={{ color: "#DC382D" }} />), at: [74, 28] }, dur: 300 },
-      { t: "lines", from: "maps", to: [{ at: [74, 28] }], dur: 600 },
-      { t: "wait", dur: 500 },
+        { at: [50, 62], label: "Inventario", icon: icon(<FaBoxes style={{ color: "#93c5fd" }} />) },
+        { at: [52, 76], label: "Tiendas", icon: icon(<FaStore style={{ color: "#93c5fd" }} />) },
+      ], dur: 800 },
+      { t: "drag", chip: { id: "maps", label: "Distance Matrix", icon: icon(<SiGooglemaps style={{ color: "#4285F4" }} />), at: [70, 96] }, to: [56, 90], dur: 1000 },
+      { t: "chip", chip: { id: "redis", label: "Redis", icon: icon(<SiRedis style={{ color: "#DC382D" }} />), at: [82, 76] }, dur: 300 },
+      { t: "lines", from: "maps", to: [{ at: [82, 76] }], dur: 500 },
+      // The truck leaves the chosen store for the customer.
+      { t: "route", from: [56, 16], to: [90, 40], dur: 2400 },
+      { t: "wait", dur: 300 },
       // Imagiq case: more than 30 points of sale, deliveries in 24 hours at most.
       { t: "flip", stats: [
         { big: "30+", small: { ES: "puntos de venta como un solo inventario", EN: "points of sale as a single inventory" } },

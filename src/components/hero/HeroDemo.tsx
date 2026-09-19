@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/locale";
+import { FaBox, FaHome, FaStore, FaTruck } from "react-icons/fa";
 import { HERO_SCENES, type ChatLine, type Chip, type Field, type Pt, type Scene, type Stat, type Step, type Target } from "@/data/heroScenes";
 
 type Line = { id: string; from: Pt; to: Target };
@@ -10,6 +11,8 @@ type Line = { id: string; from: Pt; to: Target };
 type Doc = { id: string; at: Pt; scanning: boolean; scanned: boolean };
 type Tag = Field & { key: string };
 type Chat = { at: Pt; lines: ChatLine[]; shown: number };
+type Shop = { id: string; at: Pt; product: string; price: string; button: string; done: string | null };
+type Route = { from: Pt; to: Pt; truckAt: Pt; arrived: boolean };
 
 type Frame = {
   chips: Chip[];
@@ -17,6 +20,8 @@ type Frame = {
   docs: Doc[];
   fields: Tag[];
   chat: Chat | null;
+  shop: Shop | null;
+  route: Route | null;
   cursor: Pt;
   cursorVisible: boolean;
   clicking: boolean;
@@ -37,6 +42,8 @@ const EMPTY: Frame = {
   docs: [],
   fields: [],
   chat: null,
+  shop: null,
+  route: null,
   cursor: [50, 90],
   cursorVisible: false,
   clicking: false,
@@ -53,6 +60,9 @@ const DEFAULT_DUR: Record<Step["t"], number> = {
   scan: 1200,
   extract: 900,
   chat: 2400,
+  shop: 500,
+  buy: 700,
+  route: 2400,
   cursor: 700,
   click: 350,
   lines: 800,
@@ -118,7 +128,8 @@ export function HeroDemo({
       const scene = HERO_SCENES[i];
       onScene?.(i, sceneDuration(scene, reduced));
       let f: Frame = { ...EMPTY };
-      const chipAt = (id: string) => f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? f.cursor;
+      const chipAt = (id: string) =>
+        f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? (f.shop?.id === id ? f.shop.at : undefined) ?? f.cursor;
       setFrame(f);
       await sleep(350);
 
@@ -171,6 +182,27 @@ export function HeroDemo({
               setFrame(f);
             }
             await sleep(each);
+            continue;
+          }
+          case "shop":
+            f = { ...f, shop: { id: step.id, at: step.at, product: step.product[locale], price: step.price, button: step.button[locale], done: null } };
+            break;
+          case "buy":
+            f = { ...f, shop: f.shop && f.shop.id === step.id ? { ...f.shop, done: step.done[locale] } : f.shop };
+            break;
+          case "route": {
+            // Markers first, then the truck drives over.
+            f = { ...f, route: { from: step.from, to: step.to, truckAt: step.from, arrived: false } };
+            setFrame(f);
+            await sleep(400);
+            if (cancelled.current) return;
+            f = { ...f, route: { ...f.route!, truckAt: step.to } };
+            setFrame(f);
+            await sleep(dur - 400);
+            if (cancelled.current) return;
+            f = { ...f, route: { ...f.route!, arrived: true } };
+            setFrame(f);
+            await sleep(300);
             continue;
           }
           case "lines": {
@@ -239,7 +271,7 @@ export function HeroDemo({
     return () => {
       cancelled.current = true;
     };
-  }, [onScene, request]);
+  }, [onScene, request, locale]);
 
   const pct = (p: Pt) => ({ left: `${p[0]}%`, top: `${p[1]}%` });
   const px = (p: Pt): Pt => [(p[0] / 100) * size.w, (p[1] / 100) * size.h];
@@ -380,6 +412,91 @@ export function HeroDemo({
             </div>
           ) : null}
         </div>
+      ) : null}
+
+      {/* Storefront screen */}
+      {frame.shop ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[30%] min-w-[140px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-opacity duration-500",
+            frame.stats ? "opacity-60" : "opacity-100",
+          )}
+          style={{ ...pct(frame.shop.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="flex items-center gap-1 bg-slate-100 px-2 py-1.5">
+            {[0, 1, 2].map((k) => <span key={k} className="size-1.5 rounded-full bg-slate-300" />)}
+          </div>
+          <div className="p-2.5">
+            <div className="h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300" />
+            <p className="mt-2 text-[11px] font-semibold leading-tight">{frame.shop.product}</p>
+            <p className="text-[11px] text-slate-500">{frame.shop.price}</p>
+            <div
+              className={cn(
+                "mt-2 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-[11px] font-medium text-white transition-colors duration-300",
+                frame.shop.done ? "bg-emerald-500" : "bg-blue-600",
+                frame.clicking && !frame.shop.done ? "scale-95" : "",
+              )}
+            >
+              {frame.shop.done ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+              ) : null}
+              {frame.shop.done ?? frame.shop.button}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Route: the store, the customer and the truck between them */}
+      {frame.route ? (
+        <>
+          <svg className={cn("absolute inset-0 h-full w-full transition-opacity duration-500", frame.stats ? "opacity-60" : "opacity-100")} viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}>
+            {size.w > 0 ? (() => {
+              const [x1, y1] = px(frame.route!.from);
+              const [x2, y2] = px(frame.route!.to);
+              return (
+                <path
+                  d={`M ${x1} ${y1} C ${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2} ${y2}`}
+                  fill="none"
+                  stroke="rgba(147,197,253,0.6)"
+                  strokeWidth="1.5"
+                  strokeDasharray="4 5"
+                  strokeLinecap="round"
+                  style={{ animation: "hero-fade 300ms ease-out both" }}
+                />
+              );
+            })() : null}
+          </svg>
+          {[
+            { at: frame.route.from, icon: <FaStore />, key: "a" },
+            { at: frame.route.to, icon: <FaHome />, key: "b" },
+          ].map((m) => (
+            <span
+              key={m.key}
+              className={cn(
+                "absolute -translate-x-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full border border-blue-300/40 bg-slate-950/80 text-blue-200 text-xs transition-opacity duration-500",
+                frame.stats ? "opacity-60" : "opacity-100",
+                m.key === "b" && frame.route?.arrived ? "border-emerald-300/60 text-emerald-300" : "",
+              )}
+              style={{ ...pct(m.at), animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}
+            >
+              {m.icon}
+            </span>
+          ))}
+          <span
+            className={cn(
+              "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-slate-900 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.7)] transition-opacity duration-500",
+              frame.stats ? "opacity-60" : "opacity-100",
+            )}
+            style={{
+              ...pct(frame.route.truckAt),
+              transition: "left 2000ms cubic-bezier(.45,0,.2,1), top 2000ms cubic-bezier(.45,0,.2,1), opacity 500ms",
+              animation: "hero-pop 300ms 200ms cubic-bezier(.22,1,.36,1) backwards",
+            }}
+          >
+            <FaTruck className="text-sm text-blue-600" />
+            <FaBox className="text-[10px] text-amber-600" />
+          </span>
+        </>
       ) : null}
 
       {/* Chips */}
