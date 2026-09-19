@@ -459,6 +459,7 @@ export const CASES: CaseStudy[] = [
         problem: "Clientes que escriben por WhatsApp, Instagram y la web a toda hora, con las mismas preguntas.",
         solution: "Un agente de IA conectado al catálogo, al stock y a las tiendas, que responde en cada canal.",
         why: "Una sola inteligencia para todos los canales, con respuestas al instante y el equipo libre para vender.",
+        headline: "Una sola inteligencia para todos los canales.",
       },
       EN: {
         topic: "Multichannel AI",
@@ -468,6 +469,7 @@ export const CASES: CaseStudy[] = [
         problem: "Customers writing on WhatsApp, Instagram and the web at all hours, with the same questions.",
         solution: "An AI agent connected to the catalog, stock and stores, that answers on every channel.",
         why: "One intelligence for every channel, with instant answers and the team free to sell.",
+        headline: "One intelligence for every channel.",
       },
     },
   },
