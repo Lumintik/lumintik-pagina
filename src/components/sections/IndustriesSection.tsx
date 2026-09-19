@@ -35,10 +35,10 @@ export function IndustriesSection() {
                 </p>
               ))}
               {industry.gallery?.length ? (
-                <ul className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <ul className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                   {industry.gallery.map((photo) => (
                     <li key={photo.src} className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-slate-100">
-                      <Image src={photo.src} alt="" fill sizes="(min-width: 768px) 25vw, 45vw" className="object-cover" />
+                      <Image src={photo.src} alt="" fill sizes="(min-width: 768px) 20vw, 45vw" className="object-cover" />
                     </li>
                   ))}
                 </ul>
