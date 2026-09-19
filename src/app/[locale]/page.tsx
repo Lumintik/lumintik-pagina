@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Hero } from "@/components/sections/Hero";
+import { IndustriesSection } from "@/components/sections/IndustriesSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProjectsShowcase } from "@/components/sections/ProjectsShowcase";
 import { Footer } from "@/components/sections/Footer";
@@ -24,6 +25,7 @@ export default function Home() {
           id="content-rise"
           className="relative w-full bg-white z-[2] flex flex-col items-center"
         >
+          <IndustriesSection />
           <ServicesSection />
           <ProjectsShowcase />
           <MarqueeTape />

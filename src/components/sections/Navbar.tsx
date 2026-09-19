@@ -23,6 +23,7 @@ export function Navbar() {
     { label: t.nav.services, href: href(locale, paths.services) },
     { label: t.nav.work, href: href(locale, paths.projects) },
     { label: t.nav.team, href: href(locale, paths.team) },
+    { label: t.nav.blog, href: href(locale, paths.blog) },
   ];
 
   const mobileNavItems = [...navItems, { label: t.nav.contact, href: contactHref }];
@@ -73,7 +74,7 @@ export function Navbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-[50] transition-all duration-500 ${
           bgVisible
-            ? "bg-white/70 backdrop-blur-md border-b border-slate-200/60"
+            ? "bg-white/70 backdrop-blur-md"
             : "bg-transparent"
         }`}
         style={{
@@ -86,7 +87,7 @@ export function Navbar() {
         <div className="mx-auto flex items-center justify-between max-w-[1600px] w-full pl-10 pr-6 md:pl-20 md:pr-12 py-3 md:py-3">
           <a
             href={home}
-            aria-label="Lumintik — home"
+            aria-label="Lumintik, home"
             className="inline-flex items-center select-none"
           >
             <span
@@ -298,7 +299,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
               key={item.label}
               href={item.href}
               onClick={onClose}
-              className="group flex items-center justify-between py-4 border-b border-slate-100"
+              className="group flex items-center justify-between py-4"
               style={{
                 opacity: open ? 1 : 0,
                 transform: open ? "translateX(0)" : "translateX(20px)",

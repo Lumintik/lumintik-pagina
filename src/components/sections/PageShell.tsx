@@ -32,7 +32,7 @@ export function PageShell({ eyebrow, title, titleAccent, intro, children, contac
           }}
         >
           <div className="mx-auto max-w-[1600px] w-full">
-            <p className="text-[11px] font-medium tracking-[0.18em] uppercase text-blue-300">{eyebrow}</p>
+            <p className="text-xs font-medium text-blue-300">{eyebrow}</p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
               {title} <span className="italic text-blue-300">{titleAccent}</span>
             </h1>

@@ -28,7 +28,7 @@ export function LanguageSwitcher({ className }: Props) {
 
   return (
     <ul
-      className={`flex items-center gap-1 text-[11px] font-medium tracking-[0.18em] uppercase ${className ?? ""}`}
+      className={`flex items-center gap-1 text-xs font-medium ${className ?? ""}`}
       role="list"
       aria-label="Language"
     >

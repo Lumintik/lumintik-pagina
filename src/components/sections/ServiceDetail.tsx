@@ -52,7 +52,7 @@ export function ServiceDetail({
               {t.detail.back}
             </Link>
 
-            <p className="mt-10 text-[11px] font-medium tracking-[0.18em] uppercase text-blue-300">
+            <p className="mt-10 text-xs font-medium text-blue-300">
               {t.services.eyebrow}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
@@ -93,7 +93,7 @@ export function ServiceDetail({
 
             {/* Overview */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                 {t.detail.overview}
               </h2>
               <p className="md:col-span-8 text-slate-700 text-xl md:text-2xl leading-relaxed">
@@ -103,12 +103,12 @@ export function ServiceDetail({
 
             {/* Capabilities */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                 {t.detail.capabilities}
               </h2>
               <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
                 {content.capabilities.map((c) => (
-                  <div key={c.title} className="border-t border-slate-200 pt-5">
+                  <div key={c.title} className="rounded-2xl bg-slate-50 p-5">
                     <h3 className="text-slate-900 text-lg font-semibold">{c.title}</h3>
                     <p className="mt-2 text-slate-500 text-base leading-relaxed">{c.desc}</p>
                   </div>
@@ -118,7 +118,7 @@ export function ServiceDetail({
 
             {/* Process */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                 {t.detail.process}
               </h2>
               <ol className="md:col-span-8 flex flex-col gap-8">
@@ -140,7 +140,7 @@ export function ServiceDetail({
 
             {/* Deliverables */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                 {t.detail.deliverables}
               </h2>
               <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
@@ -163,9 +163,9 @@ export function ServiceDetail({
             </section>
 
             {next && (
-              <section className="mt-20 md:mt-28 border-t border-slate-200 pt-10">
+              <section className="mt-20 md:mt-28">
                 <Link href={next.href} className="group inline-flex flex-col gap-2">
-                  <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+                  <span className="text-xs font-medium text-slate-400">
                     {t.detail.next}
                   </span>
                   <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-blue-500">

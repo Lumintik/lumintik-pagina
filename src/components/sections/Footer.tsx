@@ -20,6 +20,7 @@ export function Footer() {
     { label: t.nav.services, href: href(locale, paths.services) },
     { label: t.nav.work, href: href(locale, paths.projects) },
     { label: t.nav.team, href: href(locale, paths.team) },
+    { label: t.nav.blog, href: href(locale, paths.blog) },
     { label: t.nav.contact, href: href(locale, paths.contact) },
   ];
 
@@ -106,7 +107,7 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-8 mt-3 md:mt-0 md:contents">
             <nav aria-label="Footer navigation">
               <h4
-                className="text-xs uppercase tracking-[0.2em]"
+                className="text-xs uppercase"
                 style={{ color: labelColor, transition: "color 0.4s ease" }}
               >
                 {t.footer.sitemap}
@@ -128,7 +129,7 @@ export function Footer() {
 
             <nav aria-label="Social links">
               <h4
-                className="text-xs uppercase tracking-[0.2em]"
+                className="text-xs uppercase"
                 style={{ color: labelColor, transition: "color 0.4s ease" }}
               >
                 {t.footer.elsewhere}
@@ -153,11 +154,11 @@ export function Footer() {
         </div>
 
         <div
-          className="mt-24 md:mt-32 pt-8 border-t flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+          className="mt-24 md:mt-32 pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
           style={{ borderColor: lineColor, transition: "border-color 0.4s ease" }}
         >
           <p
-            className="text-xs tracking-[0.18em] uppercase"
+            className="text-xs uppercase"
             style={{ color: labelColor, transition: "color 0.4s ease" }}
           >
             {t.footer.line}

@@ -27,15 +27,16 @@ export type Messages = {
     join: string;
     contact: string;
     team: string;
+    blog: string;
   };
   pages: {
     services: { title: string; titleAccent: string; intro: string };
     projects: { title: string; titleAccent: string; intro: string };
     team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string> };
+    blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string };
     contact: { title: string; titleAccent: string; intro: string };
   };
   hero: {
-    eyebrow: string;
     titleParts: string[];
     titleAccent: string;
     titleAccentRotations: string[];
@@ -71,6 +72,18 @@ export type Messages = {
   projects: {
     marquee: string[];
     badge: { live: string };
+  };
+  industries: {
+    eyebrow: string;
+    title: string;
+    titleAccent: string;
+    intro: string;
+    previous: string;
+    next: string;
+    close: string;
+    seeCase: string;
+    /** Keyed by the industry id in `src/data/industries.ts`. */
+    items: Record<string, { category: string; title: string; body: string[] }>;
   };
   cases: {
     eyebrow: string;
@@ -148,11 +161,11 @@ export type Messages = {
 const en: Messages = {
   seo: {
     home: {
-      title: "Lumintik SAS — Software studio that builds inevitable products",
+      title: "Lumintik SAS, software studio that builds inevitable products",
       description:
         "Lumintik SAS is a software engineering studio for companies that care about craft. Headless commerce, applied AI, web engineering and design systems for Samsung, Claro, Coca-Cola, EZDocuAI and more.",
     },
-    service: { titleTemplate: "%s — Services" },
+    service: { titleTemplate: "%s, Services" },
   },
   detail: {
     back: "All services",
@@ -173,6 +186,7 @@ const en: Messages = {
     join: "Join",
     contact: "Contact",
     team: "Our team",
+    blog: "Blog",
   },
   pages: {
     services: {
@@ -191,6 +205,15 @@ const en: Messages = {
       intro: "A small team that designs and builds in the same room.",
       roles: { ceo: "Chief Executive Officer", coo: "Chief Operating Officer" },
     },
+    blog: {
+      title: "What we learn",
+      titleAccent: "while building.",
+      intro: "Notes from the projects: what the problem was, what we built and what it changed.",
+      read: "Read the post",
+      back: "Back to the blog",
+      more: "More posts",
+      empty: "No posts yet.",
+    },
     contact: {
       title: "Let's talk about",
       titleAccent: "your project.",
@@ -198,7 +221,6 @@ const en: Messages = {
     },
   },
   hero: {
-    eyebrow: "Software studio · 2026",
     titleParts: ["We", "build", "software", "that", "feels"],
     titleAccent: "intuitive.",
     titleAccentRotations: ["intuitive.", "scalable.", "indispensable."],
@@ -230,7 +252,7 @@ const en: Messages = {
     items: {
       productDevelopment: {
         title: "Product Development",
-        desc: "From discovery to ship — software products that earn trust.",
+        desc: "From discovery to ship: software products that earn trust.",
       },
       uxui: {
         title: "UX / UI",
@@ -238,11 +260,11 @@ const en: Messages = {
       },
       webEngineering: {
         title: "Web Engineering",
-        desc: "Performant, accessible web at the edge — sub-second LCP by default.",
+        desc: "Performant, accessible web at the edge, with sub-second LCP by default.",
       },
       appliedAI: {
         title: "Applied AI",
-        desc: "Practical AI pipelines — RAG, agents, streaming LLM workflows.",
+        desc: "Practical AI pipelines: RAG, agents, streaming LLM workflows.",
       },
       performanceSEO: {
         title: "Performance & SEO",
@@ -255,6 +277,82 @@ const en: Messages = {
       platformInfra: {
         title: "Platform & Infra",
         desc: "Multi-region, observability-first platforms ready for prime time.",
+      },
+    },
+  },
+  industries: {
+    eyebrow: "Industries",
+    title: "Where we have",
+    titleAccent: "shipped.",
+    intro: "Every industry has its own rules, data and pace. These are the ones we have already built for, with the project behind each one.",
+    previous: "Previous",
+    next: "Next",
+    close: "Close",
+    seeCase: "See the project",
+    items: {
+      retail: {
+        category: "Retail and e-commerce",
+        title: "The whole network working as one inventory.",
+        body: [
+          "For Samsung's official distributor in Colombia, more than 30 points of sale had scattered stock: what ran out in one city was left over in another.",
+          "We built an algorithm that matches each store's stock against the real distance to the customer, picks the best store and generates the shipping label. Deliveries now take 24 hours at most.",
+        ],
+      },
+      telecom: {
+        category: "Telecommunications",
+        title: "Deciding with data in the Mi Claro super app.",
+        body: [
+          "Claro needed to understand how customers use the Mi Claro app to decide what to improve.",
+          "We did the consulting and the telemetry: an event plan, funnels and dashboards for data analysis.",
+        ],
+      },
+      trade: {
+        category: "Foreign trade and logistics",
+        title: "Customs documents reviewed by AI.",
+        body: [
+          "For Griver we built an AI OCR pipeline that reads customs entries and invoices, cross-checks them and flags the differences, with a self hosted model so the data never leaves their infrastructure.",
+          "A review that took a full day now takes about ten minutes.",
+        ],
+      },
+      legal: {
+        category: "Legal and immigration",
+        title: "USCIS forms completed in minutes.",
+        body: [
+          "Immigration attorneys in the United States were filling in long USCIS forms by hand.",
+          "EZMig is a guided flow with AI that completes and validates the forms in minutes, with output certified by USCIS.",
+        ],
+      },
+      translation: {
+        category: "Translation and documents",
+        title: "Translators editing instead of retyping.",
+        body: [
+          "EZDocuAI translates documents keeping the original layout, so a translator's time per page went from about twenty minutes to three.",
+          "Document parsing, layout reconstruction and a review editor built for professionals.",
+        ],
+      },
+      sports: {
+        category: "Sports and communities",
+        title: "A live app that could not stop for each change.",
+        body: [
+          "FUTTEM is a mobile app in production in Colombia, on the App Store and Google Play, with real users who could not be interrupted by every release.",
+          "We set up three separate environments, controlled deployments and end to end tracing.",
+        ],
+      },
+      support: {
+        category: "Customer support",
+        title: "One AI agent on every channel.",
+        body: [
+          "Customers in commerce and personal finance writing on WhatsApp, Instagram and the web at all hours, with the same questions.",
+          "An AI agent connected to the catalog, the stock and the stores answers on every channel: one intelligence, instant answers and the team free to sell.",
+        ],
+      },
+      fintech: {
+        category: "Fintech",
+        title: "Financial education at the scale of a community.",
+        body: [
+          "Fridoom is a financial education brand with more than 200,000 followers.",
+          "It is one of the clients of the multichannel AI agent, which answers its users inside the app.",
+        ],
       },
     },
   },
@@ -307,7 +405,7 @@ const en: Messages = {
       { value: 100, suffix: "%", label: "Work completed in house" },
       { value: 2, suffix: "+", label: "Years crafting digital products" },
       { value: 15, suffix: "+", label: "Happy clients across 3 continents" },
-      { value: 12, suffix: "+", label: "Industries shipped — fintech, AI, telecom, e-commerce" },
+      { value: 12, suffix: "+", label: "Industries shipped: fintech, AI, telecom, e-commerce" },
     ],
   },
   footer: {
@@ -315,7 +413,7 @@ const en: Messages = {
     tagline: "Software engineering studio for companies that care about craft.",
     sitemap: "Sitemap",
     elsewhere: "Elsewhere",
-    line: "Lumintik SAS · Software studio · 2026",
+    line: "Lumintik SAS, software studio, 2026",
     rights: "",
   },
   mobileMenu: {
@@ -337,7 +435,7 @@ const en: Messages = {
     terms: "By submitting you agree to our privacy policy and terms and conditions",
     submit: "Send",
     sending: "Sending…",
-    success: "Thanks! Your message is on its way — we'll be in touch shortly.",
+    success: "Thanks! Your message is on its way. We'll be in touch shortly.",
     error: "Something went wrong sending your message. Please try again or email us directly.",
     errorRequired: "Please complete the required fields.",
     errorEmail: "Please enter a valid email address.",
@@ -348,11 +446,11 @@ const en: Messages = {
 const es: Messages = {
   seo: {
     home: {
-      title: "Lumintik SAS — Estudio de software que construye productos inevitables",
+      title: "Lumintik SAS, estudio de software que construye productos inevitables",
       description:
         "Lumintik SAS es un estudio de ingeniería de software para empresas que cuidan el detalle. Headless commerce, IA aplicada, ingeniería web y design systems para Samsung, Claro, Coca-Cola, EZDocuAI y más.",
     },
-    service: { titleTemplate: "%s — Servicios" },
+    service: { titleTemplate: "%s, Servicios" },
   },
   detail: {
     back: "Todos los servicios",
@@ -373,6 +471,7 @@ const es: Messages = {
     join: "Únete",
     contact: "Contacto",
     team: "Nuestro equipo",
+    blog: "Blog",
   },
   pages: {
     services: {
@@ -391,6 +490,15 @@ const es: Messages = {
       intro: "Un equipo pequeño que diseña y construye en la misma sala.",
       roles: { ceo: "Director ejecutivo", coo: "Director de operaciones" },
     },
+    blog: {
+      title: "Lo que aprendemos",
+      titleAccent: "construyendo.",
+      intro: "Notas desde los proyectos: cuál era el problema, qué construimos y qué cambió.",
+      read: "Leer la entrada",
+      back: "Volver al blog",
+      more: "Más entradas",
+      empty: "Aún no hay entradas.",
+    },
     contact: {
       title: "Hablemos de",
       titleAccent: "tu proyecto.",
@@ -398,7 +506,6 @@ const es: Messages = {
     },
   },
   hero: {
-    eyebrow: "Estudio de software · 2026",
     titleParts: ["Creamos", "software", "que", "se", "siente"],
     titleAccent: "intuitivo.",
     titleAccentRotations: ["intuitivo.", "escalable.", "indispensable."],
@@ -430,7 +537,7 @@ const es: Messages = {
     items: {
       productDevelopment: {
         title: "Desarrollo de Producto",
-        desc: "De la idea al lanzamiento — productos de software que se ganan la confianza.",
+        desc: "De la idea al lanzamiento: productos de software que se ganan la confianza.",
       },
       uxui: {
         title: "UX / UI",
@@ -438,11 +545,11 @@ const es: Messages = {
       },
       webEngineering: {
         title: "Ingeniería Web",
-        desc: "Web rápida y accesible en el edge — LCP sub-segundo por defecto.",
+        desc: "Web rápida y accesible en el edge, con LCP por debajo de un segundo por defecto.",
       },
       appliedAI: {
         title: "IA Aplicada",
-        desc: "Pipelines de IA prácticos — RAG, agentes y flujos LLM en streaming.",
+        desc: "Pipelines de IA prácticos: RAG, agentes y flujos LLM en streaming.",
       },
       performanceSEO: {
         title: "Performance y SEO",
@@ -455,6 +562,82 @@ const es: Messages = {
       platformInfra: {
         title: "Plataforma e Infraestructura",
         desc: "Plataformas multi-región con observabilidad lista para producción.",
+      },
+    },
+  },
+  industries: {
+    eyebrow: "Industrias",
+    title: "Donde ya hemos",
+    titleAccent: "construido.",
+    intro: "Cada industria tiene sus reglas, sus datos y su ritmo. Estas son en las que ya hemos trabajado, con el proyecto detrás de cada una.",
+    previous: "Anterior",
+    next: "Siguiente",
+    close: "Cerrar",
+    seeCase: "Ver el proyecto",
+    items: {
+      retail: {
+        category: "Retail y e-commerce",
+        title: "Toda la red trabajando como un solo inventario.",
+        body: [
+          "Para el distribuidor oficial de Samsung en Colombia, más de 30 puntos de venta tenían el inventario disperso: lo que se agotaba en una ciudad sobraba en otra.",
+          "Construimos un algoritmo que cruza el stock de cada tienda con la distancia real al cliente, elige la tienda óptima y genera la guía de envío. Las entregas ahora toman máximo 24 horas.",
+        ],
+      },
+      telecom: {
+        category: "Telecomunicaciones",
+        title: "Decidir con datos en la super app Mi Claro.",
+        body: [
+          "Claro necesitaba entender cómo usan la app sus clientes para decidir qué mejorar.",
+          "Hicimos la consultoría y la telemetría: plan de eventos, embudos y tableros para análisis de datos.",
+        ],
+      },
+      trade: {
+        category: "Comercio exterior y logística",
+        title: "Documentos aduaneros revisados con IA.",
+        body: [
+          "Para Griver construimos un pipeline de OCR con IA que lee pedimentos y facturas, los cruza y marca las diferencias, con un modelo auto hospedado para que los datos no salgan de su infraestructura.",
+          "Una revisión que tomaba un día completo ahora toma unos diez minutos.",
+        ],
+      },
+      legal: {
+        category: "Legal y migración",
+        title: "Formularios de USCIS completos en minutos.",
+        body: [
+          "Abogados de inmigración en Estados Unidos llenaban a mano formularios largos de USCIS.",
+          "EZMig es un flujo guiado con IA que completa y valida los formularios en minutos, con salida certificada por USCIS.",
+        ],
+      },
+      translation: {
+        category: "Traducción y documentos",
+        title: "Traductores que editan en vez de transcribir.",
+        body: [
+          "EZDocuAI traduce documentos conservando el diseño original, así que el tiempo de un traductor por página pasó de unos veinte minutos a tres.",
+          "Lectura de documentos, reconstrucción del diseño y un editor de revisión hecho para profesionales.",
+        ],
+      },
+      sports: {
+        category: "Deporte y comunidades",
+        title: "Una app en producción que no podía detenerse.",
+        body: [
+          "FUTTEM es una app móvil en producción en Colombia, en App Store y Google Play, con usuarios reales que no podían interrumpirse con cada cambio.",
+          "Montamos tres ambientes separados, despliegues controlados y trazas de extremo a extremo.",
+        ],
+      },
+      support: {
+        category: "Atención al cliente",
+        title: "Un agente de IA en todos los canales.",
+        body: [
+          "Clientes de comercio y finanzas personales que escriben por WhatsApp, Instagram y la web a toda hora, con las mismas preguntas.",
+          "Un agente de IA conectado al catálogo, al stock y a las tiendas responde en cada canal: una sola inteligencia, respuestas al instante y el equipo libre para vender.",
+        ],
+      },
+      fintech: {
+        category: "Fintech",
+        title: "Educación financiera a escala de comunidad.",
+        body: [
+          "Fridoom es una marca de educación financiera con más de 200.000 seguidores.",
+          "Es uno de los clientes del agente de IA multicanal, que responde a sus usuarios dentro de la app.",
+        ],
       },
     },
   },
@@ -507,7 +690,7 @@ const es: Messages = {
       { value: 100, suffix: "%", label: "Trabajo realizado in-house" },
       { value: 2, suffix: "+", label: "Años creando productos digitales" },
       { value: 15, suffix: "+", label: "Clientes felices en 3 continentes" },
-      { value: 12, suffix: "+", label: "Industrias atendidas — fintech, IA, telco, e-commerce" },
+      { value: 12, suffix: "+", label: "Industrias atendidas: fintech, IA, telco, e-commerce" },
     ],
   },
   footer: {
@@ -515,7 +698,7 @@ const es: Messages = {
     tagline: "Estudio de ingeniería de software para empresas que valoran el oficio.",
     sitemap: "Mapa del sitio",
     elsewhere: "En otros lugares",
-    line: "Lumintik SAS · Estudio de software · 2026",
+    line: "Lumintik SAS, estudio de software, 2026",
     rights: "",
   },
   mobileMenu: {
@@ -537,7 +720,7 @@ const es: Messages = {
     terms: "Al enviar aceptas la política de tratamiento de datos personales y los términos y condiciones",
     submit: "Enviar",
     sending: "Enviando…",
-    success: "¡Gracias! Tu mensaje va en camino — te contactaremos muy pronto.",
+    success: "¡Gracias! Tu mensaje va en camino. Te contactaremos muy pronto.",
     error: "Hubo un problema al enviar tu mensaje. Inténtalo de nuevo o escríbenos directamente.",
     errorRequired: "Por favor completa los campos obligatorios.",
     errorEmail: "Por favor ingresa un correo electrónico válido.",

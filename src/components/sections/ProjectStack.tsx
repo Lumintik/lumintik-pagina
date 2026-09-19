@@ -84,7 +84,7 @@ export function ProjectStack() {
             <span className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent" />
 
             <span className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-6 md:p-10">
-              <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-white/90">
+              <span className="text-xs font-medium text-white/90">
                 {card.name}
               </span>
               <span className="text-white text-xl md:text-3xl font-semibold leading-snug max-w-[34ch]">

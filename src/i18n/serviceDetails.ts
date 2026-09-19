@@ -18,7 +18,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
   EN: {
     productDevelopment: {
       overview:
-        "Product Development covers the whole arc: framing the problem, deciding what to build, and shipping it to production with real users on it. It fits companies that already have a business running and need software that has to hold up under real use — a new platform, an internal tool that no longer fits in a spreadsheet, a second version the current codebase cannot support. Design and engineering work on the same team, so scope is decided with quality of execution and cost on the same table. We build in slices you can open and use, not in phases you have to take on faith.",
+        "Product Development covers the whole arc: framing the problem, deciding what to build, and shipping it to production with real users on it. It fits companies that already have a business running and need software that has to hold up under real use: a new platform, an internal tool that no longer fits in a spreadsheet, a second version the current codebase cannot support. Design and engineering work on the same team, so scope is decided with quality of execution and cost on the same table. We build in slices you can open and use, not in phases you have to take on faith.",
       capabilities: [
         {
           title: "Discovery and scoping",
@@ -134,7 +134,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
     },
     webEngineering: {
       overview:
-        "Web Engineering covers the build itself: the front end, the rendering strategy, and the runtime it ships to. We work in Next.js, React and TypeScript deployed at the edge, and we treat performance and accessibility as constraints from the first commit rather than a cleanup phase at the end. That means server components where they help, streaming where it pays off, and a performance budget agreed on before implementation starts. It fits companies whose site or app carries real operational load — commerce, onboarding, dashboards, content at scale — and where a slow first render is a business problem, not a cosmetic one.",
+        "Web Engineering covers the build itself: the front end, the rendering strategy, and the runtime it ships to. We work in Next.js, React and TypeScript deployed at the edge, and we treat performance and accessibility as constraints from the first commit rather than a cleanup phase at the end. That means server components where they help, streaming where it pays off, and a performance budget agreed on before implementation starts. It fits companies whose site or app carries real operational load (commerce, onboarding, dashboards, content at scale) and where a slow first render is a business problem, not a cosmetic one.",
       capabilities: [
         {
           title: "Rendering strategy",
@@ -188,11 +188,11 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
         "Hand-off documentation and a recorded walkthrough for your team",
       ],
       outcome:
-        "Rendering, caching and data contracts stop being implicit: they are decided, documented and visible in the code. Performance and accessibility become numbers your team can watch — measured in CI and against a budget agreed on up front — instead of a hunch. Whoever touches the code next inherits a system, not a mystery.",
+        "Rendering, caching and data contracts stop being implicit: they are decided, documented and visible in the code. Performance and accessibility become numbers your team can watch (measured in CI and against a budget agreed on up front) instead of a hunch. Whoever touches the code next inherits a system, not a mystery.",
     },
     appliedAI: {
       overview:
-        "We build AI features that reach production, not demos. The work covers retrieval over your own content, agents that call real tools, and streaming LLM workflows wired into the stack you already run: TypeScript, Next.js, Postgres with pgvector, queues, edge and node runtimes. We treat prompts, models and retrieval as code — versioned, covered by evals, observable request by request. It fits teams that already have data, users and an operating cost to justify — support, documents, internal search, onboarding — and need the AI layer to be reviewed and tested like the rest of the system.",
+        "We build AI features that reach production, not demos. The work covers retrieval over your own content, agents that call real tools, and streaming LLM workflows wired into the stack you already run: TypeScript, Next.js, Postgres with pgvector, queues, edge and node runtimes. We treat prompts, models and retrieval as code (versioned, covered by evals, observable request by request. It fits teams that already have data, users and an operating cost to justify) support, documents, internal search, onboarding: and need the AI layer to be reviewed and tested like the rest of the system.",
       capabilities: [
         {
           title: "RAG over your own content",
@@ -250,7 +250,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
     },
     performanceSEO: {
       overview:
-        "Performance can be measured, so we treat it as an engineering problem rather than a marketing one. This service covers Core Web Vitals, technical SEO and the infrastructure decisions underneath both: rendering strategy, caching, image and font delivery, crawling and indexation, structured data. It is built for teams whose site already brings in revenue or leads — commerce, media, SaaS, anywhere a slow LCP or a broken canonical costs real traffic. We work on the site you have, in the stack you have. No rewrite is required to start.",
+        "Performance can be measured, so we treat it as an engineering problem rather than a marketing one. This service covers Core Web Vitals, technical SEO and the infrastructure decisions underneath both: rendering strategy, caching, image and font delivery, crawling and indexation, structured data. It is built for teams whose site already brings in revenue or leads: commerce, media, SaaS, anywhere a slow LCP or a broken canonical costs real traffic. We work on the site you have, in the stack you have. No rewrite is required to start.",
       capabilities: [
         {
           title: "Core Web Vitals audit",
@@ -308,7 +308,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
     },
     brandMotion: {
       overview:
-        "Brand & Motion covers the identity system and the motion language that carries it onto every screen. We treat brand as a system, not a slide deck: type scale, color ramps, grid, iconography and design tokens that reach the code your team ships. Motion gets the same rigor: easing curves, durations and transitions defined once, then reused. It fits companies whose brand lives mostly on screens — a product UI, a launch site, an investor deck, a demo video. It is most useful when several teams touch the brand and the result keeps drifting.",
+        "Brand & Motion covers the identity system and the motion language that carries it onto every screen. We treat brand as a system, not a slide deck: type scale, color ramps, grid, iconography and design tokens that reach the code your team ships. Motion gets the same rigor: easing curves, durations and transitions defined once, then reused. It fits companies whose brand lives mostly on screens: a product UI, a launch site, an investor deck, a demo video. It is most useful when several teams touch the brand and the result keeps drifting.",
       capabilities: [
         {
           title: "Identity systems",
@@ -338,7 +338,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
       process: [
         {
           title: "Audit and direction",
-          desc: "We read what already exists — product, site, decks, the category you compete in — and find what is worth keeping. Then we narrow to one or two directions, shown on real screens rather than moodboards alone.",
+          desc: "We read what already exists (product, site, decks, the category you compete in) and find what is worth keeping. Then we narrow to one or two directions, shown on real screens rather than moodboards alone.",
         },
         {
           title: "System build",
@@ -366,7 +366,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
     },
     platformInfra: {
       overview:
-        "Platform and infrastructure work for teams whose product is already in production, or about to be. We design multi-region topologies, wire the deployment pipeline, and instrument the system so that answering \"what is happening right now\" is a query someone can run, not a war room. It fits companies with real traffic, several environments, and a team that can no longer afford deploys that feel like a gamble. We work on top of your cloud and your constraints — data residency, compliance, budget — instead of imposing a stack of our own.",
+        "Platform and infrastructure work for teams whose product is already in production, or about to be. We design multi-region topologies, wire the deployment pipeline, and instrument the system so that answering \"what is happening right now\" is a query someone can run, not a war room. It fits companies with real traffic, several environments, and a team that can no longer afford deploys that feel like a gamble. We work on top of your cloud and your constraints (data residency, compliance, budget) instead of imposing a stack of our own.",
       capabilities: [
         {
           title: "Multi-region architecture",
@@ -542,7 +542,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
     },
     webEngineering: {
       overview:
-        "Ingeniería Web cubre la construcción en sí: el front end, la estrategia de renderizado y el runtime donde se despliega. Trabajamos con Next.js, React y TypeScript desplegados en el edge, y tratamos el rendimiento y la accesibilidad como restricciones desde el primer commit, no como una limpieza al final. Eso significa server components donde aportan, streaming donde compensa y un presupuesto de rendimiento acordado antes de empezar a implementar. Encaja con empresas cuyo sitio o aplicación sostiene operación real — comercio, onboarding, dashboards, contenido a escala — y donde un primer render lento es un problema de negocio, no un asunto estético.",
+        "Ingeniería Web cubre la construcción en sí: el front end, la estrategia de renderizado y el runtime donde se despliega. Trabajamos con Next.js, React y TypeScript desplegados en el edge, y tratamos el rendimiento y la accesibilidad como restricciones desde el primer commit, no como una limpieza al final. Eso significa server components donde aportan, streaming donde compensa y un presupuesto de rendimiento acordado antes de empezar a implementar. Encaja con empresas cuyo sitio o aplicación sostiene operación real (comercio, onboarding, dashboards, contenido a escala) y donde un primer render lento es un problema de negocio, no un asunto estético.",
       capabilities: [
         {
           title: "Estrategia de renderizado",
@@ -596,11 +596,11 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
         "Documentación de traspaso y una sesión grabada para tu equipo",
       ],
       outcome:
-        "El renderizado, el caché y los contratos de datos dejan de ser implícitos: quedan decididos, documentados y visibles en el código. El rendimiento y la accesibilidad pasan a ser números que tu equipo puede vigilar — medidos en CI y contra un presupuesto acordado desde el inicio — en lugar de una intuición. Quien toque el código después hereda un sistema, no un misterio.",
+        "El renderizado, el caché y los contratos de datos dejan de ser implícitos: quedan decididos, documentados y visibles en el código. El rendimiento y la accesibilidad pasan a ser números que tu equipo puede vigilar (medidos en CI y contra un presupuesto acordado desde el inicio) en lugar de una intuición. Quien toque el código después hereda un sistema, no un misterio.",
     },
     appliedAI: {
       overview:
-        "Construimos funcionalidades de IA que llegan a producción, no demos. El trabajo cubre recuperación sobre tu propio contenido, agentes que ejecutan herramientas reales y flujos LLM en streaming integrados al stack que ya usas: TypeScript, Next.js, Postgres con pgvector, colas y runtimes edge y node. Tratamos los prompts, los modelos y la recuperación como código: versionados, cubiertos por evals y observables petición a petición. Encaja con equipos que ya tienen datos, usuarios y un costo operativo que justificar — soporte, documentos, búsqueda interna, onboarding — y necesitan que la capa de IA se revise y se pruebe como el resto del sistema.",
+        "Construimos funcionalidades de IA que llegan a producción, no demos. El trabajo cubre recuperación sobre tu propio contenido, agentes que ejecutan herramientas reales y flujos LLM en streaming integrados al stack que ya usas: TypeScript, Next.js, Postgres con pgvector, colas y runtimes edge y node. Tratamos los prompts, los modelos y la recuperación como código: versionados, cubiertos por evals y observables petición a petición. Encaja con equipos que ya tienen datos, usuarios y un costo operativo que justificar (soporte, documentos, búsqueda interna, onboarding) y necesitan que la capa de IA se revise y se pruebe como el resto del sistema.",
       capabilities: [
         {
           title: "RAG sobre tu propio contenido",
@@ -746,7 +746,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
       process: [
         {
           title: "Auditoría y dirección",
-          desc: "Leemos lo que ya existe —producto, sitio, presentaciones, la categoría en la que compites— y encontramos qué vale la pena conservar. Luego reducimos a una o dos direcciones, mostradas sobre pantallas reales y no solo en moodboards.",
+          desc: "Leemos lo que ya existe (producto, sitio, presentaciones, la categoría en la que compites) y encontramos qué vale la pena conservar. Luego reducimos a una o dos direcciones, mostradas sobre pantallas reales y no solo en moodboards.",
         },
         {
           title: "Construcción del sistema",
@@ -774,7 +774,7 @@ export const serviceDetails: Record<Locale, Record<ServiceKey, ServiceContent>> 
     },
     platformInfra: {
       overview:
-        "Trabajo de plataforma e infraestructura para equipos cuyo producto ya está en producción, o está a punto de estarlo. Diseñamos topologías multi-región, montamos el pipeline de despliegue e instrumentamos el sistema para que responder «¿qué está pasando ahora mismo?» sea una consulta que alguien ejecuta, y no una sala de crisis. Encaja en empresas con tráfico real, varios entornos y un equipo que ya no puede permitirse que cada despliegue sea una apuesta. Trabajamos sobre tu nube y tus restricciones — residencia de datos, cumplimiento, presupuesto — en lugar de imponer un stack propio.",
+        "Trabajo de plataforma e infraestructura para equipos cuyo producto ya está en producción, o está a punto de estarlo. Diseñamos topologías multi-región, montamos el pipeline de despliegue e instrumentamos el sistema para que responder «¿qué está pasando ahora mismo?» sea una consulta que alguien ejecuta, y no una sala de crisis. Encaja en empresas con tráfico real, varios entornos y un equipo que ya no puede permitirse que cada despliegue sea una apuesta. Trabajamos sobre tu nube y tus restricciones (residencia de datos, cumplimiento, presupuesto) en lugar de imponer un stack propio.",
       capabilities: [
         {
           title: "Arquitectura multi-región",

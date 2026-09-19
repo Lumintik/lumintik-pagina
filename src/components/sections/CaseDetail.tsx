@@ -59,7 +59,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               {t.cases.back}
             </Link>
 
-            <p className="mt-10 text-[11px] font-medium tracking-[0.18em] uppercase text-blue-300">
+            <p className="mt-10 text-xs font-medium text-blue-300">
               {copy.topic}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
@@ -76,7 +76,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
                 { label: t.cases.sector, value: copy.sector },
               ].map((item) => (
                 <div key={item.label}>
-                  <dt className="text-[11px] font-medium tracking-[0.18em] uppercase text-blue-300">
+                  <dt className="text-xs font-medium text-blue-300">
                     {item.label}
                   </dt>
                   <dd className="mt-2 text-white text-lg font-semibold">{item.value}</dd>
@@ -118,7 +118,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             ) : null}
 
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                 {t.cases.tools}
               </h2>
               <div className="md:col-span-8">
@@ -128,7 +128,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
 
             {gallery.length ? (
               <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-                <h2 className="md:col-span-4 text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+                <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
                   {t.cases.gallery}
                 </h2>
                 <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
@@ -148,9 +148,9 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               <p className="mt-4 text-slate-500 text-lg max-w-[50ch]">{t.cases.ctaBody}</p>
             </section>
 
-            <section className="mt-20 md:mt-28 border-t border-slate-200 pt-10">
+            <section className="mt-20 md:mt-28">
               <Link href={href(locale, paths.caseStudy(next.slug))} className="group inline-flex flex-col gap-2">
-                <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-slate-400">
+                <span className="text-xs font-medium text-slate-400">
                   {t.cases.next}
                 </span>
                 <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-blue-500">

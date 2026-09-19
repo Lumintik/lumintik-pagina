@@ -44,24 +44,17 @@ export function Hero() {
       className="relative flex flex-col justify-center w-full min-h-screen px-6 md:px-12 xl:px-20 pt-28 md:pt-32 pb-14 overflow-hidden z-[2]"
     >
       <div className="grid w-full max-w-[1600px] mx-auto gap-12 xl:grid-cols-[1.05fr_1fr] xl:gap-16 items-center">
-        {/* Text: brand line, then the scene's eyebrow, title and line */}
+        {/* Text: the scene's eyebrow, title and line */}
         <div className="text-center xl:text-left">
-          <span
-            className="block uppercase tracking-[0.2em] text-xs md:text-sm font-medium text-blue-300"
-            style={reveal(60)}
-          >
-            {t.hero.eyebrow}
-          </span>
 
           <div
-            className="mt-6"
             style={{
               opacity: started && textVisible ? 1 : 0,
               transform: started && textVisible ? "translateY(0)" : "translateY(10px)",
               transition: "opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)",
             }}
           >
-            <p className="text-white/60 text-[11px] md:text-xs font-medium tracking-[0.18em] uppercase mb-4">
+            <p className="text-white/60 text-xs font-medium mb-4">
               {scene.eyebrow[locale]}
             </p>
             <h1 className="text-white text-[40px] leading-[1.05] md:text-6xl md:leading-[1.05] xl:text-[clamp(3.75rem,4.6vw,5.5rem)] xl:leading-[1.04] font-semibold tracking-tight text-balance max-w-[14ch] mx-auto xl:mx-0">

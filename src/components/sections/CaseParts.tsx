@@ -25,7 +25,7 @@ export function Pending() {
 /** Small blue label above a title, the way the rest of the site writes them. */
 export function Eyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className={cn("text-[11px] font-medium tracking-[0.18em] uppercase text-blue-500", className)}>
+    <p className={cn("text-xs font-medium text-blue-500", className)}>
       {children}
     </p>
   );

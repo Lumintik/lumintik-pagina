@@ -84,7 +84,7 @@ export function ContactSection() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 w-full">
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label htmlFor="name" className="text-xs font-semibold uppercase text-slate-300">
                 {t.contactForm.name}
               </label>
               <input
@@ -97,7 +97,7 @@ export function ContactSection() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="service" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label htmlFor="service" className="text-xs font-semibold uppercase text-slate-300">
                 {t.contactForm.service}
               </label>
               <select
@@ -120,7 +120,7 @@ export function ContactSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label htmlFor="email" className="text-xs font-semibold uppercase text-slate-300">
                 {t.contactForm.email}
               </label>
               <input
@@ -133,7 +133,7 @@ export function ContactSection() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="phone" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label htmlFor="phone" className="text-xs font-semibold uppercase text-slate-300">
                 {t.contactForm.phone}
               </label>
               <div className="flex items-center">
@@ -161,7 +161,7 @@ export function ContactSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="company" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label htmlFor="company" className="text-xs font-semibold uppercase text-slate-300">
                 {t.contactForm.company}
               </label>
               <input
@@ -172,7 +172,7 @@ export function ContactSection() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="role" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label htmlFor="role" className="text-xs font-semibold uppercase text-slate-300">
                 {t.contactForm.role}
               </label>
               <input
@@ -185,7 +185,7 @@ export function ContactSection() {
           </div>
 
           <div className="flex flex-col gap-2 w-full mt-2">
-            <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+            <label htmlFor="message" className="text-xs font-semibold uppercase text-slate-300">
               {t.contactForm.message}
             </label>
             <textarea
@@ -197,7 +197,7 @@ export function ContactSection() {
           </div>
 
           <div className="flex flex-col gap-2 w-full mt-2">
-            <label htmlFor="file" className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+            <label htmlFor="file" className="text-xs font-semibold uppercase text-slate-300">
               {t.contactForm.attachment}
             </label>
             <input

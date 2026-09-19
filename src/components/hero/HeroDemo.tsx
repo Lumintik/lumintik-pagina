@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/locale";
-import { HERO_SCENES, type Chip, type Pt, type Stat, type Step } from "@/data/heroScenes";
+import { HERO_SCENES, type Chip, type Pt, type Stat, type Step, type Target } from "@/data/heroScenes";
 
-type Line = { id: string; from: Pt; to: Pt };
+type Line = { id: string; from: Pt; to: Target };
 
 type Frame = {
   chips: Chip[];
@@ -55,10 +55,10 @@ export function HeroDemo({
 }) {
   const [frame, setFrame] = useState<Frame>(EMPTY);
   const [sceneIndex, setSceneIndex] = useState(0);
-  const cancelled = useRef(false);
 
   useEffect(() => {
-    cancelled.current = false;
+    // One token per run: a strict-mode remount must not leave the first loop alive.
+    const cancelled = { current: false };
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let sceneI = 0;
 
@@ -157,9 +157,10 @@ export function HeroDemo({
       <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)] [background-size:32px_32px]" />
 
       {/* Lines drawn out to services */}
-      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg className={cn("absolute inset-0 h-full w-full transition-opacity duration-400", frame.stats ? "opacity-0" : "opacity-100")} viewBox="0 0 100 100" preserveAspectRatio="none">
         {frame.lines.map((l) => {
-          const d = `M ${l.from[0]} ${l.from[1]} C ${(l.from[0] + l.to[0]) / 2} ${l.from[1]}, ${(l.from[0] + l.to[0]) / 2} ${l.to[1]}, ${l.to[0]} ${l.to[1]}`;
+          const to = l.to.at;
+          const d = `M ${l.from[0]} ${l.from[1]} C ${(l.from[0] + to[0]) / 2} ${l.from[1]}, ${(l.from[0] + to[0]) / 2} ${to[1]}, ${to[0]} ${to[1]}`;
           return (
             <g key={l.id}>
               <path
@@ -170,11 +171,32 @@ export function HeroDemo({
                 vectorEffect="non-scaling-stroke"
                 style={{ strokeDasharray: 200, strokeDashoffset: 200, animation: "hero-draw 700ms ease-out forwards" }}
               />
-              <circle cx={l.to[0]} cy={l.to[1]} r="1.1" fill="#93c5fd" style={{ animation: "hero-fade 300ms 500ms ease-out both" }} />
+              {/* A bare end gets a dot; a labelled one gets the service chip below. */}
+              {l.to.label ? null : (
+                <circle cx={to[0]} cy={to[1]} r="1.1" fill="#93c5fd" style={{ animation: "hero-fade 300ms 500ms ease-out both" }} />
+              )}
             </g>
           );
         })}
       </svg>
+
+      {/* The services at the end of the lines, popping in once the line gets there */}
+      {frame.lines.map((l) =>
+        l.to.label ? (
+          <div
+            key={`${l.id}-svc`}
+            className={cn(
+              "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap",
+              "bg-slate-950/70 border-blue-300/25 text-blue-100 backdrop-blur transition-all duration-400",
+              frame.stats ? "opacity-0" : "opacity-100",
+            )}
+            style={{ ...pct(l.to.at), animation: "hero-pop 380ms 520ms cubic-bezier(.22,1,.36,1) backwards" }}
+          >
+            {l.to.icon}
+            {l.to.label}
+          </div>
+        ) : null,
+      )}
 
       {/* Chips */}
       {frame.chips.map((c) => (
@@ -184,12 +206,12 @@ export function HeroDemo({
             "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-medium whitespace-nowrap",
             "bg-slate-900/80 border-white/15 text-white backdrop-blur",
             frame.dragging === c.id ? "scale-105 border-blue-300/60 shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]" : "",
-            frame.stats ? "opacity-0 scale-90" : "opacity-100",
+            frame.stats ? "opacity-0" : "opacity-100",
           )}
           style={{
             ...pct(c.at),
             transition: "left 900ms cubic-bezier(.22,1,.36,1), top 900ms cubic-bezier(.22,1,.36,1), opacity 400ms, transform 400ms",
-            animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) both",
+            animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards",
           }}
         >
           {c.icon}
@@ -208,7 +230,7 @@ export function HeroDemo({
             frame.stats ? "opacity-100 [transform:rotateY(0deg)]" : "opacity-0 [transform:rotateY(90deg)]",
           )}
         >
-          <p className="text-[11px] font-medium tracking-[0.18em] uppercase text-blue-500">
+          <p className="text-xs font-medium text-blue-500">
             {HERO_SCENES[sceneIndex]?.eyebrow[locale]}
           </p>
           <div className="mt-4 flex flex-col gap-4">
@@ -244,7 +266,7 @@ export function HeroDemo({
 
       <style>{`
         @keyframes hero-draw { to { stroke-dashoffset: 0; } }
-        @keyframes hero-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        @keyframes hero-pop { from { opacity: 0; scale: 0.7; } to { opacity: 1; scale: 1; } }
         @keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
     </div>

@@ -40,7 +40,7 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: {
       default: t.seo.home.title,
-      template: `%s · ${SITE_NAME}`,
+      template: `%s | ${SITE_NAME}`,
     },
     description: t.seo.home.description,
     applicationName: SITE_NAME,
