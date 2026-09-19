@@ -67,7 +67,7 @@ export function ClientWall() {
       </div>
 
       {/* Blue turns to white over a long gradient; a light blur sits where the wall dissolves. */}
-      <div className="relative -mt-16 h-56 w-full bg-gradient-to-b from-transparent via-[#1e3a8a] via-35% to-white">
+      <div className="relative -mt-16 h-64 w-full [background:linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.35)_50%,rgba(255,255,255,0.75)_75%,#ffffff_100%)]">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent,black_60%,transparent)]" />
         <div className="absolute inset-x-0 bottom-10 flex justify-center">
           <NoiseBackground
