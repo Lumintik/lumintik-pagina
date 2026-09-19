@@ -19,7 +19,7 @@ export function ServicesSection() {
   const visible = services.filter((s) => filter === "all" || s.group === filter);
 
   return (
-    <section id="services" className="relative w-full px-5 py-14 md:px-12 md:py-24 z-[2]">
+    <section id="services" className="relative w-full px-5 pt-4 pb-14 md:px-12 md:pt-6 md:pb-24 z-[2]">
       <div className="mx-auto max-w-[1600px] w-full">
         <p className="text-xs md:text-sm font-medium text-slate-500">{t.services.eyebrow}</p>
         <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight max-w-[18ch]">

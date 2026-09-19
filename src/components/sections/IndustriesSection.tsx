@@ -64,7 +64,7 @@ export function IndustriesSection() {
   return (
     <section
       id="industries"
-      className="relative w-full py-14 md:py-24 z-[2] overflow-hidden"
+      className="relative w-full pt-14 pb-4 md:pt-24 md:pb-6 z-[2] overflow-hidden"
     >
       <div className="px-5 md:px-12">
         <div className="mx-auto max-w-[1600px]">

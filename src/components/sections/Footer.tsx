@@ -59,7 +59,7 @@ export function Footer() {
     a.map((v, i) => Math.round(v + (b[i] - v) * t));
   const rgb = (c: number[]) => `rgb(${c.join(",")})`;
   const titleColor = rgb(lerp([15, 23, 42], [255, 255, 255], shift));
-  const accentColor = rgb(lerp([59, 130, 246], [147, 197, 253], shift));
+  const accentColor = rgb(lerp([115, 115, 115], [163, 163, 163], shift));
   const tagColor = rgb(lerp([71, 85, 105], [203, 213, 225], shift));
   const labelColor = rgb(lerp([100, 116, 139], [148, 163, 184], shift));
   const linkColor = rgb(lerp([51, 65, 85], [203, 213, 225], shift));
@@ -72,7 +72,7 @@ export function Footer() {
       id="footer"
       className="relative w-full z-[2] overflow-hidden flex-1 flex flex-col justify-end md:justify-start xl:justify-end"
     >
-      <div className="relative mx-auto max-w-[1600px] w-full px-6 md:px-12 pt-32 pb-20 md:py-20 lg:py-24 xl:pt-44 xl:pb-16">
+      <div className="relative mx-auto max-w-[1600px] w-full px-6 md:px-12 pt-28 pb-12 md:py-16 xl:pt-24 xl:pb-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
           <div>
             <h3
@@ -117,7 +117,8 @@ export function Footer() {
               >
                 {t.footer.sitemap}
               </h4>
-              <ul className="mt-6 flex flex-col gap-3">
+              {/* Two columns keep the list short enough to fit the screen. */}
+              <ul className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-3">
                 {footerLinks.map((link) => (
                   <li key={link.label}>
                     <a
@@ -159,7 +160,7 @@ export function Footer() {
         </div>
 
         <div
-          className="mt-24 md:mt-32 pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+          className="mt-12 md:mt-16 pt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
           style={{ borderColor: lineColor, transition: "border-color 0.4s ease" }}
         >
           <p
@@ -178,9 +179,9 @@ export function Footer() {
           ) : null}
         </div>
 
-        <div className="mt-10 md:mt-24 lg:mt-28">
+        <div className="mt-8 md:mt-10">
           <p
-            className="text-center uppercase font-extrabold tracking-tight leading-none text-[56px] md:text-[120px] lg:text-[160px]"
+            className="text-center uppercase font-extrabold tracking-tight leading-none text-[56px] md:text-[110px] lg:text-[140px]"
             style={{ color: `rgba(${shift > 0.5 ? "255,255,255" : "15,23,42"},0.18)` }}
           >
             LUMINTIK
