@@ -107,18 +107,18 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="mt-10 flex flex-col sm:flex-row sm:items-stretch gap-3 justify-center xl:justify-start" style={reveal(520)}>
+          <div className="mt-10 flex flex-row items-stretch gap-3 justify-center xl:justify-start" style={reveal(520)}>
             <NoiseBackground
-              containerClassName="w-full sm:w-fit rounded-full p-1.5"
+              containerClassName="flex-1 sm:flex-none sm:w-fit rounded-full p-1.5"
               gradientColors={["rgb(147, 197, 253)", "rgb(59, 130, 246)", "rgb(255, 255, 255)"]}
               noiseIntensity={0.25}
             >
               <a
                 href="#contact"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-slate-100 via-slate-100 to-white px-6 py-3 text-sm font-medium text-slate-900 shadow-[0px_2px_0px_0px_#ffffff_inset,0px_0.5px_1px_0px_#94a3b8] transition-all duration-100 active:scale-[0.98]"
+                className="inline-flex h-full w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gradient-to-r from-slate-100 via-slate-100 to-white px-3 sm:px-6 py-3 text-[13px] sm:text-sm font-medium text-slate-900 shadow-[0px_2px_0px_0px_#ffffff_inset,0px_0.5px_1px_0px_#94a3b8] transition-all duration-100 active:scale-[0.98]"
               >
                 {t.hero.startProject}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <svg className="hidden sm:block shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
@@ -126,7 +126,7 @@ export function Hero() {
             </NoiseBackground>
             <a
               href="#services"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white/10 transition-colors duration-300 w-full sm:w-auto"
+              className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 whitespace-nowrap px-3 sm:px-6 py-3 rounded-full border border-white/30 text-white text-[13px] sm:text-sm font-medium hover:bg-white/10 transition-colors duration-300 sm:w-auto"
             >
               {t.hero.howWeWork}
             </a>
