@@ -61,6 +61,7 @@ export type Messages = {
     title: string;
     titleAccent: string;
     aria: string;
+    all: string;
   };
   tape: string[];
   services: {
@@ -261,6 +262,7 @@ const en: Messages = {
     title: "Who we",
     titleAccent: "build for.",
     aria: "Companies we build for",
+    all: "See every client",
   },
   tape: [
     "Software that feels inevitable",
@@ -566,6 +568,7 @@ const es: Messages = {
     title: "Para quién",
     titleAccent: "construimos.",
     aria: "Empresas para las que construimos",
+    all: "Ver todos los clientes",
   },
   tape: [
     "Software que se siente inevitable",

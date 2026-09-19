@@ -67,8 +67,21 @@ export type Step =
   | { t: "route"; from: Pt; to: Pt; dur?: number }
   /** A form whose fields fill themselves in, one after another. */
   | { t: "form"; id: string; at: Pt; title: Record<Locale, string>; fields: Record<Locale, string>[]; dur?: number }
-  /** A dashboard whose bars grow one after another, with a headline metric. */
-  | { t: "dashboard"; at: Pt; title: Record<Locale, string>; bars: number[]; metric: Record<Locale, string>; dur?: number }
+  /** A website in a browser window, with a visitor moving through it. */
+  | { t: "page"; id: string; at: Pt; dur?: number }
+  /** The visitor scrolls the page block by block and presses its button. */
+  | { t: "browse"; id: string; dur?: number }
+  /** An analytics panel: metrics, a trend line, a bar chart and the visitor's steps. */
+  | {
+      t: "analytics";
+      at: Pt;
+      title: Record<Locale, string>;
+      kpis: { label: Record<Locale, string>; value: string }[];
+      series: number[];
+      bars: number[];
+      steps: Record<Locale, string>[];
+      dur?: number;
+    }
   | { t: "cursor"; to: Pt; dur?: number }
   | { t: "click"; dur?: number }
   | { t: "lines"; from: string; to: Target[]; dur?: number }
@@ -261,24 +274,26 @@ export const HERO_SCENES: Scene[] = [
       EN: "Event plan, funnels and dashboards: every action in the product is measured, understood and turned into a decision.",
     },
     steps: [
-      // The product emits events as people use it.
-      { t: "shop", id: "app", at: [22, 34], product: { ES: "Smartphone 256 GB", EN: "Smartphone 256 GB" }, price: "$ 1.299.000", button: { ES: "Comprar", EN: "Buy" }, dur: 500 },
-      { t: "cursor", to: [22, 46], dur: 700 },
-      { t: "click", dur: 300 },
-      { t: "buy", id: "app", done: { ES: "Pedido confirmado", EN: "Order confirmed" }, dur: 500 },
-      { t: "chip", chip: { id: "ph", label: "PostHog", icon: icon(<SiPosthog style={{ color: "#F9BD2B" }} />), at: [52, 80] }, dur: 300 },
-      { t: "extract", from: "app", fields: [
-        { label: { ES: "evento: producto visto", EN: "event: product viewed" }, at: [52, 56] },
-        { label: { ES: "evento: compra", EN: "event: purchase" }, at: [52, 68] },
-      ], dur: 900 },
-      { t: "lines", from: "app", to: [{ at: [52, 80] }], dur: 500 },
-      // The events become funnels and dashboards.
-      { t: "dashboard", at: [78, 40], title: { ES: "Embudo de compra", EN: "Purchase funnel" }, bars: [100, 72, 48, 31, 24], metric: { ES: "conversión por paso", EN: "conversion per step" }, dur: 2200 },
-      { t: "lines", from: "ph", to: [{ at: [78, 40] }], dur: 500 },
+      // A visitor goes through the site.
+      { t: "page", id: "site", at: [24, 44], dur: 500 },
+      { t: "browse", id: "site", dur: 2600 },
+      // What they did, measured.
+      { t: "chip", chip: { id: "ph", label: "PostHog", icon: icon(<SiPosthog style={{ color: "#F9BD2B" }} />), at: [46, 88] }, dur: 300 },
+      { t: "lines", from: "site", to: [{ at: [46, 88] }], dur: 500 },
+      { t: "analytics", at: [72, 48], title: { ES: "Producto en tiempo real", EN: "Product in real time" }, kpis: [
+        { label: { ES: "Sesiones", EN: "Sessions" }, value: "12.4k" },
+        { label: { ES: "Conversión", EN: "Conversion" }, value: "4,8%" },
+        { label: { ES: "Retención", EN: "Retention" }, value: "61%" },
+      ], series: [18, 30, 26, 44, 40, 58, 54, 72, 68, 90], bars: [100, 64, 41, 27], steps: [
+        { ES: "Entró por la página de inicio", EN: "Landed on the home page" },
+        { ES: "Vio los planes", EN: "Viewed the plans" },
+        { ES: "Hizo clic en Comenzar", EN: "Clicked Get started" },
+        { ES: "Completó el registro", EN: "Completed sign up" },
+      ], dur: 3400 },
+      { t: "lines", from: "ph", to: [{ at: [72, 48] }], dur: 400 },
       { t: "wait", dur: 400 },
-      // Claro case: consulting and telemetry for the Mi Claro super app.
       { t: "flip", stats: [
-        { big: "Mi Claro", small: { ES: "plan de eventos, embudos y tableros para decidir con datos", EN: "event plan, funnels and dashboards to decide with data" } },
+        { big: { ES: "Cada clic", EN: "Every click" }, small: { ES: "medido, entendido y convertido en una decisión de producto", EN: "measured, understood and turned into a product decision" } },
       ], dur: 5400 },
     ],
   },

@@ -107,28 +107,7 @@ export function Hero() {
             </p>
           </div>
 
-          <p
-            className="mt-10 text-slate-400 text-sm md:text-base leading-relaxed max-w-[52ch] mx-auto xl:mx-0"
-            style={reveal(400)}
-          >
-            {t.hero.description.lead}{" "}
-            <span className="font-medium text-white">{t.hero.description.matters}</span>
-            . {t.hero.description.buildingWith}{" "}
-            <a href="https://www.samsung.com/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:opacity-70 transition-opacity">
-              Samsung
-            </a>
-            ,{" "}
-            <a href="https://www.claro.com.co/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:opacity-70 transition-opacity">
-              Claro
-            </a>{" "}
-            {t.hero.description.and}{" "}
-            <a href="#work" className="text-blue-300 hover:opacity-70 transition-opacity">
-              EZDocuAI
-            </a>
-            {"."}
-          </p>
-
-          <div className="mt-8 flex flex-col sm:flex-row sm:items-stretch gap-3 justify-center xl:justify-start" style={reveal(520)}>
+          <div className="mt-10 flex flex-col sm:flex-row sm:items-stretch gap-3 justify-center xl:justify-start" style={reveal(520)}>
             <NoiseBackground
               containerClassName="w-full sm:w-fit rounded-full p-1.5"
               gradientColors={["rgb(147, 197, 253)", "rgb(59, 130, 246)", "rgb(255, 255, 255)"]}

@@ -14,7 +14,8 @@ type Chat = { at: Pt; lines: ChatLine[]; shown: number };
 type Shop = { id: string; at: Pt; product: string; price: string; button: string; done: string | null };
 type Route = { from: Pt; to: Pt; truckAt: Pt; arrived: boolean };
 type Form = { id: string; at: Pt; title: string; fields: string[]; filled: number };
-type Dashboard = { at: Pt; title: string; bars: number[]; metric: string; grown: number };
+type Page = { id: string; at: Pt; /** Which block the visitor is on, 0 before they start. */ block: number; pressed: boolean };
+type Analytics = { at: Pt; title: string; kpis: { label: string; value: string }[]; series: number[]; bars: number[]; steps: string[]; shown: number };
 
 type Frame = {
   chips: Chip[];
@@ -25,7 +26,8 @@ type Frame = {
   shop: Shop | null;
   route: Route | null;
   form: Form | null;
-  dashboard: Dashboard | null;
+  page: Page | null;
+  analytics: Analytics | null;
   cursor: Pt;
   cursorVisible: boolean;
   clicking: boolean;
@@ -49,7 +51,8 @@ const EMPTY: Frame = {
   shop: null,
   route: null,
   form: null,
-  dashboard: null,
+  page: null,
+  analytics: null,
   cursor: [50, 90],
   cursorVisible: false,
   clicking: false,
@@ -70,7 +73,9 @@ const DEFAULT_DUR: Record<Step["t"], number> = {
   buy: 700,
   route: 2400,
   form: 2600,
-  dashboard: 2200,
+  page: 500,
+  browse: 2600,
+  analytics: 3400,
   cursor: 700,
   click: 350,
   lines: 800,
@@ -137,7 +142,7 @@ export function HeroDemo({
       onScene?.(i, sceneDuration(scene, reduced));
       let f: Frame = { ...EMPTY };
       const chipAt = (id: string) =>
-        f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? (f.shop?.id === id ? f.shop.at : undefined) ?? (f.form?.id === id ? f.form.at : undefined) ?? f.cursor;
+        f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? (f.shop?.id === id ? f.shop.at : undefined) ?? (f.form?.id === id ? f.form.at : undefined) ?? (f.page?.id === id ? f.page.at : undefined) ?? f.cursor;
       setFrame(f);
       await sleep(350);
 
@@ -226,17 +231,35 @@ export function HeroDemo({
             }
             continue;
           }
-          case "dashboard": {
-            f = { ...f, dashboard: { at: step.at, title: step.title[locale], bars: step.bars, metric: step.metric[locale], grown: 0 } };
-            setFrame(f);
-            const each = dur / (step.bars.length + 1);
-            await sleep(each);
-            for (let k = 1; k <= step.bars.length; k++) {
+          case "page":
+            f = { ...f, page: { id: step.id, at: step.at, block: 0, pressed: false } };
+            break;
+          case "browse": {
+            // The visitor reads three blocks, then presses the button.
+            const each = dur / 4;
+            for (let k = 1; k <= 3; k++) {
+              f = { ...f, page: f.page ? { ...f.page, block: k } : null };
+              setFrame(f);
+              await sleep(each);
               if (cancelled.current) return;
-              f = { ...f, dashboard: f.dashboard ? { ...f.dashboard, grown: k } : null };
+            }
+            f = { ...f, page: f.page ? { ...f.page, pressed: true } : null };
+            setFrame(f);
+            await sleep(each);
+            continue;
+          }
+          case "analytics": {
+            f = { ...f, analytics: { at: step.at, title: step.title[locale], kpis: step.kpis.map((k) => ({ label: k.label[locale], value: k.value })), series: step.series, bars: step.bars, steps: step.steps.map((st) => st[locale]), shown: 0 } };
+            setFrame(f);
+            const each = dur / (step.steps.length + 2);
+            await sleep(each);
+            for (let k = 1; k <= step.steps.length; k++) {
+              if (cancelled.current) return;
+              f = { ...f, analytics: f.analytics ? { ...f.analytics, shown: k } : null };
               setFrame(f);
               await sleep(each);
             }
+            await sleep(each);
             continue;
           }
           case "lines": {
@@ -565,25 +588,93 @@ export function HeroDemo({
         </div>
       ) : null}
 
-      {/* Dashboard: the bars grow in one by one */}
-      {frame.dashboard ? (
+      {/* Website in a browser window; the block being read lights up */}
+      {frame.page ? (
         <div
           className={cn(
-            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] rounded-xl border border-white/10 bg-slate-950/80 p-3 text-white backdrop-blur transition-[opacity,filter] duration-500",
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[32%] min-w-[150px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
             fade,
           )}
-          style={{ ...pct(frame.dashboard.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+          style={{ ...pct(frame.page.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
         >
-          <p className="text-[11px] font-semibold">{frame.dashboard.title}</p>
-          <div className="mt-2 flex h-16 items-end gap-1.5">
-            {frame.dashboard.bars.map((v, i) => (
-              <div key={i} className="flex-1 rounded-t-sm bg-gradient-to-t from-blue-500 to-blue-300 transition-[height] duration-500 ease-out" style={{ height: i < frame.dashboard!.grown ? `${v}%` : "0%" }} />
+          <div className="flex items-center gap-1 bg-slate-100 px-2 py-1.5">
+            {[0, 1, 2].map((k) => <span key={k} className="size-1.5 rounded-full bg-slate-300" />)}
+            <span className="ml-2 h-2 flex-1 rounded-sm bg-white" />
+          </div>
+          <div className="p-2.5">
+            {/* The page scrolls as the visitor reads on */}
+            <div className="flex flex-col gap-2 transition-transform duration-500 ease-out" style={{ transform: `translateY(-${Math.max(0, frame.page.block - 1) * 14}px)` }}>
+              <div className={cn("flex items-center justify-between rounded-md px-2 py-1 transition-colors duration-300", frame.page.block === 1 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
+                <span className="h-1.5 w-8 rounded bg-slate-800" />
+                <span className="flex gap-1">{[0, 1, 2].map((k) => <span key={k} className="h-1 w-4 rounded bg-slate-300" />)}</span>
+              </div>
+              <div className={cn("rounded-md p-2 transition-colors duration-300", frame.page.block === 2 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
+                <div className="h-2 w-3/4 rounded bg-slate-800" />
+                <div className="mt-1 h-1.5 w-1/2 rounded bg-slate-300" />
+                <div className="mt-2 h-8 rounded bg-gradient-to-br from-slate-200 to-slate-300" />
+              </div>
+              <div className={cn("grid grid-cols-3 gap-1.5 rounded-md p-2 transition-colors duration-300", frame.page.block === 3 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
+                {[0, 1, 2].map((k) => (
+                  <div key={k} className={cn("rounded border p-1.5", k === 1 ? "border-slate-800" : "border-slate-200")}>
+                    <div className="h-1 w-2/3 rounded bg-slate-400" />
+                    <div className="mt-1 h-1.5 w-1/2 rounded bg-slate-800" />
+                  </div>
+                ))}
+              </div>
+              <div className={cn("mx-auto w-2/3 rounded-md py-1.5 text-center text-[10px] font-medium text-white transition-all duration-300", frame.page.pressed ? "bg-emerald-500" : "bg-slate-950")}>
+                {frame.page.pressed ? "✓" : "→"}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Analytics: metrics, a trend line, a funnel and the visitor's steps */}
+      {frame.analytics ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[44%] min-w-[200px] rounded-xl border border-white/10 bg-slate-950/85 p-3 text-white backdrop-blur transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.analytics.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <p className="text-[11px] font-semibold">{frame.analytics.title}</p>
+          <div className="mt-2 grid grid-cols-3 gap-1.5">
+            {frame.analytics.kpis.map((k, i) => (
+              <div key={k.label} className="rounded-md bg-white/5 px-2 py-1.5" style={{ animation: `hero-pop 300ms ${i * 120}ms cubic-bezier(.22,1,.36,1) backwards` }}>
+                <p className="text-[9px] text-white/60">{k.label}</p>
+                <p className="text-sm font-semibold leading-tight">{k.value}</p>
+              </div>
             ))}
           </div>
-          <div className="mt-2 flex items-center justify-between text-[10px] text-white/60">
-            <span>{frame.dashboard.metric}</span>
-            <span className="font-semibold text-emerald-300">{frame.dashboard.grown ? `${frame.dashboard.bars[Math.min(frame.dashboard.grown, frame.dashboard.bars.length) - 1]}%` : ""}</span>
+          <div className="mt-2 grid grid-cols-[1.4fr_1fr] gap-2">
+            <svg viewBox="0 0 100 40" className="h-12 w-full" preserveAspectRatio="none">
+              {(() => {
+                const pts = frame.analytics!.series.map((v, i, a) => [(i / (a.length - 1)) * 100, 38 - (v / 100) * 36] as const);
+                const d = pts.map(([x, y], i) => `${i ? "L" : "M"} ${x} ${y}`).join(" ");
+                return (
+                  <>
+                    <path d={`${d} L 100 40 L 0 40 Z`} fill="rgba(96,165,250,0.15)" style={{ animation: "hero-fade 600ms 400ms both" }} />
+                    <path d={d} fill="none" stroke="#93c5fd" strokeWidth="1.5" vectorEffect="non-scaling-stroke" pathLength={1} style={{ strokeDasharray: 1, strokeDashoffset: 1, animation: "hero-draw 1400ms 300ms ease-out forwards" }} />
+                  </>
+                );
+              })()}
+            </svg>
+            <div className="flex h-12 items-end gap-1">
+              {frame.analytics.bars.map((v, i) => (
+                <div key={i} className="flex-1 rounded-t-sm bg-gradient-to-t from-emerald-500 to-emerald-300 transition-[height] duration-500 ease-out" style={{ height: frame.analytics!.shown > 0 ? `${v}%` : "0%", transitionDelay: `${i * 120}ms` }} />
+              ))}
+            </div>
           </div>
+          <ol className="mt-2 flex flex-col gap-1">
+            {frame.analytics.steps.slice(0, frame.analytics.shown).map((st, i) => (
+              <li key={st} className="flex items-center gap-1.5 text-[10px] text-white/80" style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}>
+                <span className="size-1.5 rounded-full bg-blue-300" />
+                <span className="text-white/40 tabular-nums">{`0${i + 1}`}</span>
+                {st}
+              </li>
+            ))}
+          </ol>
         </div>
       ) : null}
 
