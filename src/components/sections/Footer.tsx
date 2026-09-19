@@ -76,7 +76,8 @@ export function Footer() {
     >
       <div className="relative mx-auto max-w-[1600px] w-full px-6 md:px-12 pt-28 pb-12 md:py-16 xl:pt-24 xl:pb-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-12">
-          <div>
+          {/* The call to action closes the row on the right */}
+          <div className="md:order-last flex flex-col md:items-end md:text-right">
             <h3
               className="text-3xl md:text-4xl font-semibold tracking-tight"
               style={{ color: titleColor, transition: "color 0.4s ease" }}
@@ -90,7 +91,7 @@ export function Footer() {
               </span>
             </h3>
             <p
-              className="mt-4 text-base max-w-md"
+              className="mt-4 text-base max-w-xs"
               style={{ color: tagColor, transition: "color 0.4s ease" }}
             >
               {t.footer.tagline}
