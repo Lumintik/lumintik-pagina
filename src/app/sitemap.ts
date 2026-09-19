@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { LOCALES, LOCALE_TAGS, toSegment } from "@/lib/locale";
 import { services } from "@/data/services";
-import { CASES } from "@/data/cases";
+import { CASES, MORE_PROJECTS } from "@/data/cases";
 import { paths } from "@/lib/routes";
 import { SITE_URL } from "@/lib/seo";
 
@@ -11,6 +11,7 @@ function routes(): ((locale: "ES" | "EN") => string)[] {
   return [
     () => "",
     ...CASES.map((c) => paths.caseStudy(c.slug)),
+    ...MORE_PROJECTS.map((p) => paths.project(p.key)),
     ...services.map((s) => () => `/services/${s.slug}`),
   ];
 }

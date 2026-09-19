@@ -66,8 +66,7 @@ export function ProjectsShowcase() {
                 image={{ src: p.image.src, alt: p.name }}
                 title={p.name}
                 desc={p.desc[locale]}
-                href={p.href ?? "#work"}
-                external={Boolean(p.href)}
+                href={href(locale, paths.project(p.key))}
                 badge={Boolean(p.href)}
               />
             ))}

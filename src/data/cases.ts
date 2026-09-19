@@ -477,12 +477,22 @@ export function findCase(slug: string): CaseStudy | undefined {
   return CASES.find((c) => c.slug === slug);
 }
 
+/**
+ * A project without a case study of its own. It still gets a page: the live
+ * site recorded scrolling, the screenshots we have and the link. Nothing is
+ * claimed about the work beyond the one line the team supplied.
+ */
 export type MoreProject = {
+  /** Also its URL segment. */
   key: string;
   name: string;
   image: { src: string; width: number; height: number };
   href?: string;
   desc: Record<Locale, string>;
+  /** Recording of the live site, shown at the top of the project page. */
+  video?: string;
+  /** Screenshots for the project page. */
+  gallery?: CaseImage[];
 };
 
 export const MORE_PROJECTS: MoreProject[] = [
@@ -495,6 +505,14 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "Plataforma de audio social que conecta la telefonía pública con la app en tiempo real.",
       EN: "Social audio platform that connects the public phone network with the app in real time.",
     },
+    gallery: [
+      {
+        src: "/projects/atto/home.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Página de inicio de Attosound", EN: "Attosound home page" },
+      },
+    ],
   },
   {
     key: "piebald",
@@ -505,6 +523,21 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "Gestora de créditos hipotecarios en Miami.",
       EN: "Mortgage lending firm in Miami.",
     },
+    video: "/videos/proyectos/piebald.mp4",
+    gallery: [
+      {
+        src: "/projects/piebald/hero.png",
+        width: 1600,
+        height: 1333,
+        alt: { ES: "Portada del sitio de Piebald Capital", EN: "Piebald Capital site hero" },
+      },
+      {
+        src: "/projects/piebald/secondary.png",
+        width: 1280,
+        height: 720,
+        alt: { ES: "Sección interior del sitio de Piebald Capital", EN: "Inner section of the Piebald Capital site" },
+      },
+    ],
   },
   {
     key: "minnesota",
@@ -515,6 +548,39 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "Estudio de grabación en Miami.",
       EN: "Recording studio in Miami.",
     },
+    video: "/videos/proyectos/minnesota.mp4",
+    gallery: [
+      {
+        src: "/projects/minnesota/hero-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Portada de Minnesota en escritorio", EN: "Minnesota home page on desktop" },
+      },
+      {
+        src: "/projects/minnesota/films-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Catálogo de películas de Minnesota", EN: "Minnesota films catalogue" },
+      },
+      {
+        src: "/projects/minnesota/records-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Sección de música de Minnesota", EN: "Minnesota records section" },
+      },
+      {
+        src: "/projects/minnesota/management-desktop.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Sección de management de Minnesota", EN: "Minnesota management section" },
+      },
+      {
+        src: "/projects/minnesota/hero-mobile.png",
+        width: 780,
+        height: 1688,
+        alt: { ES: "Portada de Minnesota en celular", EN: "Minnesota home page on a phone" },
+      },
+    ],
   },
   {
     key: "lenspr",
@@ -525,6 +591,15 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "La agencia de relaciones públicas más grande de Latam.",
       EN: "The largest public relations agency in Latin America.",
     },
+    video: "/videos/proyectos/lenspr.mp4",
+    gallery: [
+      {
+        src: "/projects/lenspr/home.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Página de inicio de LensPR", EN: "LensPR home page" },
+      },
+    ],
   },
   {
     key: "fridoom",
@@ -535,6 +610,15 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "Educación financiera con más de 200.000 seguidores.",
       EN: "Financial education with more than 200,000 followers.",
     },
+    video: "/videos/proyectos/fridoom.mp4",
+    gallery: [
+      {
+        src: "/projects/fridoom/home.png",
+        width: 2560,
+        height: 1600,
+        alt: { ES: "Página de inicio de Fridoom", EN: "Fridoom home page" },
+      },
+    ],
   },
   {
     key: "accesify",
@@ -545,6 +629,15 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "Tienda en línea de accesorios para celulares: fundas para iPhone y Samsung, protectores de pantalla y más.",
       EN: "Online store for phone accessories: iPhone and Samsung cases, screen protectors and more.",
     },
+    video: "/videos/proyectos/accesify.mp4",
+    gallery: [
+      {
+        src: "/projects/accesify/home.png",
+        width: 2560,
+        height: 1600,
+        alt: { ES: "Tienda en línea de Accesify", EN: "Accesify online store" },
+      },
+    ],
   },
   {
     key: "relatos",
@@ -555,5 +648,20 @@ export const MORE_PROJECTS: MoreProject[] = [
       ES: "Cortometrajes convertidos en ayuda humanitaria: dona desde US$5, accede a la colección y financia la asistencia tras el terremoto.",
       EN: "Short films turned into humanitarian aid: donate from US$5, unlock the collection and fund relief after the earthquake.",
     },
+    video: "/videos/proyectos/relatos.mp4",
+    gallery: [
+      {
+        src: "/projects/relatos/home.png",
+        width: 1920,
+        height: 1200,
+        alt: { ES: "Página de inicio de Relatos por Venezuela", EN: "Relatos por Venezuela home page" },
+      },
+      {
+        src: "/projects/relatos/home-mobile.png",
+        width: 780,
+        height: 1688,
+        alt: { ES: "Relatos por Venezuela en celular", EN: "Relatos por Venezuela on a phone" },
+      },
+    ],
   },
 ];

@@ -92,6 +92,11 @@ export type Messages = {
     title: string;
     titleAccent: string;
     visit: string;
+    eyebrow: string;
+    back: string;
+    open: string;
+    gallery: string;
+    next: string;
   };
   whyWork: {
     eyebrow: string;
@@ -254,6 +259,11 @@ const en: Messages = {
     title: "More",
     titleAccent: "projects.",
     visit: "opens their site in a new tab",
+    eyebrow: "Project",
+    back: "All projects",
+    open: "See the project",
+    gallery: "Screens",
+    next: "Next project",
   },
   whyWork: {
     eyebrow: "Why work with us?",
@@ -425,6 +435,11 @@ const es: Messages = {
     title: "Más",
     titleAccent: "proyectos.",
     visit: "abre su sitio en una pestaña nueva",
+    eyebrow: "Proyecto",
+    back: "Todos los proyectos",
+    open: "Ver el proyecto",
+    gallery: "Pantallas",
+    next: "Siguiente proyecto",
   },
   whyWork: {
     eyebrow: "¿Por qué trabajar con nosotros?",
