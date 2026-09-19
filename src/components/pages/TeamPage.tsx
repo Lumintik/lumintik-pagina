@@ -4,10 +4,27 @@ import Image from "next/image";
 import { PageShell } from "@/components/sections/PageShell";
 import { useT } from "@/components/providers/LocaleProvider";
 
-/** Names and roles as the team supplied them. Bios are still to come. */
-const PEOPLE: { name: string; role: "ceo" | "coo"; initials: string; photo?: string }[] = [
+type Person = {
+  name: string;
+  role: "ceo" | "coo";
+  initials: string;
+  photo?: string;
+  links?: { label: string; href: string }[];
+};
+
+/** Names, roles and public profiles as the team supplied them. Bios are still to come. */
+const PEOPLE: Person[] = [
   { name: "David Espejo", role: "ceo", initials: "DE" },
-  { name: "Andrey Plazas", role: "coo", initials: "AP", photo: "/equipo/andrey-plazas.jpg" },
+  {
+    name: "Andrey Plazas",
+    role: "coo",
+    initials: "AP",
+    photo: "/equipo/andrey-plazas.jpg",
+    links: [
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/andrey-steven-plazas-torres-4b8279192/" },
+      { label: "GitHub", href: "https://github.com/ANDREYPLAZAST" },
+    ],
+  },
 ];
 
 export function TeamPage() {
@@ -29,6 +46,26 @@ export function TeamPage() {
               </div>
               <h2 className="mt-5 text-slate-900 text-2xl font-semibold">{p.name}</h2>
               <p className="mt-1 text-slate-500 text-lg">{t.pages.team.roles[p.role]}</p>
+              {p.links?.length ? (
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {p.links.map((link) => (
+                    <li key={link.href}>
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm text-slate-700 transition-colors hover:border-slate-900 hover:text-slate-900"
+                      >
+                        {link.label}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                          <line x1="7" y1="17" x2="17" y2="7" />
+                          <polyline points="7 7 17 7 17 17" />
+                        </svg>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))}
         </ul>
