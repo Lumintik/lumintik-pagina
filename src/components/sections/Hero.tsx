@@ -67,7 +67,8 @@ export function Hero() {
                     active ? "text-white" : "text-slate-500 hover:text-slate-300",
                   )}
                 >
-                  <span className="block h-[3px] w-full rounded-full bg-white/15 overflow-hidden">
+                  <span className="block text-xs md:text-sm font-medium">{sc.eyebrow[locale]}</span>
+                  <span className="mt-3 block h-[3px] w-full rounded-full bg-white/15 overflow-hidden">
                     {active ? (
                       <span
                         key={progress.run}
@@ -76,7 +77,6 @@ export function Hero() {
                       />
                     ) : null}
                   </span>
-                  <span className="mt-3 block text-xs md:text-sm font-medium">{sc.eyebrow[locale]}</span>
                 </button>
               </li>
             );
