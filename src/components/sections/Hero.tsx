@@ -124,7 +124,7 @@ export function Hero() {
             {"."}
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center xl:items-start gap-3 justify-center xl:justify-start" style={reveal(520)}>
+          <div className="mt-8 flex flex-col sm:flex-row sm:items-stretch gap-3 justify-center xl:justify-start" style={reveal(520)}>
             <NoiseBackground
               containerClassName="w-full sm:w-fit rounded-full p-1.5"
               gradientColors={["rgb(147, 197, 253)", "rgb(59, 130, 246)", "rgb(255, 255, 255)"]}
