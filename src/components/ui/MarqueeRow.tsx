@@ -48,7 +48,7 @@ export function MarqueeRow({
               {item}
             </span>
             <span
-              className={`text-[24px] md:text-[56px] ${primary ? "text-blue-500" : "text-slate-300"}`}
+              className={`text-[24px] md:text-[56px] ${primary ? "text-slate-500" : "text-slate-300"}`}
             >
               ✻
             </span>

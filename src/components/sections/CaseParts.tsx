@@ -25,7 +25,7 @@ export function Pending() {
 /** Small blue label above a title, the way the rest of the site writes them. */
 export function Eyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className={cn("text-xs font-medium text-blue-500", className)}>
+    <p className={cn("text-xs font-medium text-slate-500", className)}>
       {children}
     </p>
   );
@@ -171,11 +171,11 @@ export function CaseCertification({ certification }: { certification: NonNullabl
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 transition-colors hover:border-blue-400"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 transition-colors hover:border-slate-900"
             >
               <span
                 aria-hidden
-                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[10px] font-semibold text-white"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[10px] font-semibold text-white"
               >
                 PASS
               </span>
@@ -197,7 +197,7 @@ export function CaseLinks({ study }: { study: CaseStudy }) {
   const { locale } = useLocale();
   if (!study.links.length && !study.badges?.length) return null;
   const linkClass =
-    "inline-flex items-center gap-2 px-5 py-3 rounded-full border border-blue-500/40 text-slate-900 text-sm font-medium hover:bg-blue-500 hover:text-white transition-colors duration-300";
+    "inline-flex items-center gap-2 px-5 py-3 rounded-full border border-slate-900/30 text-slate-900 text-sm font-medium hover:bg-slate-900 hover:text-white transition-colors duration-300";
   return (
     <>
       {study.links.length === 1 ? (

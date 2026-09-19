@@ -33,6 +33,8 @@ export type Messages = {
     blog: string;
     industries: string;
     cases: string;
+    ethics: string;
+    education: string;
   };
   pages: {
     services: { title: string; titleAccent: string; intro: string };
@@ -42,6 +44,20 @@ export type Messages = {
     contact: { title: string; titleAccent: string; intro: string };
     industries: { title: string; titleAccent: string; intro: string };
     cases: { title: string; titleAccent: string; intro: string };
+    ethics: {
+      title: string;
+      titleAccent: string;
+      intro: string;
+      whatTitle: string;
+      what: string[];
+      howTitle: string;
+      how: string[];
+      cta: string;
+      /** The channel is still to be confirmed by the team. */
+      channel: string;
+    };
+    news: { title: string; titleAccent: string; intro: string; empty: string };
+    education: { title: string; titleAccent: string; intro: string; empty: string };
   };
   hero: {
     rail: string;
@@ -201,6 +217,8 @@ const en: Messages = {
     blog: "Blog",
     industries: "Industries",
     cases: "Success stories",
+    ethics: "Ethics line",
+    education: "Education",
   },
   pages: {
     services: {
@@ -242,6 +260,38 @@ const en: Messages = {
       title: "Results with",
       titleAccent: "a name on them.",
       intro: "The problem, what we built and what it changed, for each client that let us tell it.",
+    },
+    ethics: {
+      title: "A channel to",
+      titleAccent: "speak up.",
+      intro: "If something in how we work does not sit right with you, this is the place to say it. Reports are received confidentially and every one gets an answer.",
+      whatTitle: "What you can report",
+      what: [
+        "Conduct that goes against the law or against what we agreed with a client.",
+        "Misuse of data, credentials or infrastructure entrusted to us.",
+        "Conflicts of interest, discrimination or harassment involving our team.",
+        "Any situation you would rather raise outside the regular channels.",
+      ],
+      howTitle: "How it works",
+      how: [
+        "Write to us with as much detail as you can. You may do it anonymously.",
+        "Reports are read only by the leadership team and handled in confidence.",
+        "We confirm receipt, look into it and reply with what was done.",
+      ],
+      cta: "Send a report",
+      channel: "[pending: dedicated ethics line email]",
+    },
+    news: {
+      title: "What is",
+      titleAccent: "new.",
+      intro: "Announcements from the studio: launches, partnerships and where we will be.",
+      empty: "No news published yet.",
+    },
+    education: {
+      title: "Learning to",
+      titleAccent: "build better.",
+      intro: "Workshops, talks and material for teams that want to understand the software they depend on.",
+      empty: "No programs published yet.",
     },
   },
   hero: {
@@ -498,7 +548,7 @@ const es: Messages = {
     work: "Proyectos",
     approach: "Enfoque",
     services: "Servicios",
-    news: "Novedades",
+    news: "Noticias",
     about: "Nosotros",
     home: "Inicio",
     join: "Únete",
@@ -507,6 +557,8 @@ const es: Messages = {
     blog: "Blog",
     industries: "Industrias",
     cases: "Casos de éxito",
+    ethics: "Línea ética",
+    education: "Educación",
   },
   pages: {
     services: {
@@ -548,6 +600,38 @@ const es: Messages = {
       title: "Resultados con",
       titleAccent: "nombre propio.",
       intro: "El problema, lo que construimos y lo que cambió, por cada cliente que nos dejó contarlo.",
+    },
+    ethics: {
+      title: "Un canal para",
+      titleAccent: "hablar.",
+      intro: "Si algo en nuestra forma de trabajar no te parece correcto, este es el lugar para decirlo. Los reportes se reciben de forma confidencial y todos tienen respuesta.",
+      whatTitle: "Qué puedes reportar",
+      what: [
+        "Conductas contrarias a la ley o a lo acordado con un cliente.",
+        "Uso indebido de datos, credenciales o infraestructura que se nos confió.",
+        "Conflictos de interés, discriminación o acoso que involucren a nuestro equipo.",
+        "Cualquier situación que prefieras plantear fuera de los canales habituales.",
+      ],
+      howTitle: "Cómo funciona",
+      how: [
+        "Escríbenos con todo el detalle que puedas. Puedes hacerlo de forma anónima.",
+        "Los reportes los lee únicamente el equipo directivo y se manejan con confidencialidad.",
+        "Confirmamos el recibo, investigamos y te respondemos con lo que se hizo.",
+      ],
+      cta: "Enviar un reporte",
+      channel: "[dato pendiente: correo de la línea ética]",
+    },
+    news: {
+      title: "Lo que hay",
+      titleAccent: "de nuevo.",
+      intro: "Anuncios del estudio: lanzamientos, alianzas y dónde vamos a estar.",
+      empty: "Aún no hay noticias publicadas.",
+    },
+    education: {
+      title: "Aprender a",
+      titleAccent: "construir mejor.",
+      intro: "Talleres, charlas y material para equipos que quieren entender el software del que dependen.",
+      empty: "Aún no hay programas publicados.",
     },
   },
   hero: {

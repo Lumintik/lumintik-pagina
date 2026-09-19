@@ -37,7 +37,7 @@ export function ServiceDetail({
           className="relative w-full flex justify-center px-5 pt-32 pb-16 md:px-12 md:pt-44 md:pb-24"
           style={{
             background:
-              "linear-gradient(180deg, #000000 0%, #0f172a 45%, #1e3a8a 100%)",
+              "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)",
           }}
         >
           <div className="mx-auto max-w-[1600px] w-full">
@@ -52,7 +52,7 @@ export function ServiceDetail({
               {t.detail.back}
             </Link>
 
-            <p className="mt-10 text-xs font-medium text-blue-300">
+            <p className="mt-10 text-xs font-medium text-slate-400">
               {t.services.eyebrow}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
@@ -64,7 +64,7 @@ export function ServiceDetail({
 
             <a
               href={`${home}#contact`}
-              className="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-blue-300 transition-colors duration-300"
+              className="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-slate-200 transition-colors duration-300"
             >
               {t.detail.cta}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -124,7 +124,7 @@ export function ServiceDetail({
               <ol className="md:col-span-8 flex flex-col gap-8">
                 {content.process.map((step, i) => (
                   <li key={step.title} className="flex gap-5">
-                    <span className="shrink-0 w-9 h-9 rounded-full border border-blue-500/40 text-blue-500 text-sm font-medium flex items-center justify-center">
+                    <span className="shrink-0 w-9 h-9 rounded-full border border-slate-900/30 text-slate-500 text-sm font-medium flex items-center justify-center">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div>
@@ -146,7 +146,7 @@ export function ServiceDetail({
               <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
                 {content.deliverables.map((d) => (
                   <li key={d} className="flex items-start gap-3 text-slate-700 text-base md:text-lg">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-1 shrink-0 text-blue-500">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-1 shrink-0 text-slate-500">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     {d}
@@ -168,7 +168,7 @@ export function ServiceDetail({
                   <span className="text-xs font-medium text-slate-400">
                     {t.detail.next}
                   </span>
-                  <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-blue-500">
+                  <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-slate-500">
                     {next.title}
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
                       <line x1="5" y1="12" x2="19" y2="12" />
@@ -195,7 +195,7 @@ export function ServiceDetail({
         className="relative w-full flex justify-center overflow-clip -mt-[100vh] md:-mt-[90vh] lg:-mt-[96vh] xl:-mt-[100vh] h-[200vh] md:h-[185vh] lg:h-[195vh] xl:h-[200vh]"
         style={{
           background:
-            "linear-gradient(180deg, #ffffff 0%, #93c5fd 12%, #3b82f6 26%, #1e3a8a 42%, #0f172a 65%, #0a0a0a 100%)",
+            "linear-gradient(180deg, #ffffff 0%, #d4d4d4 12%, #737373 26%, #262626 42%, #111111 65%, #0a0a0a 100%)",
         }}
       >
         <div className="sticky top-0 w-full h-screen flex flex-col items-stretch overflow-hidden">

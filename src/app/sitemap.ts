@@ -20,6 +20,9 @@ function routes(): ((locale: "ES" | "EN") => string)[] {
     paths.blog,
     paths.industries,
     paths.cases,
+    paths.ethics,
+    paths.news,
+    paths.education,
     ...POSTS.map((p) => paths.post(p.slug)),
     paths.contact,
   ];

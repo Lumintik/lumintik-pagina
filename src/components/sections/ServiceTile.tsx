@@ -50,19 +50,25 @@ export function ServiceTile({ title, description, group, href, videoSrc, posterS
       />
       <span className={`absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/20 transition-opacity duration-500 ${hover ? "opacity-100" : "opacity-0"}`} />
 
-      <span className={`relative text-xs font-medium transition-colors duration-500 ${hover ? "text-blue-200" : "text-blue-600"}`}>{group}</span>
+      <span className="relative flex items-start justify-between gap-4">
+        <span className={`text-xs font-medium transition-colors duration-500 ${hover ? "text-slate-300" : "text-slate-500"}`}>{group}</span>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors duration-500 ${
+            hover ? "border-white text-white" : "border-slate-900 text-slate-900"
+          }`}
+        >
+          {cta}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </span>
+      </span>
       <span className="relative">
         <span className={`block text-2xl md:text-3xl font-semibold leading-tight transition-colors duration-500 ${hover ? "text-white" : "text-slate-900"}`}>
           {title}
         </span>
         <span className={`mt-3 block text-base leading-relaxed transition-colors duration-500 ${hover ? "text-slate-200" : "text-slate-500"}`}>
           {description}
-        </span>
-        <span className={`mt-5 inline-flex items-center gap-2 text-sm font-medium transition-colors duration-500 ${hover ? "text-white" : "text-slate-900"}`}>
-          {cta}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
         </span>
       </span>
     </Link>

@@ -28,13 +28,13 @@ export function PageShell({ eyebrow, title, titleAccent, intro, children, contac
         <header
           className="relative w-full flex justify-center px-5 pt-32 pb-16 md:px-12 md:pt-44 md:pb-24"
           style={{
-            background: "linear-gradient(180deg, #000000 0%, #0f172a 45%, #1e3a8a 100%)",
+            background: "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)",
           }}
         >
           <div className="mx-auto max-w-[1600px] w-full">
-            <p className="text-xs font-medium text-blue-300">{eyebrow}</p>
+            <p className="text-xs font-medium text-slate-400">{eyebrow}</p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
-              {title} <span className="italic text-blue-300">{titleAccent}</span>
+              {title} <span className="italic text-slate-400">{titleAccent}</span>
             </h1>
             <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">{intro}</p>
           </div>
@@ -56,7 +56,7 @@ export function PageShell({ eyebrow, title, titleAccent, intro, children, contac
         className="relative w-full flex justify-center overflow-clip -mt-[100vh] md:-mt-[90vh] lg:-mt-[96vh] xl:-mt-[100vh] h-[200vh] md:h-[185vh] lg:h-[195vh] xl:h-[200vh]"
         style={{
           background:
-            "linear-gradient(180deg, #ffffff 0%, #93c5fd 12%, #3b82f6 26%, #1e3a8a 42%, #0f172a 65%, #0a0a0a 100%)",
+            "linear-gradient(180deg, #ffffff 0%, #d4d4d4 12%, #737373 26%, #262626 42%, #111111 65%, #0a0a0a 100%)",
         }}
       >
         <div className="sticky top-0 w-full h-screen flex flex-col items-stretch overflow-hidden">

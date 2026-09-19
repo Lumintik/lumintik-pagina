@@ -46,7 +46,7 @@ export function ClientWall() {
               <>
                 <Mark client={client} />
                 {/* The country, bottom left */}
-                <span className="absolute left-3 bottom-3 flex size-5 items-center justify-center rounded-full border border-white/20 bg-slate-950/60 p-[3px]">
+                <span className="absolute left-3 bottom-3 flex size-7 items-center justify-center rounded-full border border-white/20 bg-slate-950/60 p-1">
                   <Flag country={client.country} className="size-full" />
                 </span>
               </>

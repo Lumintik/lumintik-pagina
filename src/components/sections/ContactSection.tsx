@@ -60,8 +60,8 @@ export function ContactSection() {
       id="contact"
       className="relative box-border outline-none px-5 py-20 md:px-10 md:py-32 w-full z-[2] bg-white border-none"
     >
-      <div className="box-border max-w-none w-full mx-auto md:max-w-[1150px] bg-gradient-to-br from-[#1e3a8a] to-[#0f172a] md:p-10 p-6 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(59,130,246,0.25)] border border-blue-800/40 overflow-hidden relative">
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none" />
+      <div className="box-border max-w-none w-full mx-auto md:max-w-[1150px] bg-gradient-to-br from-[#171717] to-[#0a0a0a] md:p-10 p-6 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-white/10 overflow-hidden relative">
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,0,0,0.1),transparent_50%)] pointer-events-none" />
         <div className="text-left mb-10 relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-3">
             {t.contactForm.title}
@@ -92,7 +92,7 @@ export function ContactSection() {
                 name="name"
                 type="text"
                 aria-invalid={invalid("name")}
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400 transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
                 required
               />
             </div>
@@ -104,15 +104,15 @@ export function ContactSection() {
                 id="service"
                 name="service"
                 aria-invalid={invalid("service")}
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white focus:outline-none focus:border-blue-400 transition-colors appearance-none cursor-pointer"
+                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white focus:outline-none focus:border-white transition-colors appearance-none cursor-pointer"
                 defaultValue=""
                 required
               >
-                <option value="" disabled className="bg-[#1e3a8a] text-slate-400">
+                <option value="" disabled className="bg-[#171717] text-slate-400">
                   {t.contactForm.serviceSelect}
                 </option>
                 {servicesMap.map((svc) => (
-                  <option key={svc} value={svc} className="bg-[#1e3a8a] text-white">
+                  <option key={svc} value={svc} className="bg-[#171717] text-white">
                     {svc}
                   </option>
                 ))}
@@ -128,7 +128,7 @@ export function ContactSection() {
                 name="email"
                 type="email"
                 aria-invalid={invalid("email")}
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400 transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
                 required
               />
             </div>
@@ -140,22 +140,22 @@ export function ContactSection() {
                 <select
                   id="countryCode"
                   name="countryCode"
-                  className="border-b border-slate-700 h-[49px] bg-transparent text-slate-300 pr-2 mr-2 focus:outline-none focus:border-blue-400 transition-colors cursor-pointer text-sm"
+                  className="border-b border-slate-700 h-[49px] bg-transparent text-slate-300 pr-2 mr-2 focus:outline-none focus:border-white transition-colors cursor-pointer text-sm"
                   defaultValue="+57"
                   aria-label="Country code"
                 >
-                  <option value="+57" className="bg-[#1e3a8a]">🇨🇴 +57</option>
-                  <option value="+1" className="bg-[#1e3a8a]">🇺🇸 +1</option>
-                  <option value="+52" className="bg-[#1e3a8a]">🇲🇽 +52</option>
-                  <option value="+34" className="bg-[#1e3a8a]">🇪🇸 +34</option>
-                  <option value="+54" className="bg-[#1e3a8a]">🇦🇷 +54</option>
-                  <option value="+56" className="bg-[#1e3a8a]">🇨🇱 +56</option>
+                  <option value="+57" className="bg-[#171717]">🇨🇴 +57</option>
+                  <option value="+1" className="bg-[#171717]">🇺🇸 +1</option>
+                  <option value="+52" className="bg-[#171717]">🇲🇽 +52</option>
+                  <option value="+34" className="bg-[#171717]">🇪🇸 +34</option>
+                  <option value="+54" className="bg-[#171717]">🇦🇷 +54</option>
+                  <option value="+56" className="bg-[#171717]">🇨🇱 +56</option>
                 </select>
                 <input
                   id="phone"
                   name="phone"
                   type="tel"
-                  className="w-full px-1 py-3 h-[49px] rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400 transition-colors"
+                  className="w-full px-1 py-3 h-[49px] rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
             </div>
@@ -168,7 +168,7 @@ export function ContactSection() {
                 id="company"
                 name="company"
                 type="text"
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400 transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -179,7 +179,7 @@ export function ContactSection() {
                 id="role"
                 name="role"
                 type="text"
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400 transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
               />
             </div>
           </div>
@@ -192,7 +192,7 @@ export function ContactSection() {
               id="message"
               name="message"
               rows={2}
-              className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-400 transition-colors resize-y"
+              className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors resize-y"
             ></textarea>
           </div>
 
@@ -205,7 +205,7 @@ export function ContactSection() {
               name="file"
               type="file"
               accept=".pdf,image/*,.doc,.docx"
-              className="w-full px-1 py-2 text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 transition-colors cursor-pointer"
+              className="w-full px-1 py-2 text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition-colors cursor-pointer"
             />
           </div>
 
@@ -215,7 +215,7 @@ export function ContactSection() {
               id="terms"
               name="terms"
               aria-invalid={invalid("terms")}
-              className="mt-1 min-w-[20px] min-h-[20px] rounded border-slate-600 bg-transparent text-blue-500 cursor-pointer"
+              className="mt-1 min-w-[20px] min-h-[20px] rounded border-slate-600 bg-transparent text-slate-500 cursor-pointer"
               required
             />
             <label htmlFor="terms" className="text-sm text-slate-300 leading-tight cursor-pointer">
@@ -241,7 +241,7 @@ export function ContactSection() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full md:w-auto md:self-center px-16 py-3.5 mt-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-full shadow-lg shadow-blue-500/20 hover:-translate-y-0.5 transition-all duration-300"
+            className="w-full md:w-auto md:self-center px-16 py-3.5 mt-2 bg-white hover:bg-slate-200 disabled:opacity-60 disabled:cursor-not-allowed text-slate-900 text-sm font-semibold rounded-full shadow-lg shadow-black/40 hover:-translate-y-0.5 transition-all duration-300"
           >
             {pending ? t.contactForm.sending : t.contactForm.submit}
           </button>

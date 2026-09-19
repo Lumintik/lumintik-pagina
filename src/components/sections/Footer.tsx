@@ -23,6 +23,9 @@ export function Footer() {
     { label: t.nav.work, href: href(locale, paths.projects) },
     { label: t.nav.team, href: href(locale, paths.team) },
     { label: t.nav.blog, href: href(locale, paths.blog) },
+    { label: t.nav.news, href: href(locale, paths.news) },
+    { label: t.nav.education, href: href(locale, paths.education) },
+    { label: t.nav.ethics, href: href(locale, paths.ethics) },
     { label: t.nav.contact, href: href(locale, paths.contact) },
   ];
 

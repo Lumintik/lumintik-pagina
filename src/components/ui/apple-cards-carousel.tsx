@@ -180,7 +180,7 @@ export function Card({ card, index, closeLabel, className }: { card: CarouselCar
               >
                 <Cross />
               </button>
-              <p className="text-base font-medium text-blue-600">{card.category}</p>
+              <p className="text-base font-medium text-slate-500">{card.category}</p>
               <p className="mt-3 text-2xl font-semibold leading-tight text-slate-900 md:text-5xl">{card.title}</p>
               <div className="py-8 md:py-10">{card.content}</div>
             </motion.div>
@@ -211,7 +211,7 @@ export function Card({ card, index, closeLabel, className }: { card: CarouselCar
             className="absolute inset-0 z-10 object-cover object-top"
           />
         ) : (
-          <div className="absolute inset-0 z-10 bg-[radial-gradient(120%_90%_at_30%_10%,rgba(59,130,246,0.35),rgba(15,23,42,0)_60%),linear-gradient(180deg,#0f172a,#020617)]" />
+          <div className="absolute inset-0 z-10 bg-[radial-gradient(120%_90%_at_30%_10%,rgba(0,0,0,0.35),rgba(15,23,42,0)_60%),linear-gradient(180deg,#0f172a,#020617)]" />
         )}
       </motion.button>
     </>

@@ -38,7 +38,7 @@ export default async function OpenGraphImage() {
           <div
             style={{
               fontSize: 24,
-              color: "#3b82f6",
+              color: "#a3a3a3",
               letterSpacing: 0,
               textTransform: "uppercase",
               fontWeight: 500,
@@ -59,7 +59,7 @@ export default async function OpenGraphImage() {
             }}
           >
             <span>We build software that feels&nbsp;</span>
-            <span style={{ color: "#3b82f6" }}>inevitable.</span>
+            <span style={{ color: "#a3a3a3" }}>inevitable.</span>
           </div>
         </div>
 

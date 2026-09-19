@@ -21,9 +21,9 @@ export function ServicesSection() {
   return (
     <section id="services" className="relative w-full px-5 py-14 md:px-12 md:py-24 z-[2]">
       <div className="mx-auto max-w-[1600px] w-full">
-        <p className="text-xs md:text-sm font-medium text-blue-600">{t.services.eyebrow}</p>
+        <p className="text-xs md:text-sm font-medium text-slate-500">{t.services.eyebrow}</p>
         <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight max-w-[18ch]">
-          {t.services.title} <span className="italic text-blue-600">{t.services.titleAccent}</span>
+          {t.services.title} <span className="italic text-slate-500">{t.services.titleAccent}</span>
         </h2>
 
         <div role="tablist" aria-label={t.services.eyebrow} className="mt-8 md:mt-10 flex flex-wrap gap-2">

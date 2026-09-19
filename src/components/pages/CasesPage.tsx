@@ -39,7 +39,7 @@ export function CasesPage() {
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-6 md:p-8">
-                    <span className="text-xs md:text-sm font-medium text-blue-600">{copy.sector}</span>
+                    <span className="text-xs md:text-sm font-medium text-slate-500">{copy.sector}</span>
                     <h2 className="text-slate-900 text-xl md:text-2xl font-semibold leading-snug text-balance">{copy.headline ?? copy.why ?? copy.solution}</h2>
                     <p className="text-slate-500 text-base leading-relaxed">{copy.client}. {copy.about}</p>
                     <span className="mt-auto inline-flex items-center gap-2 pt-2 text-sm font-medium text-slate-900">

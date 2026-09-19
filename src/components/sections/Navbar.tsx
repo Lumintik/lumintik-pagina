@@ -26,6 +26,9 @@ export function Navbar() {
     { label: t.nav.work, href: href(locale, paths.projects) },
     { label: t.nav.team, href: href(locale, paths.team) },
     { label: t.nav.blog, href: href(locale, paths.blog) },
+    { label: t.nav.news, href: href(locale, paths.news) },
+    { label: t.nav.education, href: href(locale, paths.education) },
+    { label: t.nav.ethics, href: href(locale, paths.ethics) },
   ];
 
   const mobileNavItems = [...navItems, { label: t.nav.contact, href: contactHref }];
@@ -86,7 +89,7 @@ export function Navbar() {
             "opacity 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, background-color 0.4s, backdrop-filter 0.4s, border-color 0.4s",
         }}
       >
-        <div className="mx-auto flex items-center justify-between max-w-[1600px] w-full pl-10 pr-6 md:pl-20 md:pr-12 py-3 md:py-3">
+        <div className="mx-auto flex items-center justify-between max-w-[1600px] w-full pl-10 pr-6 md:pl-20 md:pr-12 min-[1400px]:pl-12 min-[1400px]:pr-8 py-3 md:py-3">
           <a
             href={home}
             aria-label="Lumintik, home"
@@ -112,12 +115,12 @@ export function Navbar() {
             </span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden min-[1400px]:flex items-center gap-1.5">
             {navItems.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                className={`relative text-sm font-medium px-4 py-2 rounded-full transition-colors duration-300 ${
+                className={`relative whitespace-nowrap text-[13px] font-medium px-3.5 py-2 rounded-full transition-colors duration-300 ${
                   scrolled
                     ? "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
                     : "text-white/80 hover:text-white hover:bg-white/10"
@@ -129,10 +132,10 @@ export function Navbar() {
 
             <a
               href={contactHref}
-              className={`ml-1 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
+              className={`ml-3 inline-flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-full text-[13px] font-medium transition-colors duration-300 ${
                 scrolled
-                  ? "bg-slate-900 text-white hover:bg-blue-500"
-                  : "bg-white text-slate-900 hover:bg-blue-300"
+                  ? "bg-slate-900 text-white hover:bg-slate-700"
+                  : "bg-white text-slate-900 hover:bg-slate-200"
               }`}
             >
               {t.nav.contact}
@@ -156,8 +159,8 @@ export function Navbar() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
-            className={`md:hidden relative inline-flex items-center justify-center w-12 h-12 rounded-full z-[110] transition-colors duration-300 ${
-              scrolled ? "bg-transparent text-blue-500" : "bg-transparent text-white"
+            className={`min-[1400px]:hidden relative inline-flex items-center justify-center w-12 h-12 rounded-full z-[110] transition-colors duration-300 ${
+              scrolled ? "bg-transparent text-slate-500" : "bg-transparent text-white"
             }`}
           >
             <span
@@ -248,7 +251,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
       aria-hidden={!open}
       inert={!open}
       onKeyDown={trapFocus}
-      className="md:hidden fixed inset-0 z-[100]"
+      className="min-[1400px]:hidden fixed inset-0 z-[100]"
       style={{
         pointerEvents: open ? "auto" : "none",
       }}
@@ -311,7 +314,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
               <span className="text-slate-900 text-4xl font-semibold tracking-tight">
                 {item.label}
               </span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-blue-500 transition-colors" aria-hidden>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-slate-500 transition-colors" aria-hidden>
                 <line x1="7" y1="17" x2="17" y2="7" />
                 <polyline points="7 7 17 7 17 17" />
               </svg>
@@ -329,7 +332,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
           <a
             href={contactHref}
             onClick={onClose}
-            className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-slate-900 text-white text-base font-medium hover:bg-blue-500 transition-colors duration-300"
+            className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-slate-900 text-white text-base font-medium hover:bg-slate-700 transition-colors duration-300"
           >
             {startLabel}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

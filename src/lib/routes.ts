@@ -13,6 +13,9 @@ export const SECTION_SEGMENTS = {
   team: { ES: "equipo", EN: "team" },
   blog: { ES: "blog", EN: "blog" },
   industries: { ES: "industrias", EN: "industries" },
+  ethics: { ES: "linea-etica", EN: "ethics-line" },
+  news: { ES: "noticias", EN: "news" },
+  education: { ES: "educacion", EN: "education" },
   contact: { ES: "contacto", EN: "contact" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
@@ -35,6 +38,9 @@ export const paths = {
   team: ((locale) => `/${SECTION_SEGMENTS.team[locale]}`) as PagePath,
   blog: ((locale) => `/${SECTION_SEGMENTS.blog[locale]}`) as PagePath,
   industries: ((locale) => `/${SECTION_SEGMENTS.industries[locale]}`) as PagePath,
+  ethics: ((locale) => `/${SECTION_SEGMENTS.ethics[locale]}`) as PagePath,
+  news: ((locale) => `/${SECTION_SEGMENTS.news[locale]}`) as PagePath,
+  education: ((locale) => `/${SECTION_SEGMENTS.education[locale]}`) as PagePath,
   post: (slug: string): PagePath => (locale) =>
     `/${SECTION_SEGMENTS.blog[locale]}/${slug}`,
   contact: ((locale) => `/${SECTION_SEGMENTS.contact[locale]}`) as PagePath,
