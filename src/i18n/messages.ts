@@ -1,5 +1,8 @@
 import type { Locale } from "@/lib/locale";
 
+/** How the services are grouped for the filters on the home page. */
+export type ServiceGroup = "product" | "engineering" | "ai" | "growth";
+
 /** Section labels shared by every service detail page. */
 export type DetailChrome = {
   back: string;
@@ -60,6 +63,9 @@ export type Messages = {
     eyebrow: string;
     title: string;
     titleAccent: string;
+    /** The filter buttons; keyed by the group in `src/data/services.ts`, plus "all". */
+    filters: Record<"all" | ServiceGroup, string>;
+    open: string;
     items: {
       productDevelopment: { title: string; desc: string };
       uxui: { title: string; desc: string };
@@ -251,6 +257,8 @@ const en: Messages = {
     eyebrow: "Our services",
     title: "Our",
     titleAccent: "services.",
+    filters: { all: "All", product: "Product and design", engineering: "Engineering", ai: "AI and data", growth: "Growth" },
+    open: "See the service",
     items: {
       productDevelopment: {
         title: "Product Development",
@@ -542,6 +550,8 @@ const es: Messages = {
     eyebrow: "Nuestros servicios",
     title: "Nuestros",
     titleAccent: "servicios.",
+    filters: { all: "Todos", product: "Producto y diseño", engineering: "Ingeniería", ai: "IA y datos", growth: "Crecimiento" },
+    open: "Ver el servicio",
     items: {
       productDevelopment: {
         title: "Desarrollo de Producto",
