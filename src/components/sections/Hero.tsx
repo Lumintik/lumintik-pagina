@@ -49,7 +49,7 @@ export function Hero() {
   return (
     <header
       id="hero"
-      className="relative flex flex-col justify-start w-full min-h-screen px-6 md:px-12 xl:px-20 pt-24 md:pt-28 pb-14 overflow-hidden z-[2]"
+      className="relative flex flex-col justify-start w-full px-6 md:px-12 xl:px-20 pt-24 md:pt-28 pb-14 overflow-hidden z-[2]"
     >
       {/* The rail: one stop per scene, the active one filling as it plays. */}
       <nav aria-label={t.hero.rail} className="w-full max-w-[1600px] mx-auto mb-8 md:mb-10" style={reveal(200)}>

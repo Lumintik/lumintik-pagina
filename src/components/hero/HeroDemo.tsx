@@ -14,6 +14,7 @@ type Chat = { at: Pt; lines: ChatLine[]; shown: number };
 type Shop = { id: string; at: Pt; product: string; price: string; button: string; done: string | null };
 type Route = { from: Pt; to: Pt; truckAt: Pt; arrived: boolean };
 type Form = { id: string; at: Pt; title: string; fields: string[]; filled: number };
+type Dashboard = { at: Pt; title: string; bars: number[]; metric: string; grown: number };
 
 type Frame = {
   chips: Chip[];
@@ -24,6 +25,7 @@ type Frame = {
   shop: Shop | null;
   route: Route | null;
   form: Form | null;
+  dashboard: Dashboard | null;
   cursor: Pt;
   cursorVisible: boolean;
   clicking: boolean;
@@ -47,6 +49,7 @@ const EMPTY: Frame = {
   shop: null,
   route: null,
   form: null,
+  dashboard: null,
   cursor: [50, 90],
   cursorVisible: false,
   clicking: false,
@@ -67,6 +70,7 @@ const DEFAULT_DUR: Record<Step["t"], number> = {
   buy: 700,
   route: 2400,
   form: 2600,
+  dashboard: 2200,
   cursor: 700,
   click: 350,
   lines: 800,
@@ -217,6 +221,19 @@ export function HeroDemo({
             for (let k = 1; k <= step.fields.length; k++) {
               if (cancelled.current) return;
               f = { ...f, form: f.form ? { ...f.form, filled: k } : null };
+              setFrame(f);
+              await sleep(each);
+            }
+            continue;
+          }
+          case "dashboard": {
+            f = { ...f, dashboard: { at: step.at, title: step.title[locale], bars: step.bars, metric: step.metric[locale], grown: 0 } };
+            setFrame(f);
+            const each = dur / (step.bars.length + 1);
+            await sleep(each);
+            for (let k = 1; k <= step.bars.length; k++) {
+              if (cancelled.current) return;
+              f = { ...f, dashboard: f.dashboard ? { ...f.dashboard, grown: k } : null };
               setFrame(f);
               await sleep(each);
             }
@@ -544,6 +561,28 @@ export function HeroDemo({
                 </div>
               );
             })}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Dashboard: the bars grow in one by one */}
+      {frame.dashboard ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] rounded-xl border border-white/10 bg-slate-950/80 p-3 text-white backdrop-blur transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.dashboard.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <p className="text-[11px] font-semibold">{frame.dashboard.title}</p>
+          <div className="mt-2 flex h-16 items-end gap-1.5">
+            {frame.dashboard.bars.map((v, i) => (
+              <div key={i} className="flex-1 rounded-t-sm bg-gradient-to-t from-blue-500 to-blue-300 transition-[height] duration-500 ease-out" style={{ height: i < frame.dashboard!.grown ? `${v}%` : "0%" }} />
+            ))}
+          </div>
+          <div className="mt-2 flex items-center justify-between text-[10px] text-white/60">
+            <span>{frame.dashboard.metric}</span>
+            <span className="font-semibold text-emerald-300">{frame.dashboard.grown ? `${frame.dashboard.bars[Math.min(frame.dashboard.grown, frame.dashboard.bars.length) - 1]}%` : ""}</span>
           </div>
         </div>
       ) : null}

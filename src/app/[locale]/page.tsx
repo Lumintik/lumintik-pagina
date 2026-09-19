@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Hero } from "@/components/sections/Hero";
+import { ClientWall } from "@/components/sections/ClientWall";
 import { IndustriesSection } from "@/components/sections/IndustriesSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ProjectsShowcase } from "@/components/sections/ProjectsShowcase";
@@ -19,7 +20,10 @@ export default function Home() {
               "linear-gradient(180deg, #000000 0%, #0f172a 55%, #1e3a8a 100%)",
           }}
         >
-          <Hero />
+          <div className="w-full flex flex-col items-center">
+            <Hero />
+            <ClientWall />
+          </div>
         </div>
         <div
           id="content-rise"

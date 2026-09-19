@@ -14,6 +14,7 @@ import {
   SiNestjs,
   SiNextdotjs,
   SiOpenai,
+  SiPosthog,
   SiRedis,
   SiWhatsapp,
 } from "react-icons/si";
@@ -66,6 +67,8 @@ export type Step =
   | { t: "route"; from: Pt; to: Pt; dur?: number }
   /** A form whose fields fill themselves in, one after another. */
   | { t: "form"; id: string; at: Pt; title: Record<Locale, string>; fields: Record<Locale, string>[]; dur?: number }
+  /** A dashboard whose bars grow one after another, with a headline metric. */
+  | { t: "dashboard"; at: Pt; title: Record<Locale, string>; bars: number[]; metric: Record<Locale, string>; dur?: number }
   | { t: "cursor"; to: Pt; dur?: number }
   | { t: "click"; dur?: number }
   | { t: "lines"; from: string; to: Target[]; dur?: number }
@@ -185,8 +188,8 @@ export const HERO_SCENES: Scene[] = [
     eyebrow: { ES: "Trámites y entidades públicas", EN: "Paperwork and public agencies" },
     title: { ES: "Trámites a nivel de gobierno", EN: "Paperwork at government grade" },
     line: {
-      ES: "Motor de formularios con prellenado por rol, validación campo a campo y PDF finales que superaron la evaluación técnica de USCIS: listos para presentarse ante una entidad federal.",
-      EN: "A form engine with role-aware prefill, field by field validation and final PDFs that passed the USCIS technical evaluation: ready to file with a federal agency.",
+      ES: "Motores de formularios con prellenado por rol, validación campo a campo y documentos finales listos para presentarse ante entidades públicas, con certificación de una agencia federal ya en producción.",
+      EN: "Form engines with role-aware prefill, field by field validation and final documents ready to file with public agencies, with a federal agency certification already in production.",
     },
     steps: [
       // The form fills itself from the case data.
@@ -205,7 +208,7 @@ export const HERO_SCENES: Scene[] = [
       // The final PDF is generated and checked.
       { t: "doc", id: "pdf", at: [84, 36], dur: 400 },
       { t: "scan", id: "pdf", dur: 1100 },
-      { t: "extract", from: "pdf", fields: [{ label: { ES: "PDF certificado por USCIS", EN: "USCIS certified PDF" }, at: [80, 66] }], dur: 700 },
+      { t: "extract", from: "pdf", fields: [{ label: { ES: "PDF certificado", EN: "Certified PDF" }, at: [80, 66] }], dur: 700 },
       { t: "chip", chip: { id: "ai", label: "Reglas + IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [40, 86] }, dur: 300 },
       { t: "lines", from: "ai", to: [{ at: [26, 44] }, { at: [84, 36] }], dur: 700 },
       { t: "wait", dur: 300 },
@@ -246,6 +249,36 @@ export const HERO_SCENES: Scene[] = [
       { t: "flip", stats: [
         { big: "30+", small: { ES: "puntos de venta como un solo inventario", EN: "points of sale as a single inventory" } },
         { big: "24 h", small: { ES: "entrega máxima", EN: "delivery at most" } },
+      ], dur: 5400 },
+    ],
+  },
+  {
+    id: "telemetry",
+    eyebrow: { ES: "Telemetría y datos", EN: "Telemetry and data" },
+    title: { ES: "Decisiones con datos, no con intuición", EN: "Decisions on data, not on gut feeling" },
+    line: {
+      ES: "Plan de eventos, embudos y tableros: cada acción en el producto se mide, se entiende y se convierte en una decisión.",
+      EN: "Event plan, funnels and dashboards: every action in the product is measured, understood and turned into a decision.",
+    },
+    steps: [
+      // The product emits events as people use it.
+      { t: "shop", id: "app", at: [22, 34], product: { ES: "Smartphone 256 GB", EN: "Smartphone 256 GB" }, price: "$ 1.299.000", button: { ES: "Comprar", EN: "Buy" }, dur: 500 },
+      { t: "cursor", to: [22, 46], dur: 700 },
+      { t: "click", dur: 300 },
+      { t: "buy", id: "app", done: { ES: "Pedido confirmado", EN: "Order confirmed" }, dur: 500 },
+      { t: "chip", chip: { id: "ph", label: "PostHog", icon: icon(<SiPosthog style={{ color: "#F9BD2B" }} />), at: [52, 80] }, dur: 300 },
+      { t: "extract", from: "app", fields: [
+        { label: { ES: "evento: producto visto", EN: "event: product viewed" }, at: [52, 56] },
+        { label: { ES: "evento: compra", EN: "event: purchase" }, at: [52, 68] },
+      ], dur: 900 },
+      { t: "lines", from: "app", to: [{ at: [52, 80] }], dur: 500 },
+      // The events become funnels and dashboards.
+      { t: "dashboard", at: [78, 40], title: { ES: "Embudo de compra", EN: "Purchase funnel" }, bars: [100, 72, 48, 31, 24], metric: { ES: "conversión por paso", EN: "conversion per step" }, dur: 2200 },
+      { t: "lines", from: "ph", to: [{ at: [78, 40] }], dur: 500 },
+      { t: "wait", dur: 400 },
+      // Claro case: consulting and telemetry for the Mi Claro super app.
+      { t: "flip", stats: [
+        { big: "Mi Claro", small: { ES: "plan de eventos, embudos y tableros para decidir con datos", EN: "event plan, funnels and dashboards to decide with data" } },
       ], dur: 5400 },
     ],
   },
