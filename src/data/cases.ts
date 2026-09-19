@@ -348,11 +348,26 @@ export const CASES: CaseStudy[] = [
     country: "MX",
     links: [{ label: "Griver", href: "https://www.reco.com.mx/" }],
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
-    images: [],
-    imagesPending: {
-      ES: "Foto del producto: la captura entregada para este caso es una pantalla interna de RECO Zero con una factura real de un cliente (Estée Lauder / Ultrafemme) y no se puede publicar. Falta una foto del producto sin datos de cliente.",
-      EN: "Product photo: the screenshot supplied for this case is an internal RECO Zero screen showing a real client's invoice (Estée Lauder / Ultrafemme) and cannot be published. A product photo without client data is still needed.",
-    },
+    images: [
+      {
+        src: "/projects/reco/plataforma-desktop.png",
+        width: 2400,
+        height: 1500,
+        alt: {
+          ES: "Plataforma RECO, el ecosistema de comercio exterior de Griver",
+          EN: "The RECO platform, Griver's foreign trade ecosystem",
+        },
+      },
+      {
+        src: "/projects/reco/plataforma-mobile.png",
+        width: 1170,
+        height: 2532,
+        alt: {
+          ES: "Plataforma RECO en celular",
+          EN: "The RECO platform on a phone",
+        },
+      },
+    ],
     copy: {
       ES: {
         topic: "Inteligencia artificial",
