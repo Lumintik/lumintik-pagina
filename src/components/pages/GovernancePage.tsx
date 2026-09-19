@@ -25,7 +25,7 @@ export function GovernancePage() {
   const fields: { key: keyof typeof copy.companyFields; value: string }[] = [
     { key: "name", value: COMPANY.name },
     { key: "nit", value: COMPANY.nit },
-    { key: "registry", value: COMPANY.registry },
+    { key: "registry", value: COMPANY.registry[locale] },
     { key: "domicile", value: COMPANY.domicile },
     { key: "address", value: COMPANY.address },
     { key: "activity", value: COMPANY.activity[locale] },

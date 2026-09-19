@@ -280,7 +280,7 @@ export function Navbar() {
 
           <button
             ref={toggleRef}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t.mobileMenu.close : t.mobileMenu.open}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
             className={`min-[1400px]:hidden relative inline-flex items-center justify-center w-12 h-12 rounded-full z-[110] transition-colors duration-300 ${
@@ -325,6 +325,7 @@ export function Navbar() {
         items={mobileNavItems}
         contactHref={contactHref}
         startLabel={t.mobileMenu.startProject}
+        closeLabel={t.mobileMenu.close}
         triggerRef={toggleRef}
       />
     </>
@@ -337,10 +338,11 @@ type MobileMenuProps = {
   items: { label: string; href: string; children?: { label: string; href: string }[] }[];
   contactHref: string;
   startLabel: string;
+  closeLabel: string;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 };
 
-function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef }: MobileMenuProps) {
+function MobileMenu({ open, onClose, items, contactHref, startLabel, closeLabel, triggerRef }: MobileMenuProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const asideRef = useRef<HTMLElement>(null);
   const wasOpen = useRef(false);
@@ -378,7 +380,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Menu"
+      aria-label={closeLabel}
       aria-hidden={!open}
       inert={!open}
       onKeyDown={trapFocus}
@@ -419,7 +421,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef 
           <button
             ref={closeRef}
             onClick={onClose}
-            aria-label="Close menu"
+            aria-label={closeLabel}
             className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-900">

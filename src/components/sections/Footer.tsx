@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
 import { href, paths } from "@/lib/routes";
+import { COMPANY, COMPANY_DOCUMENTS } from "@/data/company";
 
 const SOCIAL_LINKS = [
   { label: "GitHub", href: "https://github.com/ANDREYPLAZAST" },
@@ -74,7 +75,7 @@ export function Footer() {
       className="relative w-full z-[2] overflow-hidden flex-1 flex flex-col justify-end md:justify-start xl:justify-end"
     >
       <div className="relative mx-auto max-w-[1600px] w-full px-6 md:px-12 pt-28 pb-12 md:py-16 xl:pt-24 xl:pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-12">
           <div>
             <h3
               className="text-3xl md:text-4xl font-semibold tracking-tight"
@@ -134,6 +135,43 @@ export function Footer() {
               </ul>
             </nav>
 
+            {/* Registry details and the documents, as on the governance page */}
+            <section aria-label={t.pages.governance.companyTitle}>
+              <h4 className="text-xs uppercase" style={{ color: labelColor, transition: "color 0.4s ease" }}>
+                {t.pages.governance.companyTitle}
+              </h4>
+              <dl className="mt-6 flex flex-col gap-3 text-sm" style={{ color: linkColor }}>
+                <div>
+                  <dt className="text-xs" style={{ color: labelColor }}>{t.pages.governance.companyFields.name}</dt>
+                  <dd>{COMPANY.name}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs" style={{ color: labelColor }}>{t.pages.governance.companyFields.nit}</dt>
+                  <dd>{COMPANY.nit}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs" style={{ color: labelColor }}>{t.pages.governance.companyFields.registry}</dt>
+                  <dd>{COMPANY.registry[locale]}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs" style={{ color: labelColor }}>{t.pages.governance.companyFields.address}</dt>
+                  <dd>{COMPANY.address}</dd>
+                </div>
+              </dl>
+              <ul className="mt-4 flex flex-col gap-2">
+                {(["certificate", "rut", "rub"] as const).map((key) => (
+                  <li key={key}>
+                    <a href={COMPANY_DOCUMENTS[key]} download className="inline-flex items-center gap-2 text-sm transition-colors hover:opacity-70" style={{ color: linkColor }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
+                        <path d="M12 4v12M6 10l6 6 6-6M4 20h16" />
+                      </svg>
+                      {t.pages.governance.documents[key].title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
             <nav aria-label="Social links">
               <h4
                 className="text-xs uppercase"
@@ -180,9 +218,9 @@ export function Footer() {
           ) : null}
         </div>
 
-        <div className="mt-8 md:mt-10">
+        <div className="mt-6 md:mt-8">
           <p
-            className="text-center uppercase font-extrabold tracking-tight leading-none text-[56px] md:text-[110px] lg:text-[140px]"
+            className="text-center uppercase font-extrabold tracking-tight leading-none text-[56px] md:text-[96px] lg:text-[120px]"
             style={{ color: `rgba(${shift > 0.5 ? "255,255,255" : "15,23,42"},0.18)` }}
           >
             LUMINTIK

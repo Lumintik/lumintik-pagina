@@ -23,9 +23,12 @@ import type { Locale } from "@/lib/locale";
 /** A point on the stage, in percent of its width and height. */
 export type Pt = [number, number];
 
+/** Plain when it is a product name; per language when it is a word. */
+export type Label = string | Record<Locale, string>;
+
 export type Chip = {
   id: string;
-  label: string;
+  label: Label;
   icon?: ReactNode;
   at: Pt;
 };
@@ -37,7 +40,7 @@ export type Stat = { big: string | Record<Locale, string>; small: Record<Locale,
  * the provider is wired to); without one it ends at that point, which is
  * how a line reaches a chip that already exists.
  */
-export type Target = { at: Pt; label?: string; icon?: ReactNode };
+export type Target = { at: Pt; label?: Label; icon?: ReactNode };
 
 /**
  * One step of a scene. The player runs them in order; `dur` is how long the
@@ -222,7 +225,7 @@ export const HERO_SCENES: Scene[] = [
       { t: "doc", id: "pdf", at: [84, 36], dur: 400 },
       { t: "scan", id: "pdf", dur: 1100 },
       { t: "extract", from: "pdf", fields: [{ label: { ES: "PDF certificado", EN: "Certified PDF" }, at: [80, 66] }], dur: 700 },
-      { t: "chip", chip: { id: "ai", label: "Reglas + IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [40, 86] }, dur: 300 },
+      { t: "chip", chip: { id: "ai", label: { ES: "Reglas + IA", EN: "Rules + AI" }, icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [40, 86] }, dur: 300 },
       { t: "lines", from: "ai", to: [{ at: [26, 44] }, { at: [84, 36] }], dur: 700 },
       { t: "wait", dur: 300 },
       // EZMig case: USCIS technical evaluation passed on July 30, 2026.
@@ -249,8 +252,8 @@ export const HERO_SCENES: Scene[] = [
       { t: "chip", chip: { id: "nest", label: "NestJS", icon: icon(<SiNestjs style={{ color: "#E0234E" }} />), at: [22, 72] }, dur: 300 },
       { t: "lines", from: "shop", to: [{ at: [22, 72] }], dur: 400 },
       { t: "lines", from: "nest", to: [
-        { at: [50, 62], label: "Inventario", icon: icon(<FaBoxes style={{ color: "#93c5fd" }} />) },
-        { at: [52, 76], label: "Tiendas", icon: icon(<FaStore style={{ color: "#93c5fd" }} />) },
+        { at: [50, 62], label: { ES: "Inventario", EN: "Inventory" }, icon: icon(<FaBoxes style={{ color: "#93c5fd" }} />) },
+        { at: [52, 76], label: { ES: "Tiendas", EN: "Stores" }, icon: icon(<FaStore style={{ color: "#93c5fd" }} />) },
       ], dur: 800 },
       { t: "drag", chip: { id: "maps", label: "Distance Matrix", icon: icon(<SiGooglemaps style={{ color: "#4285F4" }} />), at: [70, 96] }, to: [56, 90], dur: 1000 },
       { t: "chip", chip: { id: "redis", label: "Redis", icon: icon(<SiRedis style={{ color: "#DC382D" }} />), at: [82, 76] }, dur: 300 },
@@ -310,7 +313,7 @@ export const HERO_SCENES: Scene[] = [
       { t: "drag", chip: { id: "wa", label: "WhatsApp", icon: icon(<SiWhatsapp style={{ color: "#25D366" }} />), at: [10, 96] }, to: [18, 22], dur: 1000 },
       { t: "chip", chip: { id: "ig", label: "Instagram", icon: icon(<SiInstagram style={{ color: "#E4405F" }} />), at: [18, 50] }, dur: 300 },
       { t: "chip", chip: { id: "web", label: "Web", icon: icon(<SiNextdotjs style={{ color: "#fff" }} />), at: [18, 78] }, dur: 300 },
-      { t: "chip", chip: { id: "agent", label: "Agente IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [46, 50] }, dur: 400 },
+      { t: "chip", chip: { id: "agent", label: { ES: "Agente IA", EN: "AI agent" }, icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [46, 50] }, dur: 400 },
       { t: "lines", from: "wa", to: [{ at: [46, 50] }], dur: 350 },
       { t: "lines", from: "ig", to: [{ at: [46, 50] }], dur: 350 },
       { t: "lines", from: "web", to: [{ at: [46, 50] }], dur: 350 },

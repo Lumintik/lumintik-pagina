@@ -202,6 +202,8 @@ export type Messages = {
   mobileMenu: {
     startProject: string;
     joinUs: string;
+    open: string;
+    close: string;
   };
   contactForm: {
     title: string;
@@ -606,6 +608,8 @@ const en: Messages = {
   mobileMenu: {
     startProject: "Start a project",
     joinUs: "Join us",
+    open: "Open menu",
+    close: "Close menu",
   },
   contactForm: {
     title: "Get a Quote",
@@ -1010,6 +1014,8 @@ const es: Messages = {
   mobileMenu: {
     startProject: "Iniciar un proyecto",
     joinUs: "Únete",
+    open: "Abrir menú",
+    close: "Cerrar menú",
   },
   contactForm: {
     title: "Cotización",

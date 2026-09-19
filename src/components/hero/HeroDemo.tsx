@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/locale";
 import { FaBox, FaHome, FaStore, FaTruck } from "react-icons/fa";
+import type { Label } from "@/data/heroScenes";
 import { HERO_SCENES, type ChatLine, type Chip, type Field, type Pt, type Scene, type Stat, type Step, type Target } from "@/data/heroScenes";
 
 type Line = { id: string; from: Pt; to: Target };
@@ -331,6 +332,7 @@ export function HeroDemo({
   }, [onScene, request, locale]);
 
   const pct = (p: Pt) => ({ left: `${p[0]}%`, top: `${p[1]}%` });
+  const text = (l: Label) => (typeof l === "string" ? l : l[locale]);
   // Everything on the stage dims behind the result card and blurs away when the scene leaves.
   const fade = frame.leaving ? "opacity-0 blur-[3px]" : frame.stats ? "opacity-60" : "opacity-100";
   const px = (p: Pt): Pt => [(p[0] / 100) * size.w, (p[1] / 100) * size.h];
@@ -393,7 +395,7 @@ export function HeroDemo({
             style={{ ...pct(l.to.at), animation: "hero-pop 380ms 520ms cubic-bezier(.22,1,.36,1) backwards" }}
           >
             {l.to.icon}
-            {l.to.label}
+            {text(l.to.label)}
           </div>
         ) : null,
       )}
@@ -695,7 +697,7 @@ export function HeroDemo({
           }}
         >
           {c.icon}
-          {c.label}
+          {text(c.label)}
         </div>
       ))}
 
