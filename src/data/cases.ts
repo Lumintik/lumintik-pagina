@@ -18,6 +18,9 @@ export type CaseCopy = {
   problem: string | null;
   solution: string | null;
   why: string | null;
+  /** Short version of the result, for the clients section. Always a fragment
+   * of the copy above, never a new claim. */
+  headline?: string;
 };
 
 export type CaseImage = {
@@ -123,6 +126,7 @@ export const CASES: CaseStudy[] = [
         solution:
           "Un algoritmo que cruza el stock de cada tienda con la distancia real al cliente, elige la tienda óptima y genera la guía de envío.",
         why: "Toda la red trabaja como un solo inventario, con entregas en máximo 24 horas.",
+        headline: "Toda la red trabaja como un solo inventario.",
       },
       EN: {
         topic: "National operations",
@@ -134,6 +138,7 @@ export const CASES: CaseStudy[] = [
         solution:
           "An algorithm that matches each store's stock against the real distance to the customer, picks the best store and generates the shipping label.",
         why: "The whole network works as a single inventory, with deliveries in 24 hours at most.",
+        headline: "The whole network works as a single inventory.",
       },
     },
   },
@@ -217,6 +222,7 @@ export const CASES: CaseStudy[] = [
         problem: "Entender cómo usan la app sus clientes para decidir qué mejorar.",
         solution:
           "Consultoría y telemetría: plan de eventos, embudos y tableros para análisis de datos.",
+        headline: "Plan de eventos, embudos y tableros para decidir con datos.",
         why: null,
       },
       EN: {
@@ -227,6 +233,7 @@ export const CASES: CaseStudy[] = [
         problem: "Understanding how customers use the app in order to decide what to improve.",
         solution:
           "Consulting and telemetry: an event plan, funnels and dashboards for data analysis.",
+        headline: "An event plan, funnels and dashboards to decide with data.",
         why: null,
       },
     },
@@ -329,6 +336,7 @@ export const CASES: CaseStudy[] = [
         solution:
           "OCR con inteligencia artificial que extrae y formatea el documento automáticamente: cada página pasa de 20 a 3 minutos para el traductor certificado.",
         why: "El cifrado TLS 1.3 en tránsito y AES 256 en reposo, el borrado programado y el certificado de eliminación con hash SHA 256 respaldan el dato: ningún documento queda guardado ni entrena modelos.",
+        headline: "Cada página pasa de 20 a 3 minutos para el traductor certificado.",
       },
       EN: {
         topic: "Security and encryption",
@@ -340,6 +348,7 @@ export const CASES: CaseStudy[] = [
         solution:
           "AI powered OCR that extracts and formats the document automatically: each page goes from 20 to 3 minutes for the certified translator.",
         why: "TLS 1.3 encryption in transit and AES 256 at rest, scheduled deletion and a deletion certificate with a SHA 256 hash back up the data: no document is kept or used to train models.",
+        headline: "Each page goes from 20 to 3 minutes for the certified translator.",
       },
     },
   },
@@ -379,6 +388,7 @@ export const CASES: CaseStudy[] = [
         solution:
           "Una API de OCR con IA para el prevalidador RECO y un modelo de lenguaje auto hospedado; los datos no salen de la infraestructura del cliente ni se almacenan.",
         why: "Lo que tomaba un día entero de revisión ahora toma 10 minutos con el prevalidador RECO.",
+        headline: "Un día entero de revisión, ahora 10 minutos.",
       },
       EN: {
         topic: "Artificial intelligence",
@@ -390,6 +400,7 @@ export const CASES: CaseStudy[] = [
         solution:
           "An AI OCR API for the RECO prevalidator and a self hosted language model; the data never leaves the client's infrastructure and is not stored.",
         why: "What used to take a full day of review now takes 10 minutes with the RECO prevalidator.",
+        headline: "A full day of review, now 10 minutes.",
       },
     },
   },
