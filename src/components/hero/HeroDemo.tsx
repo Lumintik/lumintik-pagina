@@ -15,8 +15,14 @@ type Frame = {
   clicking: boolean;
   dragging: string | null;
   stats: Stat[] | null;
+  /** Where the result card is: it starts in a corner and the cursor drags it to the centre. */
+  cardAt: Pt;
+  cardDragging: boolean;
   leaving: boolean;
 };
+
+const CARD_CORNER: Pt = [86, 84];
+const CARD_CENTER: Pt = [50, 50];
 
 const EMPTY: Frame = {
   chips: [],
@@ -26,6 +32,8 @@ const EMPTY: Frame = {
   clicking: false,
   dragging: null,
   stats: null,
+  cardAt: CARD_CORNER,
+  cardDragging: false,
   leaving: false,
 };
 
@@ -69,7 +77,6 @@ export function HeroDemo({
   className?: string;
 }) {
   const [frame, setFrame] = useState<Frame>(EMPTY);
-  const [sceneIndex, setSceneIndex] = useState(0);
   const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +102,6 @@ export function HeroDemo({
 
     async function playScene(i: number) {
       const scene = HERO_SCENES[i];
-      setSceneIndex(i);
       onScene?.(i, sceneDuration(scene, reduced));
       let f: Frame = { ...EMPTY };
       const chipAt = (id: string) => f.chips.find((c) => c.id === id)?.at ?? f.cursor;
@@ -142,9 +148,26 @@ export function HeroDemo({
             setFrame(f);
             continue;
           }
-          case "flip":
-            f = { ...f, stats: step.stats, cursorVisible: false };
-            break;
+          case "flip": {
+            // The cursor goes to the corner, the card appears under it, and
+            // both travel to the centre; the wiring stays on the stage behind.
+            f = { ...f, cursor: CARD_CORNER, cursorVisible: true };
+            setFrame(f);
+            await sleep(650);
+            if (cancelled.current) return;
+            f = { ...f, stats: step.stats, cardAt: CARD_CORNER, cardDragging: true };
+            setFrame(f);
+            await sleep(300);
+            if (cancelled.current) return;
+            f = { ...f, cardAt: CARD_CENTER, cursor: CARD_CENTER };
+            setFrame(f);
+            await sleep(950);
+            if (cancelled.current) return;
+            f = { ...f, cardDragging: false, cursorVisible: false };
+            setFrame(f);
+            await sleep(Math.max(0, dur - 1900));
+            continue;
+          }
           case "wait":
             break;
         }
@@ -189,7 +212,7 @@ export function HeroDemo({
 
       {/* Lines drawn out to services, in pixels so they land exactly on the chips */}
       <svg
-        className={cn("absolute inset-0 h-full w-full transition-opacity duration-400", frame.stats ? "opacity-0" : "opacity-100")}
+        className={cn("absolute inset-0 h-full w-full transition-opacity duration-500", frame.stats ? "opacity-60" : "opacity-100")}
         viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}
       >
         {size.w > 0 &&
@@ -226,7 +249,7 @@ export function HeroDemo({
             className={cn(
               "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap",
               "bg-slate-950/70 border-blue-300/25 text-blue-100 backdrop-blur transition-all duration-400",
-              frame.stats ? "opacity-0" : "opacity-100",
+              frame.stats ? "opacity-60" : "opacity-100",
             )}
             style={{ ...pct(l.to.at), animation: "hero-pop 380ms 520ms cubic-bezier(.22,1,.36,1) backwards" }}
           >
@@ -244,7 +267,7 @@ export function HeroDemo({
             "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-medium whitespace-nowrap",
             "bg-slate-900/80 border-white/15 text-white backdrop-blur",
             frame.dragging === c.id ? "scale-105 border-blue-300/60 shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]" : "",
-            frame.stats ? "opacity-0" : "opacity-100",
+            frame.stats ? "opacity-60" : "opacity-100",
           )}
           style={{
             ...pct(c.at),
@@ -257,28 +280,23 @@ export function HeroDemo({
         </div>
       ))}
 
-      {/* Result card */}
+      {/* Result card, dragged in from the corner */}
       <div
-        className="absolute inset-0 flex items-center justify-center p-6 [perspective:1200px]"
-        style={{ pointerEvents: "none" }}
+        className={cn(
+          "absolute -translate-x-1/2 -translate-y-1/2 w-[78%] max-w-[360px] rounded-2xl border border-white/15 bg-white p-6 text-slate-900 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]",
+          "transition-[left,top,scale,opacity] duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)]",
+          frame.stats ? "opacity-100" : "opacity-0",
+          frame.stats && frame.cardDragging ? "scale-[0.55]" : "scale-100",
+        )}
+        style={{ ...pct(frame.cardAt), pointerEvents: "none", transformOrigin: "center" }}
       >
-        <div
-          className={cn(
-            "w-[78%] max-w-[360px] rounded-2xl border border-white/15 bg-white p-6 text-slate-900 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] transition-all duration-700 [transform-style:preserve-3d]",
-            frame.stats ? "opacity-100 [transform:rotateY(0deg)]" : "opacity-0 [transform:rotateY(90deg)]",
-          )}
-        >
-          <p className="text-xs font-medium text-blue-500">
-            {HERO_SCENES[sceneIndex]?.eyebrow[locale]}
-          </p>
-          <div className="mt-4 flex flex-col gap-4">
-            {(frame.stats ?? []).map((s, i) => (
-              <div key={i}>
-                <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight">{s.big}</p>
-                <p className="mt-1.5 text-sm text-slate-500">{s.small[locale]}</p>
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-col gap-4">
+          {(frame.stats ?? []).map((s, i) => (
+            <div key={i}>
+              <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight">{s.big}</p>
+              <p className="mt-1.5 text-sm text-slate-500">{s.small[locale]}</p>
+            </div>
+          ))}
         </div>
       </div>
 
