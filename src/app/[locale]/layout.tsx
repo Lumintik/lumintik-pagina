@@ -123,7 +123,7 @@ const ORGANIZATION_JSONLD = {
   legalName: SITE_NAME,
   alternateName: "Lumintik",
   url: SITE_URL,
-  logo: `${SITE_URL}/lumintik-logo.png`,
+  logo: `${SITE_URL}/lumintik-logo-black.png`,
   image: `${SITE_URL}/lumintik-icon.png`,
   email: "andrey@lumintik.com",
   sameAs: ["https://github.com/ANDREYPLAZAST"],

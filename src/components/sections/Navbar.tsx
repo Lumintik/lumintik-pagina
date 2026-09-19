@@ -44,33 +44,24 @@ export function Navbar() {
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50);
-    // Cache vh to avoid mobile URL-bar toggle from oscillating the threshold.
-    let cachedVh = window.innerHeight || 1;
-    const refreshVh = () => {
-      cachedVh = window.innerHeight || 1;
-      onScroll();
-    };
     const onScroll = () => {
       const riseEl = document.getElementById("content-rise");
-      const vh = cachedVh;
       if (riseEl) {
         const top = riseEl.getBoundingClientRect().top;
-        // Text switches to dark when hero reaches its final light state.
-        setDarkText(top < vh * 2.3);
-        // Background only appears once we leave the hero entirely.
-        setBgVisible(top <= 0);
+        // The hero scrolls away like any section: the bar turns light with
+        // dark text as soon as the white content reaches it.
+        setDarkText(top < 80);
+        setBgVisible(top < 80);
       } else {
         setDarkText(window.scrollY > 12);
         setBgVisible(window.scrollY > 12);
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("orientationchange", refreshVh);
     onScroll();
     return () => {
       clearTimeout(t);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("orientationchange", refreshVh);
     };
   }, []);
 
@@ -121,11 +112,10 @@ export function Navbar() {
               }}
             >
               <Image
-                src="/lumintik-logo.png"
+                src={scrolled ? "/lumintik-logo-black.png" : "/lumintik-logo-white.png"}
                 alt="Lumintik"
                 fill
                 priority
-                unoptimized
                 sizes="(max-width: 768px) 140px, 180px"
                 className="object-contain object-left"
                 draggable={false}
@@ -299,10 +289,9 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, smoothScrol
         <div className="flex items-center justify-between px-6 pt-5 pb-2">
           <span className="relative block w-[173px] h-[48px]">
             <Image
-              src="/lumintik-logo.png"
+              src="/lumintik-logo-black.png"
               alt="Lumintik"
               fill
-              unoptimized
               sizes="173px"
               className="object-contain object-left"
               draggable={false}

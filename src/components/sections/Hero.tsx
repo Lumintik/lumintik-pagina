@@ -1,155 +1,55 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useT } from "@/components/providers/LocaleProvider";
 import Spline from "@splinetool/react-spline";
 
+/**
+ * The opening screen. It scrolls away like any other section: the text is
+ * white on the dark gradient, and the accent word rotates on a timer rather
+ * than being driven by the scroll position.
+ */
 export function Hero() {
   const t = useT();
   const [started, setStarted] = useState(false);
-  const [shift, setShift] = useState(0);
   const [accentIndex, setAccentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
   const accents = t.hero.titleAccentRotations ?? [t.hero.titleAccent];
-  const accentsLenRef = useRef(accents.length);
-  accentsLenRef.current = accents.length;
 
+  // Word entrance on load. Switching language navigates to another URL, so
+  // the page mounts again and the entrance plays again on its own.
   useEffect(() => {
-    const t = setTimeout(() => setStarted(true), 80);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check, { passive: true });
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  // Re-trigger word entrance when language changes.
-  useEffect(() => {
-    setStarted(false);
-    const id = setTimeout(() => setStarted(true), 60);
+    const id = setTimeout(() => setStarted(true), 80);
     return () => clearTimeout(id);
-  }, [t]);
-
-  // Track scroll progress within the hero wrapper to invert text colors.
-  useEffect(() => {
-    let ticking = false;
-    let lastShift = -1;
-    let lastAccent = -1;
-    // Cache vh so the mobile URL bar toggle (which mutates innerHeight on
-    // every scroll-up) doesn't make the color-shift threshold oscillate.
-    let cachedVh = window.innerHeight || 1;
-    const refreshVh = () => {
-      cachedVh = window.innerHeight || 1;
-      update();
-    };
-    const update = () => {
-      const rise = document.getElementById("content-rise");
-      const vh = cachedVh;
-      if (rise) {
-        const top = rise.getBoundingClientRect().top;
-        const start = vh * 3.1;
-        const end = vh * 1.7;
-        const raw = (start - top) / (start - end);
-        const nextShift = Math.max(0, Math.min(1, raw));
-        const minShiftDelta = window.innerWidth < 768 ? 0.035 : 0.015;
-        if (Math.abs(nextShift - lastShift) >= minShiftDelta) {
-          lastShift = nextShift;
-          setShift(nextShift);
-        }
-
-        // Rotate accent word across the full hero scroll.
-        const heroStart = vh * 3.4;
-        const heroEnd = 0;
-        const hp = Math.max(0, Math.min(1, (heroStart - top) / (heroStart - heroEnd)));
-        const len = accentsLenRef.current;
-        const idx = Math.min(len - 1, Math.floor(hp * len));
-        if (idx !== lastAccent) {
-          lastAccent = idx;
-          setAccentIndex(idx);
-        }
-      }
-      ticking = false;
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        globalThis.requestAnimationFrame(update);
-        ticking = true;
-      }
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("orientationchange", refreshVh);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("orientationchange", refreshVh);
-    };
   }, []);
 
-  const lerp = (a: number[], b: number[], t: number) =>
-    a.map((v, i) => Math.round(v + (b[i] - v) * t));
-  const rgb = (c: number[]) => `rgb(${c.join(",")})`;
-  // Final colors match v1: slate-900 title, blue-500 accent/eyebrow, slate-700 body, slate-900 matters
-  const titleColor = rgb(lerp([255, 255, 255], [15, 23, 42], shift));
-  const accentColor = rgb(lerp([147, 197, 253], [59, 130, 246], shift));
-  const eyebrowColor = rgb(lerp([147, 197, 253], [59, 130, 246], shift));
-  const bodyColor = rgb(lerp([203, 213, 225], [51, 65, 85], shift));
-  const matterColor = rgb(lerp([255, 255, 255], [15, 23, 42], shift));
+  // Rotate the accent word every few seconds.
+  useEffect(() => {
+    if (accents.length < 2) return;
+    const id = setInterval(() => {
+      setAccentIndex((i) => (i + 1) % accents.length);
+    }, 2800);
+    return () => clearInterval(id);
+  }, [accents.length]);
 
   return (
     <header
       id="hero"
-      className="relative flex flex-col w-full h-full px-6 md:px-20 pt-28 md:pt-32 pb-10 md:pb-6 overflow-hidden z-[2]"
+      className="relative flex flex-col w-full min-h-screen px-6 md:px-20 pt-28 md:pt-32 pb-10 md:pb-6 overflow-hidden z-[2]"
     >
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          opacity: shift,
-          transition: "opacity 0.4s ease",
-          background:
-            "radial-gradient(110% 65% at 50% -15%, rgba(59,130,246,0.4) 0%, rgba(96,165,250,0.2) 25%, rgba(255,255,255,0) 55%)",
-          maskImage:
-            "linear-gradient(180deg, #000 0%, #000 55%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%)",
-          WebkitMaskImage:
-            "linear-gradient(180deg, #000 0%, #000 55%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0) 100%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none mix-blend-screen"
-        style={{
-          opacity: isMobile ? 0 : shift,
-          transition: "opacity 0.4s ease",
-          background:
-            "conic-gradient(from 200deg at 50% -5%, rgba(255,255,255,0) 0deg, rgba(96,165,250,0.55) 30deg, rgba(255,255,255,0) 60deg, rgba(59,130,246,0.5) 95deg, rgba(255,255,255,0) 130deg, rgba(147,197,253,0.55) 175deg, rgba(255,255,255,0) 215deg, rgba(59,130,246,0.45) 260deg, rgba(255,255,255,0) 300deg, rgba(96,165,250,0.5) 340deg, rgba(255,255,255,0) 360deg)",
-          filter: isMobile ? "none" : "blur(28px)",
-          maskImage:
-            "linear-gradient(180deg, #000 0%, #000 50%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%)",
-          WebkitMaskImage:
-            "linear-gradient(180deg, #000 0%, #000 50%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%)",
-        }}
-      />
       <div className="relative flex flex-col flex-1 justify-between w-full max-w-[1880px] mx-auto pt-6 md:pt-6 xl:pt-16 pb-8 md:pb-12">
         <div className="xl:max-w-[60%] text-center xl:text-left">
           <span
-            className="block uppercase tracking-[0.2em] text-xs md:text-sm font-medium mb-5 md:mb-6"
+            className="block uppercase tracking-[0.2em] text-xs md:text-sm font-medium mb-5 md:mb-6 text-blue-300"
             style={{
-              color: eyebrowColor,
               opacity: started ? 1 : 0,
-              transition: "opacity 0.6s ease 60ms, color 0.4s ease",
+              transition: "opacity 0.6s ease 60ms",
             }}
           >
             {t.hero.eyebrow}
           </span>
 
-          <h1
-            className="text-[40px] leading-[1.05] md:text-7xl md:leading-[1.05] xl:text-[clamp(5rem,5.3vw,6.75rem)] xl:leading-[1.04] font-semibold tracking-tight text-balance"
-            style={{ color: titleColor, transition: "color 0.4s ease" }}
-          >
+          <h1 className="text-white text-[40px] leading-[1.05] md:text-7xl md:leading-[1.05] xl:text-[clamp(5rem,5.3vw,6.75rem)] xl:leading-[1.04] font-semibold tracking-tight text-balance">
             {t.hero.titleParts.map((text, i) => {
               const delay = i * 60;
               return (
@@ -171,7 +71,7 @@ export function Hero() {
                 </span>
               );
             })}
-            <span style={{ color: accentColor, transition: "color 0.4s ease" }}>
+            <span className="text-blue-300">
               <span
                 className="relative block xl:inline-block overflow-hidden align-bottom"
                 style={{
@@ -219,15 +119,15 @@ export function Hero() {
               "opacity 0.8s cubic-bezier(0.22,1,0.36,1) 1100ms, transform 0.8s cubic-bezier(0.22,1,0.36,1) 1100ms",
           }}
         >
-          {/* Spline 3D Scene anchored to the top of the description block so it pushes up on mobile */}
-          <div 
+          {/* Spline 3D scene anchored to the top of the description block so it pushes up on mobile */}
+          <div
             className="absolute left-1/2 flex items-center justify-center -translate-x-[50%] bottom-[100%] xl:left-auto xl:-translate-x-0 xl:right-[-80px] xl:bottom-full w-[390px] h-[480px] md:w-[460px] md:h-[560px] xl:w-[clamp(730px,48vw,940px)] xl:h-[clamp(730px,48vw,940px)] mb-[-75px] xl:mb-[-100px] pointer-events-none z-0"
             style={{
               clipPath: "polygon(0% 0%, 100% 0%, 100% calc(100% - 70px), max(50%, calc(100% - 180px)) calc(100% - 70px), max(50%, calc(100% - 180px)) 100%, min(50%, 180px) 100%, min(50%, 180px) calc(100% - 70px), 0% calc(100% - 70px))"
             }}
           >
-            {/* pointer-events-auto restores drag controls. scaleX(-1) reliably mirrors the model. touch-none allows mobile fingers to freely orbit without scrolling the page. onWheelCapture stops zooming. */}
-            <div 
+            {/* pointer-events-auto restores drag controls. scaleX(-1) mirrors the model. touch-none lets fingers orbit without scrolling the page. onWheelCapture stops zooming. */}
+            <div
               className="absolute inset-0 w-full h-full pointer-events-none xl:pointer-events-auto xl:cursor-grab xl:active:cursor-grabbing xl:touch-none"
               style={{ transform: "scaleX(-1)" }}
               onWheelCapture={(e) => e.stopPropagation()}
@@ -236,24 +136,15 @@ export function Hero() {
             </div>
           </div>
 
-          <p
-            className="text-sm md:text-xl xl:text-[clamp(1.25rem,1.2vw,1.55rem)] leading-relaxed xl:max-w-[60%] z-10 relative pointer-events-auto"
-            style={{ color: bodyColor, transition: "color 0.4s ease" }}
-          >
+          <p className="text-slate-300 text-sm md:text-xl xl:text-[clamp(1.25rem,1.2vw,1.55rem)] leading-relaxed xl:max-w-[60%] z-10 relative pointer-events-auto">
             {t.hero.description.lead}{" "}
-            <span
-              className="font-medium"
-              style={{ color: matterColor, transition: "color 0.4s ease" }}
-            >
-              {t.hero.description.matters}
-            </span>
+            <span className="font-medium text-white">{t.hero.description.matters}</span>
             . {t.hero.description.buildingWith}{" "}
             <a
               href="https://www.samsung.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:opacity-70 transition-opacity"
-              style={{ color: accentColor }}
+              className="text-blue-300 hover:opacity-70 transition-opacity"
             >
               Samsung
             </a>
@@ -262,18 +153,13 @@ export function Hero() {
               href="https://www.claro.com.co/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:opacity-70 transition-opacity"
-              style={{ color: accentColor }}
+              className="text-blue-300 hover:opacity-70 transition-opacity"
             >
               Claro
             </a>
             {" "}
             {t.hero.description.and}{" "}
-            <a
-              href="#work"
-              className="hover:opacity-70 transition-opacity"
-              style={{ color: accentColor }}
-            >
+            <a href="#work" className="text-blue-300 hover:opacity-70 transition-opacity">
               EZDocuAI
             </a>
             {"."}
@@ -283,11 +169,7 @@ export function Hero() {
             <div className="flex flex-wrap flex-col xl:flex-row items-center gap-3 z-10 w-full xl:w-auto">
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 md:px-6 rounded-full text-sm font-medium transition-colors duration-300 w-full xl:w-auto"
-                style={{
-                  backgroundColor: rgb(lerp([255, 255, 255], [15, 23, 42], shift)),
-                  color: rgb(lerp([15, 23, 42], [255, 255, 255], shift)),
-                }}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 md:px-6 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-blue-300 transition-colors duration-300 w-full xl:w-auto"
               >
                 {t.hero.startProject}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -297,11 +179,7 @@ export function Hero() {
               </a>
               <a
                 href="#services"
-                className="hidden xl:inline-flex items-center justify-center gap-2 px-5 py-3 md:px-6 rounded-full border text-sm font-medium transition-colors duration-300 w-full xl:w-auto"
-                style={{
-                  color: rgb(lerp([255, 255, 255], [15, 23, 42], shift)),
-                  borderColor: `rgba(${shift > 0.5 ? "15,23,42" : "255,255,255"},0.3)`,
-                }}
+                className="hidden xl:inline-flex items-center justify-center gap-2 px-5 py-3 md:px-6 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white/10 transition-colors duration-300 w-full xl:w-auto"
               >
                 {t.hero.howWeWork}
               </a>

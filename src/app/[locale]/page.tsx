@@ -12,19 +12,17 @@ export default function Home() {
       <Navbar />
       <main className="relative w-full flex flex-col items-center">
         <div
-          className="relative w-full flex justify-center overflow-clip h-[338vh] md:h-[405vh]"
+          className="relative w-full flex justify-center"
           style={{
             background:
-              "linear-gradient(180deg, #000000 0%, #1e3a8a 38%, #ffffff 80%, #ffffff 100%)",
+              "linear-gradient(180deg, #000000 0%, #0f172a 55%, #1e3a8a 100%)",
           }}
         >
-          <div className="sticky top-0 w-full h-screen flex justify-center overflow-hidden">
-            <Hero />
-          </div>
+          <Hero />
         </div>
         <div
           id="content-rise"
-          className="relative w-full bg-white z-[2] flex flex-col items-center md:-mt-[14vh] lg:-mt-[20vh] xl:mt-0"
+          className="relative w-full bg-white z-[2] flex flex-col items-center"
         >
           <ServicesSection />
           <ProjectsShowcase />

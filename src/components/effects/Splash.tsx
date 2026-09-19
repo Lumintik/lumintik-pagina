@@ -50,22 +50,13 @@ export function Splash() {
   return (
     <div
       aria-hidden={exiting}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-white"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]"
       style={{
         opacity: exiting ? 0 : 1,
         transition: "opacity 450ms cubic-bezier(0.16,1,0.3,1) 400ms",
         pointerEvents: exiting ? "none" : "auto",
       }}
     >
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(45% 40% at 50% 50%, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.05) 45%, rgba(255,255,255,0) 75%)",
-          opacity: exiting ? 0 : 1,
-          transition: "opacity 400ms cubic-bezier(0.16,1,0.3,1) 250ms",
-        }}
-      />
       <div
         ref={logoWrapRef}
         className="relative"
@@ -84,10 +75,10 @@ export function Splash() {
         }}
       >
         <Image
-          src="/lumintik-logo.png"
+          src="/lumintik-logo-white.png"
           alt="Lumintik"
-          width={1600}
-          height={1600}
+          width={675}
+          height={486}
           priority
           unoptimized
           sizes="(max-width: 768px) 50vw, 280px"
@@ -98,8 +89,8 @@ export function Splash() {
       </div>
       <style>{`
         @keyframes splash-breathe {
-          0%, 100% { filter: drop-shadow(0 8px 24px rgba(59,130,246,0.18)); }
-          50%      { filter: drop-shadow(0 12px 36px rgba(59,130,246,0.28)); }
+          0%, 100% { opacity: 0.92; }
+          50%      { opacity: 1; }
         }
       `}</style>
     </div>
