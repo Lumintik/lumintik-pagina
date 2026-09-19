@@ -61,6 +61,8 @@ export type CaseStudy = {
   tools: ToolId[] | null;
   /** First image is the cover. An empty list shows a pending placeholder. */
   images: CaseImage[];
+  /** Thumbnail for the work grid when the case has no photos of its own. */
+  cardImage?: CaseImage;
   /** What is still missing for the images, shown in the placeholder. */
   imagesPending?: Record<Locale, string>;
   copy: Record<Locale, CaseCopy>;
@@ -196,6 +198,12 @@ export const CASES: CaseStudy[] = [
     links: [{ label: "Claro", href: "https://www.claro.com.co/" }],
     tools: null,
     images: [],
+    cardImage: {
+      src: "/projects/claro/home.png",
+      width: 2880,
+      height: 1800,
+      alt: { ES: "Sitio de Claro Colombia", EN: "Claro Colombia website" },
+    },
     imagesPending: {
       ES: "Fotos del proyecto Mi Claro: mockup de la app sin fondo, foto del equipo y sala de trabajo.",
       EN: "Mi Claro project photos: app mockup without background, team photo and workroom.",
