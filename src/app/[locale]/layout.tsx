@@ -92,6 +92,14 @@ export async function generateMetadata({
       },
     },
     manifest: "/manifest.webmanifest",
+    // The symbol alone, black on light tabs and white on dark ones.
+    icons: {
+      icon: [
+        { url: "/favicon-light.png", type: "image/png", sizes: "256x256", media: "(prefers-color-scheme: light)" },
+        { url: "/favicon-dark.png", type: "image/png", sizes: "256x256", media: "(prefers-color-scheme: dark)" },
+      ],
+      apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    },
     appleWebApp: {
       capable: true,
       statusBarStyle: "default",
