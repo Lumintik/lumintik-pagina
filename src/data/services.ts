@@ -7,7 +7,8 @@ export type ServiceMeta = {
   /** URL segment for the service detail page. */
   slug: string;
   videoSrc: string;
-  posterSrc?: string;
+  /** A still frame of the video, for the menu and as the poster. */
+  posterSrc: string;
   group: ServiceGroup;
 };
 
@@ -18,6 +19,7 @@ export const services: ServiceMeta[] = [
     slug: "product-development",
     videoSrc:
       "https://res.cloudinary.com/dgnqk0ucm/video/upload/v1777947436/kling_20260425_%E4%BD%9C%E5%93%81_The_phone__3050_0_eqmcsa.mp4",
+    posterSrc: "https://res.cloudinary.com/dgnqk0ucm/video/upload/so_3/v1777947436/kling_20260425_%E4%BD%9C%E5%93%81_The_phone__3050_0_eqmcsa.jpg",
   },
   {
     key: "uxui",
@@ -25,6 +27,7 @@ export const services: ServiceMeta[] = [
     slug: "ux-ui-design",
     videoSrc:
       "https://res.cloudinary.com/dgnqk0ucm/video/upload/v1777897916/Web_design_xewguf.mp4",
+    posterSrc: "https://res.cloudinary.com/dgnqk0ucm/video/upload/so_3/v1777897916/Web_design_xewguf.jpg",
   },
   {
     key: "webEngineering",
@@ -32,6 +35,7 @@ export const services: ServiceMeta[] = [
     slug: "web-engineering",
     videoSrc:
       "https://res.cloudinary.com/dgnqk0ucm/video/upload/v1777897916/development_vzjgen.mp4",
+    posterSrc: "https://res.cloudinary.com/dgnqk0ucm/video/upload/so_3/v1777897916/development_vzjgen.jpg",
   },
   {
     key: "appliedAI",
@@ -39,6 +43,7 @@ export const services: ServiceMeta[] = [
     slug: "applied-ai",
     videoSrc:
       "https://res.cloudinary.com/dgnqk0ucm/video/upload/v1777897916/brand_dkfgzs.mp4",
+    posterSrc: "https://res.cloudinary.com/dgnqk0ucm/video/upload/so_3/v1777897916/brand_dkfgzs.jpg",
   },
   {
     key: "performanceSEO",
@@ -46,6 +51,7 @@ export const services: ServiceMeta[] = [
     slug: "performance-seo",
     videoSrc:
       "https://res.cloudinary.com/dgnqk0ucm/video/upload/v1777897916/motion_graphics_dojqoq.mp4",
+    posterSrc: "https://res.cloudinary.com/dgnqk0ucm/video/upload/so_3/v1777897916/motion_graphics_dojqoq.jpg",
   },
   {
     key: "brandMotion",

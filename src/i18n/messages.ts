@@ -35,6 +35,20 @@ export type Messages = {
     cases: string;
     ethics: string;
     education: string;
+    governance: string;
+    company: string;
+    companyData: string;
+    resources: string;
+  };
+  /** The header dropdowns: a line per panel and a line per entry. */
+  menu: {
+    viewAll: string;
+    services: string;
+    industries: string;
+    cases: string;
+    company: string;
+    resources: string;
+    items: Record<"team" | "governance" | "companyData" | "ethics" | "blog" | "news" | "education", string>;
   };
   pages: {
     services: { title: string; titleAccent: string; intro: string };
@@ -56,8 +70,34 @@ export type Messages = {
       /** The channel is still to be confirmed by the team. */
       channel: string;
     };
-    news: { title: string; titleAccent: string; intro: string; empty: string };
-    education: { title: string; titleAccent: string; intro: string; empty: string };
+    news: { title: string; titleAccent: string; intro: string; empty: string; cta: string };
+    education: {
+      title: string;
+      titleAccent: string;
+      intro: string;
+      formatsTitle: string;
+      formats: { title: string; desc: string }[];
+      datesTitle: string;
+      dates: string;
+      cta: string;
+    };
+    governance: {
+      title: string;
+      titleAccent: string;
+      intro: string;
+      structureTitle: string;
+      structure: { role: string; name: string; scope: string }[];
+      principlesTitle: string;
+      principles: { title: string; desc: string }[];
+      policiesTitle: string;
+      policies: { title: string; desc: string; link: "ethics" | "contact" }[];
+      companyTitle: string;
+      companyIntro: string;
+      companyFields: Record<"name" | "nit" | "registry" | "domicile" | "address" | "activity", string>;
+      documentsTitle: string;
+      documents: Record<"rut" | "rub" | "certificate", { title: string; desc: string }>;
+      download: string;
+    };
   };
   hero: {
     rail: string;
@@ -218,7 +258,28 @@ const en: Messages = {
     industries: "Industries",
     cases: "Success stories",
     ethics: "Ethics line",
+    governance: "Corporate governance",
+    company: "Company",
+    companyData: "Company details",
+    resources: "Resources",
     education: "Education",
+  },
+  menu: {
+    viewAll: "See all",
+    services: "Everything we build, from the idea to the platform it runs on.",
+    industries: "The sectors we have already shipped for.",
+    cases: "Real projects with the result each one produced.",
+    company: "Who we are and how we govern ourselves.",
+    resources: "What we write, announce and teach.",
+    items: {
+      team: "The people who design and build.",
+      governance: "Structure, principles and policies.",
+      companyData: "Tax ID, registry and documents to download.",
+      ethics: "A confidential channel to report concerns.",
+      blog: "Notes from the projects.",
+      news: "Announcements from the studio.",
+      education: "Workshops and talks for teams.",
+    },
   },
   pages: {
     services: {
@@ -285,13 +346,56 @@ const en: Messages = {
       title: "What is",
       titleAccent: "new.",
       intro: "Announcements from the studio: launches, partnerships and where we will be.",
-      empty: "No news published yet.",
+      empty: "No news published yet. The first announcements will appear here.",
+      cta: "Write to us to hear first",
     },
     education: {
       title: "Learning to",
       titleAccent: "build better.",
       intro: "Workshops, talks and material for teams that want to understand the software they depend on.",
-      empty: "No programs published yet.",
+      formatsTitle: "Formats",
+      formats: [
+        { title: "Team workshops", desc: "Half a day or a full day with your team on one topic: applied AI, observability, product delivery. Hands on, with your own product as the material." },
+        { title: "Talks", desc: "Forty minutes on what we have learned building for real operations, for events, universities and internal sessions." },
+        { title: "Technical mentoring", desc: "Recurring sessions with a tech lead or founding team: architecture reviews, roadmap and hiring decisions." },
+      ],
+      datesTitle: "Upcoming dates",
+      dates: "[pending: first published dates]",
+      cta: "Request a session",
+    },
+    governance: {
+      title: "How we",
+      titleAccent: "govern ourselves.",
+      intro: "A small studio still needs clear rules: who decides what, what we promise every client, and where to go when something is not right.",
+      structureTitle: "Structure",
+      structure: [
+        { role: "Chief Executive Officer", name: "David Espejo", scope: "Strategy, clients and the technical direction of every project." },
+        { role: "Chief Operating Officer", name: "Andrey Plazas", scope: "Operations, delivery, finance and the team." },
+      ],
+      principlesTitle: "Principles",
+      principles: [
+        { title: "The client owns what we build", desc: "Code, infrastructure and accounts are set up in the client's name from the first day. Leaving us never means losing the product." },
+        { title: "Their cloud, their constraints", desc: "We work on top of the client's cloud, data residency and compliance rules instead of imposing a stack of our own." },
+        { title: "Data stays where it belongs", desc: "We process the minimum data needed, in the client's infrastructure whenever it is sensitive, and we never use it to train models." },
+        { title: "One truth about the state of a project", desc: "Scope, budget and risks are written down and visible to the client at all times; there is no version of the project only we know." },
+        { title: "No conflicts of interest", desc: "We do not take engagements that compete with an active client's core business without telling both sides." },
+      ],
+      policiesTitle: "Policies and channels",
+      policies: [
+        { title: "Ethics line", desc: "A confidential channel for anyone, inside or outside the studio, to report conduct that goes against these principles.", link: "ethics" },
+        { title: "Data protection", desc: "Requests about personal data we hold, from a client, a candidate or a visitor, are answered through the contact channel.", link: "contact" },
+        { title: "Security incidents", desc: "If you believe you found a vulnerability in something we built or run, write to us; we acknowledge every report.", link: "contact" },
+      ],
+      companyTitle: "Company details",
+      companyIntro: "As registered with the Colombian tax authority (DIAN) and the Bogotá Chamber of Commerce.",
+      companyFields: { name: "Legal name", nit: "Tax ID (NIT)", registry: "Commercial registration", domicile: "Domicile", address: "Registered address", activity: "Main activity" },
+      documentsTitle: "Documents",
+      documents: {
+        rut: { title: "Tax registry (RUT)", desc: "DIAN single tax registry form, updated September 3, 2026." },
+        rub: { title: "Beneficial owners report", desc: "Report of beneficial owners filed with DIAN on June 2, 2026." },
+        certificate: { title: "Certificate of existence and legal representation", desc: "Issued by the Bogotá Chamber of Commerce on September 7, 2026. Verification code B26583477B5F84." },
+      },
+      download: "Download PDF",
     },
   },
   hero: {
@@ -496,7 +600,7 @@ const en: Messages = {
     tagline: "Software engineering studio for companies that care about craft.",
     sitemap: "Sitemap",
     elsewhere: "Elsewhere",
-    line: "Lumintik SAS, software studio, 2026",
+    line: "Lumintik Developers SAS, NIT 902069502-5, Bogotá, 2026",
     rights: "",
   },
   mobileMenu: {
@@ -558,7 +662,28 @@ const es: Messages = {
     industries: "Industrias",
     cases: "Casos de éxito",
     ethics: "Línea ética",
+    governance: "Gobierno corporativo",
+    company: "Empresa",
+    companyData: "Datos de la empresa",
+    resources: "Recursos",
     education: "Educación",
+  },
+  menu: {
+    viewAll: "Ver todo",
+    services: "Todo lo que construimos, de la idea a la plataforma donde corre.",
+    industries: "Los sectores en los que ya hemos entregado.",
+    cases: "Proyectos reales con el resultado que produjo cada uno.",
+    company: "Quiénes somos y cómo nos gobernamos.",
+    resources: "Lo que escribimos, anunciamos y enseñamos.",
+    items: {
+      team: "Las personas que diseñan y construyen.",
+      governance: "Estructura, principios y políticas.",
+      companyData: "NIT, matrícula y documentos para descargar.",
+      ethics: "Un canal confidencial para reportar inquietudes.",
+      blog: "Notas desde los proyectos.",
+      news: "Anuncios del estudio.",
+      education: "Talleres y charlas para equipos.",
+    },
   },
   pages: {
     services: {
@@ -625,13 +750,56 @@ const es: Messages = {
       title: "Lo que hay",
       titleAccent: "de nuevo.",
       intro: "Anuncios del estudio: lanzamientos, alianzas y dónde vamos a estar.",
-      empty: "Aún no hay noticias publicadas.",
+      empty: "Aún no hay noticias publicadas. Los primeros anuncios aparecerán aquí.",
+      cta: "Escríbenos para enterarte primero",
     },
     education: {
       title: "Aprender a",
       titleAccent: "construir mejor.",
       intro: "Talleres, charlas y material para equipos que quieren entender el software del que dependen.",
-      empty: "Aún no hay programas publicados.",
+      formatsTitle: "Formatos",
+      formats: [
+        { title: "Talleres para equipos", desc: "Media jornada o un día completo con tu equipo sobre un tema: IA aplicada, observabilidad, entrega de producto. Prácticos, con tu propio producto como material." },
+        { title: "Charlas", desc: "Cuarenta minutos sobre lo que hemos aprendido construyendo para operaciones reales, en eventos, universidades y sesiones internas." },
+        { title: "Mentoría técnica", desc: "Sesiones recurrentes con un líder técnico o un equipo fundador: revisiones de arquitectura, hoja de ruta y decisiones de contratación." },
+      ],
+      datesTitle: "Próximas fechas",
+      dates: "[dato pendiente: primeras fechas publicadas]",
+      cta: "Solicitar una sesión",
+    },
+    governance: {
+      title: "Cómo nos",
+      titleAccent: "gobernamos.",
+      intro: "Un estudio pequeño también necesita reglas claras: quién decide qué, qué le prometemos a cada cliente y a dónde acudir cuando algo no está bien.",
+      structureTitle: "Estructura",
+      structure: [
+        { role: "Director ejecutivo", name: "David Espejo", scope: "Estrategia, clientes y la dirección técnica de cada proyecto." },
+        { role: "Director de operaciones", name: "Andrey Plazas", scope: "Operación, entrega, finanzas y el equipo." },
+      ],
+      principlesTitle: "Principios",
+      principles: [
+        { title: "El cliente es dueño de lo que construimos", desc: "Código, infraestructura y cuentas quedan a nombre del cliente desde el primer día. Dejar de trabajar con nosotros nunca significa perder el producto." },
+        { title: "Su nube, sus restricciones", desc: "Trabajamos sobre la nube del cliente, su residencia de datos y sus reglas de cumplimiento, en lugar de imponer un stack propio." },
+        { title: "Los datos se quedan donde deben", desc: "Procesamos el mínimo de datos necesario, dentro de la infraestructura del cliente cuando son sensibles, y nunca los usamos para entrenar modelos." },
+        { title: "Una sola verdad sobre el estado del proyecto", desc: "Alcance, presupuesto y riesgos quedan por escrito y visibles para el cliente en todo momento; no existe una versión del proyecto que solo nosotros conocemos." },
+        { title: "Sin conflictos de interés", desc: "No tomamos trabajos que compitan con el negocio principal de un cliente activo sin decírselo a ambas partes." },
+      ],
+      policiesTitle: "Políticas y canales",
+      policies: [
+        { title: "Línea ética", desc: "Un canal confidencial para que cualquier persona, dentro o fuera del estudio, reporte conductas contrarias a estos principios.", link: "ethics" },
+        { title: "Protección de datos", desc: "Las solicitudes sobre datos personales que tengamos, de un cliente, un candidato o un visitante, se atienden por el canal de contacto.", link: "contact" },
+        { title: "Incidentes de seguridad", desc: "Si crees haber encontrado una vulnerabilidad en algo que construimos u operamos, escríbenos; confirmamos todos los reportes.", link: "contact" },
+      ],
+      companyTitle: "Datos de la empresa",
+      companyIntro: "Tal como constan en la DIAN y en la Cámara de Comercio de Bogotá.",
+      companyFields: { name: "Razón social", nit: "NIT", registry: "Matrícula mercantil", domicile: "Domicilio", address: "Dirección registrada", activity: "Actividad principal" },
+      documentsTitle: "Documentos",
+      documents: {
+        rut: { title: "Registro Único Tributario (RUT)", desc: "Formulario del RUT de la DIAN, actualizado el 3 de septiembre de 2026." },
+        rub: { title: "Reporte de beneficiarios finales", desc: "Reporte presentado ante la DIAN el 2 de junio de 2026." },
+        certificate: { title: "Certificado de existencia y representación legal", desc: "Expedido por la Cámara de Comercio de Bogotá el 7 de septiembre de 2026. Código de verificación B26583477B5F84." },
+      },
+      download: "Descargar PDF",
     },
   },
   hero: {
@@ -836,7 +1004,7 @@ const es: Messages = {
     tagline: "Estudio de ingeniería de software para empresas que valoran el oficio.",
     sitemap: "Mapa del sitio",
     elsewhere: "En otros lugares",
-    line: "Lumintik SAS, estudio de software, 2026",
+    line: "Lumintik Developers SAS, NIT 902069502-5, Bogotá, 2026",
     rights: "",
   },
   mobileMenu: {

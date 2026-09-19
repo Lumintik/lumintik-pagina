@@ -26,6 +26,7 @@ export function Footer() {
     { label: t.nav.news, href: href(locale, paths.news) },
     { label: t.nav.education, href: href(locale, paths.education) },
     { label: t.nav.ethics, href: href(locale, paths.ethics) },
+    { label: t.nav.governance, href: href(locale, paths.governance) },
     { label: t.nav.contact, href: href(locale, paths.contact) },
   ];
 
