@@ -82,8 +82,8 @@ export const HERO_SCENES: Scene[] = [
     eyebrow: { ES: "Plataforma e infraestructura", EN: "Platform and infrastructure" },
     title: { ES: "Infraestructura eficiente", EN: "Efficient infrastructure" },
     line: {
-      ES: "Tres ambientes, despliegues controlados y observabilidad desde el primer día.",
-      EN: "Three environments, controlled deployments and observability from day one.",
+      ES: "Ambientes aislados y blindados para testeo, despliegues controlados y observabilidad desde el primer día.",
+      EN: "Isolated, hardened environments for testing, controlled deployments and observability from day one.",
     },
     steps: [
       { t: "chip", chip: { id: "aws", label: "AWS", icon: icon(<FaAws style={{ color: "#FF9900" }} />), at: [20, 14] }, dur: 500 },
