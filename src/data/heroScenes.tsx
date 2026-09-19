@@ -1,19 +1,19 @@
 import type { ReactNode } from "react";
-import { FaAws, FaBoxes, FaDatabase, FaFileInvoice, FaHistory, FaServer, FaStore, FaTruck } from "react-icons/fa";
+import { FaAws, FaBoxes, FaDatabase, FaServer, FaStore, FaTruck } from "react-icons/fa";
 import {
+  SiClaude,
   SiCloudflare,
   SiCloudflarepages,
   SiCloudflareworkers,
-  SiDocker,
   SiGooglebigquery,
   SiGooglecloud,
   SiGooglecloudstorage,
   SiGooglemaps,
   SiInstagram,
+  SiLanggraph,
   SiNestjs,
   SiNextdotjs,
   SiOpenai,
-  SiPostgresql,
   SiRedis,
   SiWhatsapp,
 } from "react-icons/si";
@@ -29,7 +29,7 @@ export type Chip = {
   at: Pt;
 };
 
-export type Stat = { big: string; small: Record<Locale, string> };
+export type Stat = { big: string | Record<Locale, string>; small: Record<Locale, string> };
 
 /**
  * Where a line ends. With a label it shows a small chip there (the service
@@ -42,8 +42,22 @@ export type Target = { at: Pt; label?: string; icon?: ReactNode };
  * One step of a scene. The player runs them in order; `dur` is how long the
  * step takes before the next one starts.
  */
+/** A field pulled out of a scanned document. */
+export type Field = { label: Record<Locale, string>; at: Pt };
+
+/** One message in the chat panel. */
+export type ChatLine = { who: "user" | "bot" | "done"; text: Record<Locale, string> };
+
 export type Step =
   | { t: "chip"; chip: Chip; dur?: number }
+  /** A document appears on the stage. */
+  | { t: "doc"; id: string; at: Pt; dur?: number }
+  /** A scan line sweeps the document. */
+  | { t: "scan"; id: string; dur?: number }
+  /** Fields fly out of the document as small tags. */
+  | { t: "extract"; from: string; fields: Field[]; dur?: number }
+  /** A chat panel where the lines type in one by one. */
+  | { t: "chat"; at: Pt; lines: ChatLine[]; dur?: number }
   | { t: "cursor"; to: Pt; dur?: number }
   | { t: "click"; dur?: number }
   | { t: "lines"; from: string; to: Target[]; dur?: number }
@@ -122,28 +136,39 @@ export const HERO_SCENES: Scene[] = [
   {
     id: "ai",
     eyebrow: { ES: "Inteligencia artificial aplicada", EN: "Applied artificial intelligence" },
-    title: { ES: "Documentos que se revisan solos", EN: "Documents that review themselves" },
+    title: { ES: "IA que hace el trabajo", EN: "AI that does the work" },
     line: {
-      ES: "OCR con IA y un modelo de lenguaje auto hospedado: los datos no salen de la infraestructura del cliente.",
-      EN: "AI OCR and a self hosted language model: the data never leaves the client's infrastructure.",
+      ES: "Documentos que se leen solos, datos que se extraen sin manos y agentes que responden y automatizan procesos.",
+      EN: "Documents that read themselves, data extracted with no hands and agents that answer and automate processes.",
     },
     steps: [
-      { t: "chip", chip: { id: "ocr", label: "OCR con IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [24, 30] }, dur: 500 },
-      { t: "cursor", to: [24, 30], dur: 700 },
-      { t: "click", dur: 350 },
-      { t: "lines", from: "ocr", to: [
-        { at: [60, 16], label: "Pedimentos", icon: icon(<FaFileInvoice style={{ color: "#93c5fd" }} />) },
-        { at: [64, 40], label: "Facturas", icon: icon(<FaFileInvoice style={{ color: "#93c5fd" }} />) },
-      ], dur: 800 },
-      { t: "chip", chip: { id: "docker", label: "Docker", icon: icon(<SiDocker style={{ color: "#2496ED" }} />), at: [70, 64] }, dur: 300 },
-      { t: "drag", chip: { id: "pg", label: "PostgreSQL", icon: icon(<SiPostgresql style={{ color: "#4169E1" }} />), at: [16, 80] }, to: [34, 66], dur: 1100 },
-      { t: "lines", from: "pg", to: [
-        { at: [64, 84], label: "Histórico", icon: icon(<FaHistory style={{ color: "#93c5fd" }} />) },
-      ], dur: 600 },
-      { t: "wait", dur: 500 },
+      // A document is scanned and its fields come out.
+      { t: "doc", id: "doc", at: [22, 34], dur: 500 },
+      { t: "cursor", to: [22, 34], dur: 600 },
+      { t: "click", dur: 300 },
+      { t: "scan", id: "doc", dur: 1300 },
+      { t: "extract", from: "doc", fields: [
+        { label: { ES: "Fecha", EN: "Date" }, at: [50, 18] },
+        { label: { ES: "Total", EN: "Total" }, at: [52, 34] },
+        { label: { ES: "Proveedor", EN: "Supplier" }, at: [50, 50] },
+      ], dur: 900 },
+      // The models are dragged in and wired through an agent graph.
+      { t: "drag", chip: { id: "claude", label: "Claude", icon: icon(<SiClaude style={{ color: "#D97757" }} />), at: [10, 96] }, to: [18, 74], dur: 1000 },
+      { t: "chip", chip: { id: "bedrock", label: "Bedrock", icon: aws("bedrock"), at: [18, 60] }, dur: 300 },
+      { t: "chip", chip: { id: "gpt", label: "ChatGPT", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [18, 88] }, dur: 300 },
+      { t: "lines", from: "claude", to: [{ at: [48, 76], label: "LangGraph", icon: icon(<SiLanggraph style={{ color: "#fff" }} />) }], dur: 700 },
+      { t: "lines", from: "bedrock", to: [{ at: [48, 76] }], dur: 400 },
+      { t: "lines", from: "gpt", to: [{ at: [48, 76] }], dur: 400 },
+      // The agent answers and closes the loop.
+      { t: "chat", at: [78, 40], lines: [
+        { who: "user", text: { ES: "¿Ya llegó la factura de hoy?", EN: "Did today's invoice arrive?" } },
+        { who: "bot", text: { ES: "Sí. Leída y validada, sin diferencias.", EN: "Yes. Read and validated, no differences." } },
+        { who: "done", text: { ES: "Registrada en el ERP", EN: "Posted to the ERP" } },
+      ], dur: 2600 },
+      { t: "wait", dur: 300 },
       // Griver case: a full day of review down to 10 minutes.
       { t: "flip", stats: [
-        { big: "1 día → 10 min", small: { ES: "revisión de pedimentos y facturas", EN: "reviewing customs entries and invoices" } },
+        { big: { ES: "1 día → 10 min", EN: "1 day → 10 min" }, small: { ES: "revisión de documentos en un caso real", EN: "document review in a real case" } },
       ], dur: 3600 },
     ],
   },

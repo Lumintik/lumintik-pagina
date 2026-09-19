@@ -3,13 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/locale";
-import { HERO_SCENES, type Chip, type Pt, type Scene, type Stat, type Step, type Target } from "@/data/heroScenes";
+import { HERO_SCENES, type ChatLine, type Chip, type Field, type Pt, type Scene, type Stat, type Step, type Target } from "@/data/heroScenes";
 
 type Line = { id: string; from: Pt; to: Target };
+
+type Doc = { id: string; at: Pt; scanning: boolean; scanned: boolean };
+type Tag = Field & { key: string };
+type Chat = { at: Pt; lines: ChatLine[]; shown: number };
 
 type Frame = {
   chips: Chip[];
   lines: Line[];
+  docs: Doc[];
+  fields: Tag[];
+  chat: Chat | null;
   cursor: Pt;
   cursorVisible: boolean;
   clicking: boolean;
@@ -27,6 +34,9 @@ const CARD_CENTER: Pt = [50, 50];
 const EMPTY: Frame = {
   chips: [],
   lines: [],
+  docs: [],
+  fields: [],
+  chat: null,
   cursor: [50, 90],
   cursorVisible: false,
   clicking: false,
@@ -39,6 +49,10 @@ const EMPTY: Frame = {
 
 const DEFAULT_DUR: Record<Step["t"], number> = {
   chip: 400,
+  doc: 500,
+  scan: 1200,
+  extract: 900,
+  chat: 2400,
   cursor: 700,
   click: 350,
   lines: 800,
@@ -104,7 +118,7 @@ export function HeroDemo({
       const scene = HERO_SCENES[i];
       onScene?.(i, sceneDuration(scene, reduced));
       let f: Frame = { ...EMPTY };
-      const chipAt = (id: string) => f.chips.find((c) => c.id === id)?.at ?? f.cursor;
+      const chipAt = (id: string) => f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? f.cursor;
       setFrame(f);
       await sleep(350);
 
@@ -124,6 +138,41 @@ export function HeroDemo({
             await sleep(180);
             f = { ...f, clicking: false };
             break;
+          case "doc":
+            f = { ...f, docs: [...f.docs, { id: step.id, at: step.at, scanning: false, scanned: false }] };
+            break;
+          case "scan":
+            f = { ...f, docs: f.docs.map((d) => (d.id === step.id ? { ...d, scanning: true } : d)) };
+            setFrame(f);
+            await sleep(dur);
+            f = { ...f, docs: f.docs.map((d) => (d.id === step.id ? { ...d, scanning: false, scanned: true } : d)) };
+            setFrame(f);
+            continue;
+          case "extract": {
+            // The tags start on the document and slide out to their places.
+            const from = chipAt(step.from);
+            const base = f.fields.length;
+            const key = (k: number) => `${step.from}-${k}-${base}`;
+            f = { ...f, fields: [...f.fields, ...step.fields.map((fl, k) => ({ ...fl, at: from, key: key(k) }))] };
+            setFrame(f);
+            await sleep(60);
+            if (cancelled.current) return;
+            f = { ...f, fields: f.fields.map((fl) => { const i = step.fields.findIndex((_, k) => key(k) === fl.key); return i >= 0 ? { ...fl, at: step.fields[i].at } : fl; }) };
+            break;
+          }
+          case "chat": {
+            f = { ...f, chat: { at: step.at, lines: step.lines, shown: 0 } };
+            setFrame(f);
+            const each = dur / (step.lines.length + 1);
+            for (let k = 1; k <= step.lines.length; k++) {
+              await sleep(each);
+              if (cancelled.current) return;
+              f = { ...f, chat: f.chat ? { ...f.chat, shown: k } : null };
+              setFrame(f);
+            }
+            await sleep(each);
+            continue;
+          }
           case "lines": {
             const from = chipAt(step.from);
             const fresh = step.to.map((to, k) => ({ id: `${step.from}-${k}-${f.lines.length}`, from, to }));
@@ -259,6 +308,80 @@ export function HeroDemo({
         ) : null,
       )}
 
+      {/* Documents, with a scan line while they are read */}
+      {frame.docs.map((d) => (
+        <div
+          key={d.id}
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[22%] min-w-[96px] aspect-[3/4] overflow-hidden rounded-lg bg-white p-2.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-opacity duration-500",
+            frame.stats ? "opacity-60" : "opacity-100",
+          )}
+          style={{ ...pct(d.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="h-1.5 w-1/2 rounded bg-slate-800" />
+          {[0.9, 0.75, 0.85, 0.6, 0.8, 0.5].map((w, i) => (
+            <div key={i} className={cn("mt-1.5 h-1 rounded transition-colors duration-500", d.scanned ? "bg-blue-200" : "bg-slate-200")} style={{ width: `${w * 100}%` }} />
+          ))}
+          {d.scanned ? (
+            <span className="absolute right-1.5 bottom-1.5 flex size-4 items-center justify-center rounded-full bg-emerald-500 text-white" style={{ animation: "hero-pop 300ms both" }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+            </span>
+          ) : null}
+          {d.scanning ? (
+            <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-transparent via-blue-300/40 to-blue-400 hero-scan" />
+          ) : null}
+        </div>
+      ))}
+
+      {/* Fields pulled out of a document */}
+      {frame.fields.map((fl) => (
+        <div
+          key={fl.key}
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-md border border-emerald-300/30 bg-slate-950/70 px-2.5 py-1 text-[11px] font-medium text-emerald-100 backdrop-blur whitespace-nowrap",
+            frame.stats ? "opacity-60" : "opacity-100",
+          )}
+          style={{ ...pct(fl.at), transition: "left 700ms cubic-bezier(.22,1,.36,1), top 700ms cubic-bezier(.22,1,.36,1), opacity 400ms" }}
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+          {fl.label[locale]}
+        </div>
+      ))}
+
+      {/* Chat panel: the lines type in one at a time */}
+      {frame.chat ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] flex flex-col gap-1.5 rounded-xl border border-white/10 bg-slate-950/70 p-2.5 backdrop-blur transition-opacity duration-500",
+            frame.stats ? "opacity-60" : "opacity-100",
+          )}
+          style={{ ...pct(frame.chat.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          {frame.chat.lines.slice(0, frame.chat.shown).map((line, i) => (
+            <div
+              key={i}
+              className={cn(
+                "max-w-[92%] rounded-lg px-2.5 py-1.5 text-[11px] leading-snug",
+                line.who === "user" && "self-end bg-blue-500 text-white",
+                line.who === "bot" && "self-start bg-white text-slate-900",
+                line.who === "done" && "self-start inline-flex items-center gap-1.5 bg-emerald-500/15 text-emerald-200 border border-emerald-300/30",
+              )}
+              style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}
+            >
+              {line.who === "done" ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+              ) : null}
+              {line.text[locale]}
+            </div>
+          ))}
+          {frame.chat.shown < frame.chat.lines.length ? (
+            <div className="self-start flex gap-1 px-2 py-1.5">
+              {[0, 1, 2].map((k) => <span key={k} className="size-1 rounded-full bg-slate-400 hero-dot" style={{ animationDelay: `${k * 160}ms` }} />)}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
       {/* Chips */}
       {frame.chips.map((c) => (
         <div
@@ -293,7 +416,7 @@ export function HeroDemo({
         <div className="flex flex-col gap-4">
           {(frame.stats ?? []).map((s, i) => (
             <div key={i}>
-              <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight">{s.big}</p>
+              <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight">{typeof s.big === "string" ? s.big : s.big[locale]}</p>
               <p className="mt-1.5 text-sm text-slate-500">{s.small[locale]}</p>
             </div>
           ))}
@@ -324,6 +447,10 @@ export function HeroDemo({
         @keyframes hero-draw { to { stroke-dashoffset: 0; } }
         @keyframes hero-pop { from { opacity: 0; scale: 0.7; } to { opacity: 1; scale: 1; } }
         @keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes hero-scan { from { transform: translateY(-100%); } to { transform: translateY(300%); } }
+        .hero-scan { animation: hero-scan 1200ms ease-in-out infinite; }
+        @keyframes hero-dot { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+        .hero-dot { animation: hero-dot 1s infinite; }
       `}</style>
     </div>
   );
