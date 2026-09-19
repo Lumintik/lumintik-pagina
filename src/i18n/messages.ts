@@ -150,8 +150,19 @@ export type Messages = {
     next: string;
     close: string;
     seeCase: string;
+    /** Section headings shared by every industry page. */
+    page: { eyebrow: string; demands: string; whatWeBuilt: string; stack: string; gallery: string; caseTitle: string; others: string; back: string; ctaTitle: string; ctaBody: string; ctaButton: string };
     /** Keyed by the industry id in `src/data/industries.ts`. */
-    items: Record<string, { category: string; title: string; body: string[] }>;
+    items: Record<
+      string,
+      {
+        category: string;
+        title: string;
+        body: string[];
+        /** What this sector demands of the software; three per industry. */
+        demands: { title: string; desc: string }[];
+      }
+    >;
   };
   cases: {
     eyebrow: string;
@@ -473,6 +484,19 @@ const en: Messages = {
     next: "Next",
     close: "Close",
     seeCase: "See the project",
+    page: {
+      eyebrow: "Industry",
+      demands: "What this sector demands",
+      whatWeBuilt: "What we built",
+      stack: "What we work with",
+      gallery: "From the project",
+      caseTitle: "The case behind it",
+      others: "Other industries",
+      back: "All industries",
+      ctaTitle: "Do you work in this sector?",
+      ctaBody: "Tell us what you are trying to solve. We reply by email with what we would do and what it would take.",
+      ctaButton: "Start a project",
+    },
     items: {
       aerospace: {
         category: "Aerospace",
@@ -480,6 +504,11 @@ const en: Messages = {
         body: [
           "In 2024 we won Orion, a robotics and space exploration camp, with a rover we built and programmed ourselves.",
           "The prize was a trip to Cape Canaveral, at the Kennedy Space Center, where we programmed one of the modules of a part of the Space Station.",
+        ],
+        demands: [
+          { title: "There is no second attempt", desc: "A module already in space cannot be patched. The code is reviewed, simulated and tested before, not after." },
+          { title: "Hardware and software at once", desc: "Motors, sensors and control are programmed against the real part, not against a comfortable abstraction." },
+          { title: "Documentation as part of the deliverable", desc: "Every decision is written down so another team can pick it up years later." },
         ],
       },
       retail: {
@@ -489,6 +518,11 @@ const en: Messages = {
           "For Samsung's official distributor in Colombia, more than 30 points of sale had scattered stock: what ran out in one city was left over in another.",
           "We built an algorithm that matches each store's stock against the real distance to the customer, picks the best store and generates the shipping label. Deliveries now take 24 hours at most.",
         ],
+        demands: [
+          { title: "Inventory lies if it is not real time", desc: "Selling what no longer exists costs more than not selling it. Stock is queried, not assumed." },
+          { title: "Delivery is part of the product", desc: "Picking the wrong source store adds days. The real distance to the customer goes into the decision." },
+          { title: "Peaks give no warning", desc: "A launch or a Black Friday multiplies traffic. The platform is sized for that from day one." },
+        ],
       },
       telecom: {
         category: "Telecommunications",
@@ -496,6 +530,11 @@ const en: Messages = {
         body: [
           "Claro needed to understand how customers use the Mi Claro app to decide what to improve.",
           "We did the consulting and the telemetry: an event plan, funnels and dashboards for data analysis.",
+        ],
+        demands: [
+          { title: "Scale changes the rules", desc: "Millions of lines turn any detail into an incident. You measure before you decide." },
+          { title: "Nobody improves what they cannot see", desc: "Without an event plan, each team argues with its own version of the data." },
+          { title: "Systems from several eras coexist", desc: "The new has to talk to what has been running for years, without breaking it." },
         ],
       },
       trade: {
@@ -505,6 +544,11 @@ const en: Messages = {
           "For Griver we built an AI OCR pipeline that reads customs entries and invoices, cross-checks them and flags the differences, with a self hosted model so the data never leaves their infrastructure.",
           "A review that took a full day now takes about ten minutes.",
         ],
+        demands: [
+          { title: "The data cannot leave", desc: "Customs entries and invoices carry client and cargo information. The model runs inside the client's infrastructure." },
+          { title: "An error costs fines", desc: "A misread figure reaches customs. The system flags differences instead of approving them silently." },
+          { title: "The volume is daily", desc: "It is not ten documents a month; it is hundreds a day, and the process has to hold that pace." },
+        ],
       },
       legal: {
         category: "Legal and immigration",
@@ -512,6 +556,11 @@ const en: Messages = {
         body: [
           "Immigration attorneys in the United States were filling in long USCIS forms by hand.",
           "EZMig is a guided flow with AI that completes and validates the forms in minutes, with output certified by USCIS.",
+        ],
+        demands: [
+          { title: "The format is the law", desc: "An agency rejects a form over one misplaced field. Validation happens per field, not at the end." },
+          { title: "Sensitive data about real people", desc: "Passports, addresses and histories. We process the minimum needed and keep a record of every change." },
+          { title: "The filing has stages", desc: "A case lives for months and passes through several hands. The state of every document has to be obvious." },
         ],
       },
       translation: {
@@ -521,6 +570,11 @@ const en: Messages = {
           "EZDocuAI translates documents keeping the original layout, so a translator's time per page went from about twenty minutes to three.",
           "Document parsing, layout reconstruction and a review editor built for professionals.",
         ],
+        demands: [
+          { title: "Layout is content", desc: "Stamps, tables and columns mean something. Rebuilding them by hand takes most of the time." },
+          { title: "The document is private", desc: "Personal certificates, diplomas and contracts. Encrypted in transit and at rest, and deleted with proof." },
+          { title: "The professional reviews, does not retype", desc: "The tool hands over an editable draft so the certified translator can apply their judgement." },
+        ],
       },
       sports: {
         category: "Sports and communities",
@@ -528,6 +582,11 @@ const en: Messages = {
         body: [
           "FUTTEM is a mobile app in production in Colombia, on the App Store and Google Play, with real users who could not be interrupted by every release.",
           "We set up three separate environments, controlled deployments and end to end tracing.",
+        ],
+        demands: [
+          { title: "The app is used at seven in the evening", desc: "When everyone comes in at once is not the moment for something to fail." },
+          { title: "Availability changes by the minute", desc: "Slots, fields and line ups move in real time or the booking is useless." },
+          { title: "Publishing to stores is a process", desc: "The App Store and Google Play impose their timing and reviews; releases are planned around that." },
         ],
       },
       support: {
@@ -537,6 +596,11 @@ const en: Messages = {
           "Customers in commerce and personal finance writing on WhatsApp, Instagram and the web at all hours, with the same questions.",
           "An AI agent connected to the catalog, the stock and the stores answers on every channel: one intelligence, instant answers and the team free to sell.",
         ],
+        demands: [
+          { title: "Customers write wherever they want", desc: "WhatsApp, Instagram or the web: the answer has to be the same on all three." },
+          { title: "Answering without knowing is useless", desc: "The agent connects to the catalog, the stock and the stores before it speaks." },
+          { title: "Knowing when to hand over to a person", desc: "A hard conversation goes to the team with all the context, it is not abandoned." },
+        ],
       },
       fintech: {
         category: "Fintech",
@@ -544,6 +608,11 @@ const en: Messages = {
         body: [
           "Fridoom is a financial education brand with more than 200,000 followers.",
           "It is one of the clients of the multichannel AI agent, which answers its users inside the app.",
+        ],
+        demands: [
+          { title: "Trust is lost only once", desc: "A mistake with someone's money is not made up for with an apology." },
+          { title: "Clarity is the feature", desc: "If the person does not understand their own balance, the product is not finished." },
+          { title: "The audience arrives in waves", desc: "One post can bring thousands of users in an hour; the platform holds or it fails in public." },
         ],
       },
     },
@@ -882,6 +951,19 @@ const es: Messages = {
     next: "Siguiente",
     close: "Cerrar",
     seeCase: "Ver el proyecto",
+    page: {
+      eyebrow: "Industria",
+      demands: "Lo que exige este sector",
+      whatWeBuilt: "Lo que construimos",
+      stack: "Con qué trabajamos",
+      gallery: "Del proyecto",
+      caseTitle: "El caso detrás",
+      others: "Otras industrias",
+      back: "Todas las industrias",
+      ctaTitle: "¿Trabajas en este sector?",
+      ctaBody: "Cuéntanos qué necesitas resolver. Te respondemos por correo con qué haríamos y qué tomaría.",
+      ctaButton: "Iniciar un proyecto",
+    },
     items: {
       aerospace: {
         category: "Aeroespacial",
@@ -889,6 +971,11 @@ const es: Messages = {
         body: [
           "En 2024 ganamos Orion, un campamento de robótica y exploración espacial, con un róver que construimos y programamos nosotros mismos.",
           "El premio fue viajar a Cabo Cañaveral, en el Centro Espacial Kennedy, y programar allí uno de los módulos de una pieza de la Estación Espacial.",
+        ],
+        demands: [
+          { title: "No hay segundo intento", desc: "Un módulo que ya salió al espacio no se parchea. El código se revisa, se simula y se prueba antes, no después." },
+          { title: "Hardware y software a la vez", desc: "Motores, sensores y control se programan contra la pieza real, no contra una abstracción cómoda." },
+          { title: "Documentación como parte del entregable", desc: "Cada decisión queda escrita para que otro equipo pueda retomarla años después." },
         ],
       },
       retail: {
@@ -898,6 +985,11 @@ const es: Messages = {
           "Para el distribuidor oficial de Samsung en Colombia, más de 30 puntos de venta tenían el inventario disperso: lo que se agotaba en una ciudad sobraba en otra.",
           "Construimos un algoritmo que cruza el stock de cada tienda con la distancia real al cliente, elige la tienda óptima y genera la guía de envío. Las entregas ahora toman máximo 24 horas.",
         ],
+        demands: [
+          { title: "El inventario miente si no es en tiempo real", desc: "Vender lo que ya no existe cuesta más que no venderlo. El stock se consulta, no se supone." },
+          { title: "La entrega es parte del producto", desc: "Elegir mal la tienda de origen agrega días. La distancia real al cliente entra en la decisión." },
+          { title: "Los picos no avisan", desc: "Un lanzamiento o un Black Friday multiplican el tráfico. La plataforma se dimensiona para eso desde el día uno." },
+        ],
       },
       telecom: {
         category: "Telecomunicaciones",
@@ -905,6 +997,11 @@ const es: Messages = {
         body: [
           "Claro necesitaba entender cómo usan la app sus clientes para decidir qué mejorar.",
           "Hicimos la consultoría y la telemetría: plan de eventos, embudos y tableros para análisis de datos.",
+        ],
+        demands: [
+          { title: "La escala cambia las reglas", desc: "Millones de líneas convierten cualquier detalle en un incidente. Se mide antes de decidir." },
+          { title: "Nadie mejora lo que no ve", desc: "Sin plan de eventos, cada equipo discute con su propia versión de los datos." },
+          { title: "Conviven sistemas de varias épocas", desc: "Lo nuevo tiene que hablar con lo que lleva años funcionando, sin romperlo." },
         ],
       },
       trade: {
@@ -914,6 +1011,11 @@ const es: Messages = {
           "Para Griver construimos un pipeline de OCR con IA que lee pedimentos y facturas, los cruza y marca las diferencias, con un modelo auto hospedado para que los datos no salgan de su infraestructura.",
           "Una revisión que tomaba un día completo ahora toma unos diez minutos.",
         ],
+        demands: [
+          { title: "Los datos no pueden salir", desc: "Pedimentos y facturas llevan información de clientes y mercancía. El modelo corre dentro de la infraestructura del cliente." },
+          { title: "Un error cuesta multas", desc: "Una cifra mal leída llega a la aduana. El sistema marca diferencias en vez de aprobarlas en silencio." },
+          { title: "El volumen es diario", desc: "No son diez documentos al mes; son cientos al día, y el proceso tiene que sostener ese ritmo." },
+        ],
       },
       legal: {
         category: "Legal y migración",
@@ -921,6 +1023,11 @@ const es: Messages = {
         body: [
           "Abogados de inmigración en Estados Unidos llenaban a mano formularios largos de USCIS.",
           "EZMig es un flujo guiado con IA que completa y valida los formularios en minutos, con salida certificada por USCIS.",
+        ],
+        demands: [
+          { title: "El formato es la ley", desc: "Una entidad rechaza un formulario por un campo mal puesto. La validación es por campo, no al final." },
+          { title: "Datos sensibles de personas reales", desc: "Pasaportes, direcciones e historiales. Se procesa el mínimo necesario y queda registro de cada cambio." },
+          { title: "El trámite tiene etapas", desc: "Un caso vive meses y pasa por varias manos. El estado de cada documento tiene que ser evidente." },
         ],
       },
       translation: {
@@ -930,6 +1037,11 @@ const es: Messages = {
           "EZDocuAI traduce documentos conservando el diseño original, así que el tiempo de un traductor por página pasó de unos veinte minutos a tres.",
           "Lectura de documentos, reconstrucción del diseño y un editor de revisión hecho para profesionales.",
         ],
+        demands: [
+          { title: "El diseño es contenido", desc: "Sellos, tablas y columnas significan algo. Reconstruirlos a mano se lleva la mayor parte del tiempo." },
+          { title: "El documento es privado", desc: "Actas, diplomas y contratos personales. Se cifran en tránsito y en reposo, y se borran con constancia." },
+          { title: "El profesional revisa, no transcribe", desc: "La herramienta entrega un borrador editable para que el traductor certificado aporte su criterio." },
+        ],
       },
       sports: {
         category: "Deporte y comunidades",
@@ -937,6 +1049,11 @@ const es: Messages = {
         body: [
           "FUTTEM es una app móvil en producción en Colombia, en App Store y Google Play, con usuarios reales que no podían interrumpirse con cada cambio.",
           "Montamos tres ambientes separados, despliegues controlados y trazas de extremo a extremo.",
+        ],
+        demands: [
+          { title: "La app se usa a las siete de la noche", desc: "Cuando todos entran a la vez, no es el momento de que algo falle." },
+          { title: "La disponibilidad cambia por minuto", desc: "Cupos, canchas y alineaciones se mueven en tiempo real o la reserva no sirve." },
+          { title: "Publicar en tiendas es un proceso", desc: "App Store y Google Play imponen sus tiempos y revisiones; el despliegue se planea con eso." },
         ],
       },
       support: {
@@ -946,6 +1063,11 @@ const es: Messages = {
           "Clientes de comercio y finanzas personales que escriben por WhatsApp, Instagram y la web a toda hora, con las mismas preguntas.",
           "Un agente de IA conectado al catálogo, al stock y a las tiendas responde en cada canal: una sola inteligencia, respuestas al instante y el equipo libre para vender.",
         ],
+        demands: [
+          { title: "El cliente escribe por donde quiere", desc: "WhatsApp, Instagram o la web: la respuesta tiene que ser la misma en los tres." },
+          { title: "Responder sin saber no sirve", desc: "El agente se conecta al catálogo, al stock y a las tiendas antes de abrir la boca." },
+          { title: "Saber cuándo pasar a una persona", desc: "Una conversación difícil se entrega al equipo con todo el contexto, no se abandona." },
+        ],
       },
       fintech: {
         category: "Fintech",
@@ -953,6 +1075,11 @@ const es: Messages = {
         body: [
           "Fridoom es una marca de educación financiera con más de 200.000 seguidores.",
           "Es uno de los clientes del agente de IA multicanal, que responde a sus usuarios dentro de la app.",
+        ],
+        demands: [
+          { title: "La confianza se pierde una sola vez", desc: "Un error con el dinero de alguien no se compensa con una disculpa." },
+          { title: "La claridad es la función", desc: "Si la persona no entiende su propio saldo, el producto no está terminado." },
+          { title: "La audiencia llega en oleadas", desc: "Una publicación puede traer miles de usuarios en una hora; la plataforma lo aguanta o se cae en público." },
         ],
       },
     },

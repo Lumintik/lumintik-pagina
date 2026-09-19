@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/cn";
@@ -22,7 +23,8 @@ export type CarouselCard = {
   src?: string;
   title: string;
   category: string;
-  content: ReactNode;
+  /** Only for cards that open the sheet; a linked card needs none. */
+  content?: ReactNode;
 };
 
 const CarouselContext = createContext<{ onCardClose: (index: number) => void; currentIndex: number }>({
@@ -125,7 +127,22 @@ export function Carousel({ items, initialScroll = 0, labels }: CarouselProps) {
   );
 }
 
-export function Card({ card, index, closeLabel, className }: { card: CarouselCard; index: number; closeLabel: string; className?: string }) {
+function MotionCard({ href, onClick, className, children }: { href?: string; onClick?: () => void; className?: string; children: ReactNode }) {
+  const props = { className, whileHover: { scale: 1.01 }, whileTap: { scale: 0.99 } };
+  return href ? (
+    <motion.div {...props}>
+      <Link href={href} className="block h-full w-full">
+        {children}
+      </Link>
+    </motion.div>
+  ) : (
+    <motion.button type="button" onClick={onClick} {...props}>
+      {children}
+    </motion.button>
+  );
+}
+
+export function Card({ card, index, closeLabel, className, href }: { card: CarouselCard; index: number; closeLabel: string; className?: string; href?: string }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { onCardClose } = useContext(CarouselContext);
@@ -188,12 +205,11 @@ export function Card({ card, index, closeLabel, className }: { card: CarouselCar
         )}
       </AnimatePresence>
 
-      <motion.button
-        type="button"
-        onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-        className={cn("relative z-10 flex flex-col items-start justify-start overflow-hidden rounded-3xl bg-slate-900 text-left", className ?? "h-80 w-56 md:h-[40rem] md:w-96")}
+      {/* With a href the card is a link to its own page; otherwise it opens the sheet. */}
+      <MotionCard
+        href={href}
+        onClick={href ? undefined : () => setOpen(true)}
+        className={cn("group relative z-10 flex flex-col items-start justify-start overflow-hidden rounded-3xl bg-slate-900 text-left", className ?? "h-80 w-56 md:h-[40rem] md:w-96")}
       >
         {/* Most captures are light, so the caption needs its own scrim. */}
         <div className="pointer-events-none absolute inset-0 z-20 bg-slate-950/35" />
@@ -213,7 +229,7 @@ export function Card({ card, index, closeLabel, className }: { card: CarouselCar
         ) : (
           <div className="absolute inset-0 z-10 bg-[radial-gradient(120%_90%_at_30%_10%,rgba(0,0,0,0.35),rgba(15,23,42,0)_60%),linear-gradient(180deg,#0f172a,#020617)]" />
         )}
-      </motion.button>
+      </MotionCard>
     </>
   );
 }

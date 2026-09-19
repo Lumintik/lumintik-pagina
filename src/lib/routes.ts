@@ -39,6 +39,8 @@ export const paths = {
   team: ((locale) => `/${SECTION_SEGMENTS.team[locale]}`) as PagePath,
   blog: ((locale) => `/${SECTION_SEGMENTS.blog[locale]}`) as PagePath,
   industries: ((locale) => `/${SECTION_SEGMENTS.industries[locale]}`) as PagePath,
+  industry: (id: string): PagePath => (locale) =>
+    `/${SECTION_SEGMENTS.industries[locale]}/${id}`,
   ethics: ((locale) => `/${SECTION_SEGMENTS.ethics[locale]}`) as PagePath,
   news: ((locale) => `/${SECTION_SEGMENTS.news[locale]}`) as PagePath,
   education: ((locale) => `/${SECTION_SEGMENTS.education[locale]}`) as PagePath,

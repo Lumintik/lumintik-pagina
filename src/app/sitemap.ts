@@ -3,6 +3,7 @@ import { LOCALES, LOCALE_TAGS, toSegment } from "@/lib/locale";
 import { services } from "@/data/services";
 import { CASES, MORE_PROJECTS } from "@/data/cases";
 import { POSTS } from "@/data/posts";
+import { INDUSTRIES } from "@/data/industries";
 import { paths } from "@/lib/routes";
 import { SITE_URL } from "@/lib/seo";
 
@@ -19,6 +20,7 @@ function routes(): ((locale: "ES" | "EN") => string)[] {
     paths.team,
     paths.blog,
     paths.industries,
+    ...INDUSTRIES.map((i) => paths.industry(i.id)),
     paths.cases,
     paths.ethics,
     paths.news,
