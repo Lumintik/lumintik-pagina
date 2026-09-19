@@ -37,6 +37,7 @@ export type Messages = {
     contact: { title: string; titleAccent: string; intro: string };
   };
   hero: {
+    rail: string;
     titleParts: string[];
     titleAccent: string;
     titleAccentRotations: string[];
@@ -221,6 +222,7 @@ const en: Messages = {
     },
   },
   hero: {
+    rail: "What we do",
     titleParts: ["We", "build", "software", "that", "feels"],
     titleAccent: "intuitive.",
     titleAccentRotations: ["intuitive.", "scalable.", "indispensable."],
@@ -290,6 +292,11 @@ const en: Messages = {
     close: "Close",
     seeCase: "See the project",
     items: {
+      aerospace: {
+        category: "Aerospace",
+        title: "[pending: aerospace project title]",
+        body: ["[pending: what the problem was, what we built and what it changed. Photos to come.]"],
+      },
       retail: {
         category: "Retail and e-commerce",
         title: "The whole network working as one inventory.",
@@ -506,6 +513,7 @@ const es: Messages = {
     },
   },
   hero: {
+    rail: "Lo que hacemos",
     titleParts: ["Creamos", "software", "que", "se", "siente"],
     titleAccent: "intuitivo.",
     titleAccentRotations: ["intuitivo.", "escalable.", "indispensable."],
@@ -575,6 +583,11 @@ const es: Messages = {
     close: "Cerrar",
     seeCase: "Ver el proyecto",
     items: {
+      aerospace: {
+        category: "Aeroespacial",
+        title: "[dato pendiente: título del proyecto aeroespacial]",
+        body: ["[dato pendiente: cuál era el problema, qué construimos y qué cambió. Fotos por llegar.]"],
+      },
       retail: {
         category: "Retail y e-commerce",
         title: "Toda la red trabajando como un solo inventario.",

@@ -109,7 +109,7 @@ export const HERO_SCENES: Scene[] = [
       { t: "click", dur: 350 },
       { t: "lines", from: "cf", to: [
         { at: [60, 92], label: "Workers", icon: icon(<SiCloudflareworkers style={{ color: "#F38020" }} />) },
-        { at: [82, 92], label: "Pages", icon: icon(<SiCloudflarepages style={{ color: "#F38020" }} />) },
+        { at: [82, 82], label: "Pages", icon: icon(<SiCloudflarepages style={{ color: "#F38020" }} />) },
       ], dur: 800 },
       { t: "wait", dur: 500 },
       // EXAMPLE FIGURES from the brief, not measured results. Replace before publishing.

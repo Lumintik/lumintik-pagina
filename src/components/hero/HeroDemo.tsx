@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/locale";
-import { HERO_SCENES, type Chip, type Pt, type Stat, type Step, type Target } from "@/data/heroScenes";
+import { HERO_SCENES, type Chip, type Pt, type Scene, type Stat, type Step, type Target } from "@/data/heroScenes";
 
 type Line = { id: string; from: Pt; to: Target };
 
@@ -39,6 +39,17 @@ const DEFAULT_DUR: Record<Step["t"], number> = {
   wait: 500,
 };
 
+/** How long a scene takes end to end, so a progress rail can follow it. */
+export function sceneDuration(scene: Scene, reduced = false): number {
+  const clamp = (ms: number) => (reduced ? Math.min(ms, 200) : ms);
+  const steps = scene.steps.reduce((sum, step) => {
+    const dur = step.dur ?? DEFAULT_DUR[step.t];
+    // A click pauses briefly before its own duration; a drag pauses inside it.
+    return sum + clamp(dur) + (step.t === "click" ? clamp(180) : 0);
+  }, 0);
+  return clamp(350) + steps + clamp(450);
+}
+
 /**
  * Plays the hero scenes on a loop: chips appear, a cursor clicks and drags
  * them, lines draw out to services, and a card flips in with the result.
@@ -47,27 +58,45 @@ const DEFAULT_DUR: Record<Step["t"], number> = {
 export function HeroDemo({
   locale,
   onScene,
+  request,
   className,
 }: {
   locale: Locale;
-  onScene?: (index: number) => void;
+  /** Called when a scene starts, with how long it will play. */
+  onScene?: (index: number, duration: number) => void;
+  /** A scene someone asked for; a new `nonce` restarts there even if it is the same scene. */
+  request?: { index: number; nonce: number };
   className?: string;
 }) {
   const [frame, setFrame] = useState<Frame>(EMPTY);
   const [sceneIndex, setSceneIndex] = useState(0);
+  const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  // The lines are drawn in pixels, so the stage's size is measured.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setSize({ w: width, h: height });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     // One token per run: a strict-mode remount must not leave the first loop alive.
     const cancelled = { current: false };
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let sceneI = 0;
+    let sceneI = request?.index ?? 0;
 
     const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, reduced ? Math.min(ms, 200) : ms));
 
     async function playScene(i: number) {
       const scene = HERO_SCENES[i];
       setSceneIndex(i);
-      onScene?.(i);
+      onScene?.(i, sceneDuration(scene, reduced));
       let f: Frame = { ...EMPTY };
       const chipAt = (id: string) => f.chips.find((c) => c.id === id)?.at ?? f.cursor;
       setFrame(f);
@@ -138,12 +167,14 @@ export function HeroDemo({
     return () => {
       cancelled.current = true;
     };
-  }, [onScene]);
+  }, [onScene, request]);
 
   const pct = (p: Pt) => ({ left: `${p[0]}%`, top: `${p[1]}%` });
+  const px = (p: Pt): Pt => [(p[0] / 100) * size.w, (p[1] / 100) * size.h];
 
   return (
     <div
+      ref={stageRef}
       aria-hidden
       className={cn(
         "relative w-full aspect-[4/3] overflow-hidden rounded-2xl border border-white/10",
@@ -156,28 +187,35 @@ export function HeroDemo({
       {/* Faint grid, like a canvas */}
       <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)] [background-size:32px_32px]" />
 
-      {/* Lines drawn out to services */}
-      <svg className={cn("absolute inset-0 h-full w-full transition-opacity duration-400", frame.stats ? "opacity-0" : "opacity-100")} viewBox="0 0 100 100" preserveAspectRatio="none">
-        {frame.lines.map((l) => {
-          const to = l.to.at;
-          const d = `M ${l.from[0]} ${l.from[1]} C ${(l.from[0] + to[0]) / 2} ${l.from[1]}, ${(l.from[0] + to[0]) / 2} ${to[1]}, ${to[0]} ${to[1]}`;
-          return (
-            <g key={l.id}>
-              <path
-                d={d}
-                fill="none"
-                stroke="rgba(147,197,253,0.9)"
-                strokeWidth="0.5"
-                vectorEffect="non-scaling-stroke"
-                style={{ strokeDasharray: 200, strokeDashoffset: 200, animation: "hero-draw 700ms ease-out forwards" }}
-              />
-              {/* A bare end gets a dot; a labelled one gets the service chip below. */}
-              {l.to.label ? null : (
-                <circle cx={to[0]} cy={to[1]} r="1.1" fill="#93c5fd" style={{ animation: "hero-fade 300ms 500ms ease-out both" }} />
-              )}
-            </g>
-          );
-        })}
+      {/* Lines drawn out to services, in pixels so they land exactly on the chips */}
+      <svg
+        className={cn("absolute inset-0 h-full w-full transition-opacity duration-400", frame.stats ? "opacity-0" : "opacity-100")}
+        viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}
+      >
+        {size.w > 0 &&
+          frame.lines.map((l) => {
+            const [x1, y1] = px(l.from);
+            const [x2, y2] = px(l.to.at);
+            const mx = (x1 + x2) / 2;
+            const d = `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+            return (
+              <g key={l.id}>
+                <path
+                  d={d}
+                  pathLength={1}
+                  fill="none"
+                  stroke="rgba(147,197,253,0.9)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  style={{ strokeDasharray: 1, strokeDashoffset: 1, animation: "hero-draw 700ms ease-out forwards" }}
+                />
+                {/* A bare end gets a dot; a labelled one gets the service chip below. */}
+                {l.to.label ? null : (
+                  <circle cx={x2} cy={y2} r="4" fill="#93c5fd" style={{ animation: "hero-fade 300ms 500ms ease-out both" }} />
+                )}
+              </g>
+            );
+          })}
       </svg>
 
       {/* The services at the end of the lines, popping in once the line gets there */}

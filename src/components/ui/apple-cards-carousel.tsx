@@ -17,7 +17,8 @@ type CarouselProps = {
 };
 
 export type CarouselCard = {
-  src: string;
+  /** Without a cover the card shows a dark surface. */
+  src?: string;
   title: string;
   category: string;
   content: ReactNode;
@@ -200,13 +201,17 @@ export function Card({ card, index, closeLabel }: { card: CarouselCard; index: n
           <p className="text-left text-sm font-medium text-white md:text-base">{card.category}</p>
           <p className="mt-2 max-w-xs text-left text-xl font-semibold text-balance text-white md:text-3xl">{card.title}</p>
         </div>
-        <Image
-          src={card.src}
-          alt=""
-          fill
-          sizes="(min-width: 768px) 384px, 224px"
-          className="absolute inset-0 z-10 object-cover object-top"
-        />
+        {card.src ? (
+          <Image
+            src={card.src}
+            alt=""
+            fill
+            sizes="(min-width: 768px) 384px, 224px"
+            className="absolute inset-0 z-10 object-cover object-top"
+          />
+        ) : (
+          <div className="absolute inset-0 z-10 bg-[radial-gradient(120%_90%_at_30%_10%,rgba(59,130,246,0.35),rgba(15,23,42,0)_60%),linear-gradient(180deg,#0f172a,#020617)]" />
+        )}
       </motion.button>
     </>
   );

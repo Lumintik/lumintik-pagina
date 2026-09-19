@@ -3,13 +3,16 @@ import { paths, type PagePath } from "@/lib/routes";
 export type Industry = {
   /** Key into `messages.industries.items`. */
   id: string;
-  image: string;
-  /** The case study or project page behind the industry. */
-  path: PagePath;
+  /** Missing while the photos are pending; the card shows a dark cover instead. */
+  image?: string;
+  /** The case study or project page behind the industry, when there is one. */
+  path?: PagePath;
 };
 
 /** The industries on the home page, in the order they show. */
 export const INDUSTRIES: Industry[] = [
+  // Aerospace first, as asked; photos and the project behind it are pending.
+  { id: "aerospace" },
   { id: "retail", image: "/projects/samsung/cart-mobile.png", path: paths.caseStudy("imagiq") },
   { id: "trade", image: "/projects/reco/plataforma-mobile.png", path: paths.caseStudy("griver") },
   { id: "legal", image: "/projects/ezmig/home.png", path: paths.caseStudy("ezmig") },
