@@ -12,6 +12,7 @@ export const SECTION_SEGMENTS = {
   services: { ES: "servicios", EN: "services" },
   team: { ES: "equipo", EN: "team" },
   blog: { ES: "blog", EN: "blog" },
+  industries: { ES: "industrias", EN: "industries" },
   contact: { ES: "contacto", EN: "contact" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
@@ -33,6 +34,7 @@ export const paths = {
     `/${SECTION_SEGMENTS.services[locale]}/${slug}`,
   team: ((locale) => `/${SECTION_SEGMENTS.team[locale]}`) as PagePath,
   blog: ((locale) => `/${SECTION_SEGMENTS.blog[locale]}`) as PagePath,
+  industries: ((locale) => `/${SECTION_SEGMENTS.industries[locale]}`) as PagePath,
   post: (slug: string): PagePath => (locale) =>
     `/${SECTION_SEGMENTS.blog[locale]}/${slug}`,
   contact: ((locale) => `/${SECTION_SEGMENTS.contact[locale]}`) as PagePath,

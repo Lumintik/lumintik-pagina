@@ -49,11 +49,14 @@ export function Hero() {
   return (
     <header
       id="hero"
-      className="relative flex flex-col justify-center w-full min-h-screen px-6 md:px-12 xl:px-20 pt-28 md:pt-32 pb-14 overflow-hidden z-[2]"
+      className="relative flex flex-col justify-start w-full min-h-screen px-6 md:px-12 xl:px-20 pt-24 md:pt-28 pb-14 overflow-hidden z-[2]"
     >
       {/* The rail: one stop per scene, the active one filling as it plays. */}
-      <nav aria-label={t.hero.rail} className="w-full max-w-[1600px] mx-auto mb-10 md:mb-14" style={reveal(200)}>
-        <ol className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-3">
+      <nav aria-label={t.hero.rail} className="w-full max-w-[1600px] mx-auto mb-8 md:mb-10" style={reveal(200)}>
+        {/* On phones only the active label fits, so it sits above the tracks. */}
+        <p className="md:hidden mb-3 text-xs font-medium text-white text-center">{HERO_SCENES[progress.index].eyebrow[locale]}</p>
+        {/* One row always: every stop gets an equal column and the labels wrap instead. */}
+        <ol className="grid gap-x-3 md:gap-x-4" style={{ gridTemplateColumns: `repeat(${HERO_SCENES.length}, minmax(0, 1fr))` }}>
           {HERO_SCENES.map((sc, i) => {
             const active = i === progress.index;
             return (
@@ -62,13 +65,14 @@ export function Hero() {
                   type="button"
                   onClick={() => goTo(i)}
                   aria-current={active ? "step" : undefined}
+                  aria-label={sc.eyebrow[locale]}
                   className={cn(
-                    "group w-full text-left transition-colors duration-300",
+                    "group flex h-full w-full flex-col justify-end text-left transition-colors duration-300",
                     active ? "text-white" : "text-slate-500 hover:text-slate-300",
                   )}
                 >
-                  <span className="block text-xs md:text-sm font-medium">{sc.eyebrow[locale]}</span>
-                  <span className="mt-3 block h-[3px] w-full rounded-full bg-white/15 overflow-hidden">
+                  <span className="hidden md:flex min-h-[2.5em] items-end text-sm leading-tight font-medium text-balance">{sc.eyebrow[locale]}</span>
+                  <span className="md:mt-2.5 block h-[3px] w-full rounded-full bg-white/15 overflow-hidden">
                     {active ? (
                       <span
                         key={progress.run}

@@ -64,6 +64,8 @@ export type Step =
   | { t: "buy"; id: string; done: Record<Locale, string>; dur?: number }
   /** A truck with a box drives from the store to the customer. */
   | { t: "route"; from: Pt; to: Pt; dur?: number }
+  /** A form whose fields fill themselves in, one after another. */
+  | { t: "form"; id: string; at: Pt; title: Record<Locale, string>; fields: Record<Locale, string>[]; dur?: number }
   | { t: "cursor"; to: Pt; dur?: number }
   | { t: "click"; dur?: number }
   | { t: "lines"; from: string; to: Target[]; dur?: number }
@@ -136,7 +138,7 @@ export const HERO_SCENES: Scene[] = [
       { t: "flip", stats: [
         { big: "50%", small: { ES: "ahorro en costos de nube", EN: "cloud cost savings" } },
         { big: "80%", small: { ES: "menos tiempo de despliegue", EN: "less deployment time" } },
-      ], dur: 3600 },
+      ], dur: 5400 },
     ],
   },
   {
@@ -175,16 +177,51 @@ export const HERO_SCENES: Scene[] = [
       // Griver case: a full day of review down to 10 minutes.
       { t: "flip", stats: [
         { big: { ES: "1 día → 10 min", EN: "1 day → 10 min" }, small: { ES: "revisión de documentos en un caso real", EN: "document review in a real case" } },
-      ], dur: 3600 },
+      ], dur: 5400 },
+    ],
+  },
+  {
+    id: "forms",
+    eyebrow: { ES: "Trámites y entidades públicas", EN: "Paperwork and public agencies" },
+    title: { ES: "Trámites a nivel de gobierno", EN: "Paperwork at government grade" },
+    line: {
+      ES: "Motor de formularios con prellenado por rol, validación campo a campo y PDF finales que superaron la evaluación técnica de USCIS: listos para presentarse ante una entidad federal.",
+      EN: "A form engine with role-aware prefill, field by field validation and final PDFs that passed the USCIS technical evaluation: ready to file with a federal agency.",
+    },
+    steps: [
+      // The form fills itself from the case data.
+      { t: "form", id: "form", at: [26, 44], title: { ES: "Motor de formularios", EN: "Form engine" }, fields: [
+        { ES: "Nombre completo", EN: "Full name" },
+        { ES: "Fecha de nacimiento", EN: "Date of birth" },
+        { ES: "País de origen", EN: "Country of birth" },
+        { ES: "Dirección actual", EN: "Current address" },
+      ], dur: 2600 },
+      // The filings come out of it, ready to file.
+      { t: "extract", from: "form", fields: [
+        { label: { ES: "I-130", EN: "I-130" }, at: [60, 24] },
+        { label: { ES: "I-485", EN: "I-485" }, at: [64, 40] },
+        { label: { ES: "N-400", EN: "N-400" }, at: [60, 56] },
+      ], dur: 900 },
+      // The final PDF is generated and checked.
+      { t: "doc", id: "pdf", at: [84, 36], dur: 400 },
+      { t: "scan", id: "pdf", dur: 1100 },
+      { t: "extract", from: "pdf", fields: [{ label: { ES: "PDF certificado por USCIS", EN: "USCIS certified PDF" }, at: [80, 66] }], dur: 700 },
+      { t: "chip", chip: { id: "ai", label: "Reglas + IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [40, 86] }, dur: 300 },
+      { t: "lines", from: "ai", to: [{ at: [26, 44] }, { at: [84, 36] }], dur: 700 },
+      { t: "wait", dur: 300 },
+      // EZMig case: USCIS technical evaluation passed on July 30, 2026.
+      { t: "flip", stats: [
+        { big: "USCIS", small: { ES: "evaluación técnica superada: formularios certificados para presentar", EN: "technical evaluation passed: forms certified for filing" } },
+      ], dur: 5400 },
     ],
   },
   {
     id: "ops",
     eyebrow: { ES: "Operación a escala real", EN: "Operations at real scale" },
-    title: { ES: "Toda la red, un solo inventario", EN: "The whole network, one inventory" },
+    title: { ES: "Operaciones que se mueven solas", EN: "Operations that run themselves" },
     line: {
-      ES: "Una compra en línea, el algoritmo elige la tienda con stock más cercana y el pedido sale hacia el cliente.",
-      EN: "An online purchase, the algorithm picks the closest store with stock and the order leaves for the customer.",
+      ES: "Compras, inventario y logística conectados: cada pedido sale desde el mejor punto y llega a tiempo.",
+      EN: "Purchases, inventory and logistics connected: every order ships from the best point and arrives on time.",
     },
     steps: [
       // Someone buys on the store.
@@ -209,7 +246,7 @@ export const HERO_SCENES: Scene[] = [
       { t: "flip", stats: [
         { big: "30+", small: { ES: "puntos de venta como un solo inventario", EN: "points of sale as a single inventory" } },
         { big: "24 h", small: { ES: "entrega máxima", EN: "delivery at most" } },
-      ], dur: 3600 },
+      ], dur: 5400 },
     ],
   },
   {
@@ -217,24 +254,34 @@ export const HERO_SCENES: Scene[] = [
     eyebrow: { ES: "Experiencia y conversión", EN: "Experience and conversion" },
     title: { ES: "Una inteligencia, todos los canales", EN: "One intelligence, every channel" },
     line: {
-      ES: "Un agente conectado al catálogo, al stock y a las tiendas, que responde en WhatsApp, Instagram y la web.",
-      EN: "An agent connected to the catalog, stock and stores, answering on WhatsApp, Instagram and the web.",
+      ES: "Un agente conectado al catálogo, al stock y a las tiendas, que atiende en WhatsApp, Instagram y la web.",
+      EN: "An agent connected to the catalog, stock and stores, serving customers on WhatsApp, Instagram and the web.",
     },
     steps: [
-      { t: "chip", chip: { id: "agent", label: "Agente IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [50, 50] }, dur: 500 },
-      { t: "drag", chip: { id: "wa", label: "WhatsApp", icon: icon(<SiWhatsapp style={{ color: "#25D366" }} />), at: [14, 84] }, to: [20, 24], dur: 1000 },
-      { t: "lines", from: "agent", to: [{ at: [20, 24] }], dur: 500 },
-      { t: "chip", chip: { id: "ig", label: "Instagram", icon: icon(<SiInstagram style={{ color: "#E4405F" }} />), at: [80, 26] }, dur: 300 },
-      { t: "lines", from: "agent", to: [{ at: [80, 26] }], dur: 500 },
-      { t: "chip", chip: { id: "web", label: "Web", icon: icon(<SiNextdotjs style={{ color: "#fff" }} />), at: [78, 78] }, dur: 300 },
-      { t: "cursor", to: [78, 78], dur: 600 },
-      { t: "click", dur: 350 },
-      { t: "lines", from: "agent", to: [{ at: [78, 78] }], dur: 500 },
-      { t: "wait", dur: 500 },
+      // The channels come in and meet at the agent.
+      { t: "drag", chip: { id: "wa", label: "WhatsApp", icon: icon(<SiWhatsapp style={{ color: "#25D366" }} />), at: [10, 96] }, to: [18, 22], dur: 1000 },
+      { t: "chip", chip: { id: "ig", label: "Instagram", icon: icon(<SiInstagram style={{ color: "#E4405F" }} />), at: [18, 50] }, dur: 300 },
+      { t: "chip", chip: { id: "web", label: "Web", icon: icon(<SiNextdotjs style={{ color: "#fff" }} />), at: [18, 78] }, dur: 300 },
+      { t: "chip", chip: { id: "agent", label: "Agente IA", icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [46, 50] }, dur: 400 },
+      { t: "lines", from: "wa", to: [{ at: [46, 50] }], dur: 350 },
+      { t: "lines", from: "ig", to: [{ at: [46, 50] }], dur: 350 },
+      { t: "lines", from: "web", to: [{ at: [46, 50] }], dur: 350 },
+      // A customer writes and the agent handles it end to end.
+      { t: "cursor", to: [46, 50], dur: 600 },
+      { t: "click", dur: 300 },
+      { t: "lines", from: "agent", to: [{ at: [78, 50] }], dur: 400 },
+      { t: "chat", at: [78, 50], lines: [
+        { who: "user", text: { ES: "Hola, ¿tienen el Smartphone 256 GB en negro?", EN: "Hi, do you have the 256 GB smartphone in black?" } },
+        { who: "bot", text: { ES: "Sí, hay 3 en la tienda más cercana a ti. ¿Te lo reservo?", EN: "Yes, there are 3 at the store closest to you. Shall I reserve one?" } },
+        { who: "user", text: { ES: "Sí, por favor.", EN: "Yes, please." } },
+        { who: "bot", text: { ES: "Listo, queda a tu nombre hasta mañana.", EN: "Done, it is held in your name until tomorrow." } },
+        { who: "done", text: { ES: "Reserva creada", EN: "Reservation created" } },
+      ], dur: 4200 },
+      { t: "wait", dur: 300 },
       // Multichannel case: the result as stated there.
       { t: "flip", stats: [
         { big: "1", small: { ES: "sola inteligencia para todos los canales, con respuestas al instante", EN: "intelligence for every channel, with instant answers" } },
-      ], dur: 3600 },
+      ], dur: 5400 },
     ],
   },
 ];

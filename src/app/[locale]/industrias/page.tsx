@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CasesPage } from "@/components/pages/CasesPage";
+import { IndustriesPage } from "@/components/pages/IndustriesPage";
 import { messages } from "@/i18n/messages";
 import { LOCALES, OG_LOCALES, fromSegment, toSegment } from "@/lib/locale";
 import { paths } from "@/lib/routes";
@@ -10,30 +10,30 @@ export function generateStaticParams() {
   return LOCALES.map((l) => ({ locale: toSegment(l) }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/[locale]/casos">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/[locale]/industrias">): Promise<Metadata> {
   const locale = fromSegment((await params).locale);
   if (!locale) return {};
   const t = messages[locale];
-  const title = t.nav.cases;
-  const description = t.pages.cases.intro;
+  const title = t.nav.industries;
+  const description = t.pages.industries.intro;
   return {
     title,
     description,
-    alternates: localizedAlternates(locale, paths.cases),
+    alternates: localizedAlternates(locale, paths.industries),
     openGraph: {
       type: "website",
       siteName: SITE_NAME,
       title,
       description,
-      url: absoluteUrl(locale, paths.cases),
+      url: absoluteUrl(locale, paths.industries),
       locale: OG_LOCALES[locale],
       alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => OG_LOCALES[l]),
     },
   };
 }
 
-export default async function Page({ params }: PageProps<"/[locale]/casos">) {
+export default async function Page({ params }: PageProps<"/[locale]/industrias">) {
   const locale = fromSegment((await params).locale);
   if (!locale) notFound();
-  return <CasesPage />;
+  return <IndustriesPage />;
 }

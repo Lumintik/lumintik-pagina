@@ -31,6 +31,8 @@ export type Messages = {
     contact: string;
     team: string;
     blog: string;
+    industries: string;
+    cases: string;
   };
   pages: {
     services: { title: string; titleAccent: string; intro: string };
@@ -38,6 +40,8 @@ export type Messages = {
     team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string> };
     blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string };
     contact: { title: string; titleAccent: string; intro: string };
+    industries: { title: string; titleAccent: string; intro: string };
+    cases: { title: string; titleAccent: string; intro: string };
   };
   hero: {
     rail: string;
@@ -194,6 +198,8 @@ const en: Messages = {
     contact: "Contact",
     team: "Our team",
     blog: "Blog",
+    industries: "Industries",
+    cases: "Success stories",
   },
   pages: {
     services: {
@@ -225,6 +231,16 @@ const en: Messages = {
       title: "Let's talk about",
       titleAccent: "your project.",
       intro: "Tell us what you need. We reply by email.",
+    },
+    industries: {
+      title: "Where we have",
+      titleAccent: "shipped.",
+      intro: "Every industry has its own rules, data and pace. These are the ones we have already built for, with the project behind each one.",
+    },
+    cases: {
+      title: "Results with",
+      titleAccent: "a name on them.",
+      intro: "The problem, what we built and what it changed, for each client that let us tell it.",
     },
   },
   hero: {
@@ -487,6 +503,8 @@ const es: Messages = {
     contact: "Contacto",
     team: "Nuestro equipo",
     blog: "Blog",
+    industries: "Industrias",
+    cases: "Casos de éxito",
   },
   pages: {
     services: {
@@ -518,6 +536,16 @@ const es: Messages = {
       title: "Hablemos de",
       titleAccent: "tu proyecto.",
       intro: "Cuéntanos qué necesitas. Te respondemos por correo.",
+    },
+    industries: {
+      title: "Donde ya hemos",
+      titleAccent: "construido.",
+      intro: "Cada industria tiene sus reglas, sus datos y su ritmo. Estas son en las que ya hemos trabajado, con el proyecto detrás de cada una.",
+    },
+    cases: {
+      title: "Resultados con",
+      titleAccent: "nombre propio.",
+      intro: "El problema, lo que construimos y lo que cambió, por cada cliente que nos dejó contarlo.",
     },
   },
   hero: {

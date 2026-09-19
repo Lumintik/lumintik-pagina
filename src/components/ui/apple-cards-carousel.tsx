@@ -3,6 +3,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
+import { cn } from "@/lib/cn";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 
 /*
@@ -124,7 +125,7 @@ export function Carousel({ items, initialScroll = 0, labels }: CarouselProps) {
   );
 }
 
-export function Card({ card, index, closeLabel }: { card: CarouselCard; index: number; closeLabel: string }) {
+export function Card({ card, index, closeLabel, className }: { card: CarouselCard; index: number; closeLabel: string; className?: string }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { onCardClose } = useContext(CarouselContext);
@@ -192,7 +193,7 @@ export function Card({ card, index, closeLabel }: { card: CarouselCard; index: n
         onClick={() => setOpen(true)}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="relative z-10 flex h-80 w-56 flex-col items-start justify-start overflow-hidden rounded-3xl bg-slate-900 text-left md:h-[40rem] md:w-96"
+        className={cn("relative z-10 flex flex-col items-start justify-start overflow-hidden rounded-3xl bg-slate-900 text-left", className ?? "h-80 w-56 md:h-[40rem] md:w-96")}
       >
         {/* Most captures are light, so the caption needs its own scrim. */}
         <div className="pointer-events-none absolute inset-0 z-20 bg-slate-950/35" />

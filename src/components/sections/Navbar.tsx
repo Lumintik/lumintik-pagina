@@ -21,6 +21,8 @@ export function Navbar() {
   const navItems = [
     { label: t.nav.home, href: home },
     { label: t.nav.services, href: href(locale, paths.services) },
+    { label: t.nav.industries, href: href(locale, paths.industries) },
+    { label: t.nav.cases, href: href(locale, paths.cases) },
     { label: t.nav.work, href: href(locale, paths.projects) },
     { label: t.nav.team, href: href(locale, paths.team) },
     { label: t.nav.blog, href: href(locale, paths.blog) },

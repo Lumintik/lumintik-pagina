@@ -13,6 +13,7 @@ type Tag = Field & { key: string };
 type Chat = { at: Pt; lines: ChatLine[]; shown: number };
 type Shop = { id: string; at: Pt; product: string; price: string; button: string; done: string | null };
 type Route = { from: Pt; to: Pt; truckAt: Pt; arrived: boolean };
+type Form = { id: string; at: Pt; title: string; fields: string[]; filled: number };
 
 type Frame = {
   chips: Chip[];
@@ -22,6 +23,7 @@ type Frame = {
   chat: Chat | null;
   shop: Shop | null;
   route: Route | null;
+  form: Form | null;
   cursor: Pt;
   cursorVisible: boolean;
   clicking: boolean;
@@ -44,6 +46,7 @@ const EMPTY: Frame = {
   chat: null,
   shop: null,
   route: null,
+  form: null,
   cursor: [50, 90],
   cursorVisible: false,
   clicking: false,
@@ -63,11 +66,12 @@ const DEFAULT_DUR: Record<Step["t"], number> = {
   shop: 500,
   buy: 700,
   route: 2400,
+  form: 2600,
   cursor: 700,
   click: 350,
   lines: 800,
   drag: 1100,
-  flip: 3600,
+  flip: 5400,
   wait: 500,
 };
 
@@ -129,7 +133,7 @@ export function HeroDemo({
       onScene?.(i, sceneDuration(scene, reduced));
       let f: Frame = { ...EMPTY };
       const chipAt = (id: string) =>
-        f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? (f.shop?.id === id ? f.shop.at : undefined) ?? f.cursor;
+        f.chips.find((c) => c.id === id)?.at ?? f.docs.find((d) => d.id === id)?.at ?? (f.shop?.id === id ? f.shop.at : undefined) ?? (f.form?.id === id ? f.form.at : undefined) ?? f.cursor;
       setFrame(f);
       await sleep(350);
 
@@ -205,6 +209,19 @@ export function HeroDemo({
             await sleep(300);
             continue;
           }
+          case "form": {
+            f = { ...f, form: { id: step.id, at: step.at, title: step.title[locale], fields: step.fields.map((fl) => fl[locale]), filled: 0 } };
+            setFrame(f);
+            const each = dur / (step.fields.length + 1);
+            await sleep(each);
+            for (let k = 1; k <= step.fields.length; k++) {
+              if (cancelled.current) return;
+              f = { ...f, form: f.form ? { ...f.form, filled: k } : null };
+              setFrame(f);
+              await sleep(each);
+            }
+            continue;
+          }
           case "lines": {
             const from = chipAt(step.from);
             const fresh = step.to.map((to, k) => ({ id: `${step.from}-${k}-${f.lines.length}`, from, to }));
@@ -258,7 +275,7 @@ export function HeroDemo({
 
       if (cancelled.current) return;
       setFrame({ ...f, leaving: true });
-      await sleep(450);
+      await sleep(700);
     }
 
     (async () => {
@@ -274,6 +291,8 @@ export function HeroDemo({
   }, [onScene, request, locale]);
 
   const pct = (p: Pt) => ({ left: `${p[0]}%`, top: `${p[1]}%` });
+  // Everything on the stage dims behind the result card and blurs away when the scene leaves.
+  const fade = frame.leaving ? "opacity-0 blur-[3px]" : frame.stats ? "opacity-60" : "opacity-100";
   const px = (p: Pt): Pt => [(p[0] / 100) * size.w, (p[1] / 100) * size.h];
 
   return (
@@ -283,8 +302,7 @@ export function HeroDemo({
       className={cn(
         "relative w-full aspect-[4/3] overflow-hidden rounded-2xl border border-white/10",
         "bg-[radial-gradient(120%_90%_at_30%_10%,rgba(59,130,246,0.22),rgba(15,23,42,0)_60%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]",
-        "shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)] transition-opacity duration-500",
-        frame.leaving ? "opacity-0" : "opacity-100",
+        "shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]",
         className,
       )}
     >
@@ -293,7 +311,7 @@ export function HeroDemo({
 
       {/* Lines drawn out to services, in pixels so they land exactly on the chips */}
       <svg
-        className={cn("absolute inset-0 h-full w-full transition-opacity duration-500", frame.stats ? "opacity-60" : "opacity-100")}
+        className={cn("absolute inset-0 h-full w-full transition-[opacity,filter] duration-500", fade)}
         viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}
       >
         {size.w > 0 &&
@@ -330,7 +348,7 @@ export function HeroDemo({
             className={cn(
               "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap",
               "bg-slate-950/70 border-blue-300/25 text-blue-100 backdrop-blur transition-all duration-400",
-              frame.stats ? "opacity-60" : "opacity-100",
+              fade,
             )}
             style={{ ...pct(l.to.at), animation: "hero-pop 380ms 520ms cubic-bezier(.22,1,.36,1) backwards" }}
           >
@@ -345,8 +363,8 @@ export function HeroDemo({
         <div
           key={d.id}
           className={cn(
-            "absolute -translate-x-1/2 -translate-y-1/2 w-[22%] min-w-[96px] aspect-[3/4] overflow-hidden rounded-lg bg-white p-2.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-opacity duration-500",
-            frame.stats ? "opacity-60" : "opacity-100",
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[22%] min-w-[96px] aspect-[3/4] overflow-hidden rounded-lg bg-white p-2.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
           )}
           style={{ ...pct(d.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
         >
@@ -371,9 +389,9 @@ export function HeroDemo({
           key={fl.key}
           className={cn(
             "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-md border border-emerald-300/30 bg-slate-950/70 px-2.5 py-1 text-[11px] font-medium text-emerald-100 backdrop-blur whitespace-nowrap",
-            frame.stats ? "opacity-60" : "opacity-100",
+            fade,
           )}
-          style={{ ...pct(fl.at), transition: "left 700ms cubic-bezier(.22,1,.36,1), top 700ms cubic-bezier(.22,1,.36,1), opacity 400ms" }}
+          style={{ ...pct(fl.at), transition: "left 700ms cubic-bezier(.22,1,.36,1), top 700ms cubic-bezier(.22,1,.36,1), opacity 400ms, filter 400ms" }}
         >
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
           {fl.label[locale]}
@@ -384,8 +402,8 @@ export function HeroDemo({
       {frame.chat ? (
         <div
           className={cn(
-            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] flex flex-col gap-1.5 rounded-xl border border-white/10 bg-slate-950/70 p-2.5 backdrop-blur transition-opacity duration-500",
-            frame.stats ? "opacity-60" : "opacity-100",
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] flex flex-col gap-1.5 rounded-xl border border-black/10 bg-[#efe7dd] p-2.5 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
           )}
           style={{ ...pct(frame.chat.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
         >
@@ -394,9 +412,9 @@ export function HeroDemo({
               key={i}
               className={cn(
                 "max-w-[92%] rounded-lg px-2.5 py-1.5 text-[11px] leading-snug",
-                line.who === "user" && "self-end bg-blue-500 text-white",
-                line.who === "bot" && "self-start bg-white text-slate-900",
-                line.who === "done" && "self-start inline-flex items-center gap-1.5 bg-emerald-500/15 text-emerald-200 border border-emerald-300/30",
+                line.who === "user" && "self-end bg-white text-slate-900 shadow-[0_1px_1px_rgba(0,0,0,0.08)]",
+                line.who === "bot" && "self-start bg-[#d9fdd3] text-slate-900 shadow-[0_1px_1px_rgba(0,0,0,0.08)]",
+                line.who === "done" && "self-center inline-flex items-center gap-1.5 bg-[#fff5c4] text-slate-700 text-[10px]",
               )}
               style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}
             >
@@ -408,7 +426,7 @@ export function HeroDemo({
           ))}
           {frame.chat.shown < frame.chat.lines.length ? (
             <div className="self-start flex gap-1 px-2 py-1.5">
-              {[0, 1, 2].map((k) => <span key={k} className="size-1 rounded-full bg-slate-400 hero-dot" style={{ animationDelay: `${k * 160}ms` }} />)}
+              {[0, 1, 2].map((k) => <span key={k} className="size-1 rounded-full bg-slate-500 hero-dot" style={{ animationDelay: `${k * 160}ms` }} />)}
             </div>
           ) : null}
         </div>
@@ -418,8 +436,8 @@ export function HeroDemo({
       {frame.shop ? (
         <div
           className={cn(
-            "absolute -translate-x-1/2 -translate-y-1/2 w-[30%] min-w-[140px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-opacity duration-500",
-            frame.stats ? "opacity-60" : "opacity-100",
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[30%] min-w-[140px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
           )}
           style={{ ...pct(frame.shop.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
         >
@@ -433,7 +451,7 @@ export function HeroDemo({
             <div
               className={cn(
                 "mt-2 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-[11px] font-medium text-white transition-colors duration-300",
-                frame.shop.done ? "bg-emerald-500" : "bg-blue-600",
+                frame.shop.done ? "bg-emerald-500" : "bg-slate-950",
                 frame.clicking && !frame.shop.done ? "scale-95" : "",
               )}
             >
@@ -449,7 +467,7 @@ export function HeroDemo({
       {/* Route: the store, the customer and the truck between them */}
       {frame.route ? (
         <>
-          <svg className={cn("absolute inset-0 h-full w-full transition-opacity duration-500", frame.stats ? "opacity-60" : "opacity-100")} viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}>
+          <svg className={cn("absolute inset-0 h-full w-full transition-[opacity,filter] duration-500", fade)} viewBox={`0 0 ${Math.max(size.w, 1)} ${Math.max(size.h, 1)}`}>
             {size.w > 0 ? (() => {
               const [x1, y1] = px(frame.route!.from);
               const [x2, y2] = px(frame.route!.to);
@@ -473,8 +491,8 @@ export function HeroDemo({
             <span
               key={m.key}
               className={cn(
-                "absolute -translate-x-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full border border-blue-300/40 bg-slate-950/80 text-blue-200 text-xs transition-opacity duration-500",
-                frame.stats ? "opacity-60" : "opacity-100",
+                "absolute -translate-x-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full border border-blue-300/40 bg-slate-950/80 text-blue-200 text-xs transition-[opacity,filter] duration-500",
+                fade,
                 m.key === "b" && frame.route?.arrived ? "border-emerald-300/60 text-emerald-300" : "",
               )}
               style={{ ...pct(m.at), animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}
@@ -484,8 +502,8 @@ export function HeroDemo({
           ))}
           <span
             className={cn(
-              "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-slate-900 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.7)] transition-opacity duration-500",
-              frame.stats ? "opacity-60" : "opacity-100",
+              "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-slate-900 shadow-[0_8px_20px_-8px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+              fade,
             )}
             style={{
               ...pct(frame.route.truckAt),
@@ -499,6 +517,37 @@ export function HeroDemo({
         </>
       ) : null}
 
+      {/* Form: each row fills in and gets its check */}
+      {frame.form ? (
+        <div
+          className={cn(
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[34%] min-w-[150px] overflow-hidden rounded-xl bg-white text-slate-900 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.7)] transition-[opacity,filter] duration-500",
+            fade,
+          )}
+          style={{ ...pct(frame.form.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
+        >
+          <div className="bg-slate-100 px-3 py-1.5 text-[11px] font-semibold">{frame.form.title}</div>
+          <div className="flex flex-col gap-2 p-3">
+            {frame.form.fields.map((label, i) => {
+              const done = i < frame.form!.filled;
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <p className="text-[9px] text-slate-500">{label}</p>
+                    <div className="mt-0.5 h-2 w-full rounded-sm bg-slate-100 overflow-hidden">
+                      <div className="h-full rounded-sm bg-blue-400 transition-[width] duration-500 ease-out" style={{ width: done ? `${70 + ((i * 13) % 30)}%` : "0%" }} />
+                    </div>
+                  </div>
+                  <span className={cn("flex size-4 items-center justify-center rounded-full text-white transition-colors duration-300", done ? "bg-emerald-500" : "bg-slate-200")}>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       {/* Chips */}
       {frame.chips.map((c) => (
         <div
@@ -507,11 +556,11 @@ export function HeroDemo({
             "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-medium whitespace-nowrap",
             "bg-slate-900/80 border-white/15 text-white backdrop-blur",
             frame.dragging === c.id ? "scale-105 border-blue-300/60 shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]" : "",
-            frame.stats ? "opacity-60" : "opacity-100",
+            fade,
           )}
           style={{
             ...pct(c.at),
-            transition: "left 900ms cubic-bezier(.22,1,.36,1), top 900ms cubic-bezier(.22,1,.36,1), opacity 400ms, transform 400ms",
+            transition: "left 900ms cubic-bezier(.22,1,.36,1), top 900ms cubic-bezier(.22,1,.36,1), opacity 400ms, filter 400ms, transform 400ms",
             animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards",
           }}
         >
@@ -528,9 +577,9 @@ export function HeroDemo({
           // a bright rim on top, a soft one below, and a sheen across the face.
           "border border-white/30 bg-white/[0.12] backdrop-blur-2xl backdrop-saturate-[1.8]",
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(255,255,255,0.12),inset_1px_0_0_rgba(255,255,255,0.18),0_30px_60px_-20px_rgba(0,0,0,0.6)]",
-          "transition-[left,top,scale,opacity] duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)]",
-          frame.stats ? "opacity-100" : "opacity-0",
-          frame.stats && frame.cardDragging ? "scale-[0.55]" : "scale-100",
+          "transition-[left,top,scale,opacity,filter,translate] duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)]",
+          frame.stats && !frame.leaving ? "opacity-100" : "opacity-0",
+          frame.leaving ? "scale-90 blur-md -translate-y-[60%]" : frame.stats && frame.cardDragging ? "scale-[0.55]" : "scale-100",
         )}
         style={{ ...pct(frame.cardAt), pointerEvents: "none", transformOrigin: "center" }}
       >
