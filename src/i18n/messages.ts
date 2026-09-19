@@ -476,8 +476,11 @@ const en: Messages = {
     items: {
       aerospace: {
         category: "Aerospace",
-        title: "[pending: aerospace project title]",
-        body: ["[pending: what the problem was, what we built and what it changed. Photos to come.]"],
+        title: "From the Orion camp to Cape Canaveral.",
+        body: [
+          "In 2024 we won Orion, a robotics and space exploration camp, with a rover we built and programmed ourselves.",
+          "The prize was a trip to Cape Canaveral, at the Kennedy Space Center, where we programmed one of the modules of a part of the Space Station.",
+        ],
       },
       retail: {
         category: "Retail and e-commerce",
@@ -882,8 +885,11 @@ const es: Messages = {
     items: {
       aerospace: {
         category: "Aeroespacial",
-        title: "[dato pendiente: título del proyecto aeroespacial]",
-        body: ["[dato pendiente: cuál era el problema, qué construimos y qué cambió. Fotos por llegar.]"],
+        title: "Del campamento Orion a Cabo Cañaveral.",
+        body: [
+          "En 2024 ganamos Orion, un campamento de robótica y exploración espacial, con un róver que construimos y programamos nosotros mismos.",
+          "El premio fue viajar a Cabo Cañaveral, en el Centro Espacial Kennedy, y programar allí uno de los módulos de una pieza de la Estación Espacial.",
+        ],
       },
       retail: {
         category: "Retail y e-commerce",

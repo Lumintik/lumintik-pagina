@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Card, Carousel } from "@/components/ui/apple-cards-carousel";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
@@ -33,6 +34,15 @@ export function IndustriesSection() {
                   {paragraph}
                 </p>
               ))}
+              {industry.gallery?.length ? (
+                <ul className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-4">
+                  {industry.gallery.map((photo) => (
+                    <li key={photo.src} className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-slate-100">
+                      <Image src={photo.src} alt="" fill sizes="(min-width: 768px) 25vw, 45vw" className="object-cover" />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               {industry.path ? (
                 <Link
                   href={href(locale, industry.path)}

@@ -7,12 +7,22 @@ export type Industry = {
   image?: string;
   /** The case study or project page behind the industry, when there is one. */
   path?: PagePath;
+  /** Extra photos shown inside the card, when the industry has no page of its own. */
+  gallery?: { src: string; width: number; height: number }[];
 };
 
 /** The industries on the home page, in the order they show. */
 export const INDUSTRIES: Industry[] = [
-  // Aerospace first, as asked; photos and the project behind it are pending.
-  { id: "aerospace" },
+  {
+    id: "aerospace",
+    image: "/projects/orion/vab-nasa.jpg",
+    gallery: [
+      { src: "/projects/orion/rover-equipo.jpg", width: 1600, height: 1200 },
+      { src: "/projects/orion/modulo-controles.jpg", width: 1200, height: 1600 },
+      { src: "/projects/orion/rocket-garden.jpg", width: 1600, height: 1200 },
+      { src: "/projects/orion/transbordador.jpg", width: 1200, height: 1600 },
+    ],
+  },
   { id: "retail", image: "/projects/samsung/cart-mobile.png", path: paths.caseStudy("imagiq") },
   { id: "trade", image: "/projects/reco/plataforma-mobile.png", path: paths.caseStudy("griver") },
   { id: "legal", image: "/projects/ezmig/home.png", path: paths.caseStudy("ezmig") },
