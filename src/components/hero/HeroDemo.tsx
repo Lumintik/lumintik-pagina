@@ -406,18 +406,24 @@ export function HeroDemo({
       {/* Result card, dragged in from the corner */}
       <div
         className={cn(
-          "absolute -translate-x-1/2 -translate-y-1/2 w-[78%] max-w-[360px] rounded-2xl border border-white/15 bg-white p-6 text-slate-900 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)]",
+          "absolute -translate-x-1/2 -translate-y-1/2 w-[78%] max-w-[360px] overflow-hidden rounded-3xl p-6 text-white",
+          // Liquid glass: what is behind shows through blurred and saturated,
+          // a bright rim on top, a soft one below, and a sheen across the face.
+          "border border-white/30 bg-white/[0.12] backdrop-blur-2xl backdrop-saturate-[1.8]",
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(255,255,255,0.12),inset_1px_0_0_rgba(255,255,255,0.18),0_30px_60px_-20px_rgba(0,0,0,0.6)]",
           "transition-[left,top,scale,opacity] duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)]",
           frame.stats ? "opacity-100" : "opacity-0",
           frame.stats && frame.cardDragging ? "scale-[0.55]" : "scale-100",
         )}
         style={{ ...pct(frame.cardAt), pointerEvents: "none", transformOrigin: "center" }}
       >
-        <div className="flex flex-col gap-4">
+        <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.35)_0%,rgba(255,255,255,0.08)_35%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.12)_100%)]" />
+        <span className="pointer-events-none absolute -top-1/2 -left-1/4 h-full w-1/2 rotate-12 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)] blur-md hero-sheen" />
+        <div className="relative flex flex-col gap-4">
           {(frame.stats ?? []).map((s, i) => (
             <div key={i}>
-              <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight">{typeof s.big === "string" ? s.big : s.big[locale]}</p>
-              <p className="mt-1.5 text-sm text-slate-500">{s.small[locale]}</p>
+              <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">{typeof s.big === "string" ? s.big : s.big[locale]}</p>
+              <p className="mt-1.5 text-sm text-white/75">{s.small[locale]}</p>
             </div>
           ))}
         </div>
@@ -451,6 +457,8 @@ export function HeroDemo({
         .hero-scan { animation: hero-scan 1200ms ease-in-out infinite; }
         @keyframes hero-dot { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
         .hero-dot { animation: hero-dot 1s infinite; }
+        @keyframes hero-sheen { from { transform: translate(-60%, 0) rotate(12deg); } to { transform: translate(340%, 60%) rotate(12deg); } }
+        .hero-sheen { animation: hero-sheen 2.8s 600ms ease-in-out infinite; }
       `}</style>
     </div>
   );
