@@ -3,7 +3,7 @@
 import { ServiceCard } from "@/components/sections/ServiceCard";
 import { services } from "@/data/services";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
-import { toSegment } from "@/lib/locale";
+import { href, paths } from "@/lib/routes";
 
 export function ServicesSection() {
   const t = useT();
@@ -86,7 +86,7 @@ export function ServicesSection() {
                 key={service.key}
                 title={copy.title}
                 description={copy.desc}
-                href={`/${toSegment(locale)}/services/${service.slug}`}
+                href={href(locale, paths.service(service.slug))}
                 videoSrc={service.videoSrc}
                 posterSrc={service.posterSrc}
                 span={service.span}

@@ -26,6 +26,13 @@ export type Messages = {
     home: string;
     join: string;
     contact: string;
+    team: string;
+  };
+  pages: {
+    services: { title: string; titleAccent: string; intro: string };
+    projects: { title: string; titleAccent: string; intro: string };
+    team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string> };
+    contact: { title: string; titleAccent: string; intro: string };
   };
   hero: {
     eyebrow: string;
@@ -165,6 +172,30 @@ const en: Messages = {
     home: "Home",
     join: "Join",
     contact: "Contact",
+    team: "Our team",
+  },
+  pages: {
+    services: {
+      title: "What we",
+      titleAccent: "do.",
+      intro: "Seven services, each one described by how we work, not by promises.",
+    },
+    projects: {
+      title: "What we have",
+      titleAccent: "built.",
+      intro: "Every project, case studies first. Each one opens its own page.",
+    },
+    team: {
+      title: "The people",
+      titleAccent: "behind it.",
+      intro: "A small team that designs and builds in the same room.",
+      roles: { ceo: "Chief Executive Officer", coo: "Chief Operating Officer" },
+    },
+    contact: {
+      title: "Let's talk about",
+      titleAccent: "your project.",
+      intro: "Tell us what you need. We reply by email.",
+    },
   },
   hero: {
     eyebrow: "Software studio · 2026",
@@ -341,6 +372,30 @@ const es: Messages = {
     home: "Inicio",
     join: "Únete",
     contact: "Contacto",
+    team: "Nuestro equipo",
+  },
+  pages: {
+    services: {
+      title: "Qué",
+      titleAccent: "hacemos.",
+      intro: "Siete servicios, cada uno descrito por cómo trabajamos, no por promesas.",
+    },
+    projects: {
+      title: "Lo que hemos",
+      titleAccent: "construido.",
+      intro: "Todos los proyectos, primero los casos. Cada uno abre su propia página.",
+    },
+    team: {
+      title: "Las personas",
+      titleAccent: "detrás.",
+      intro: "Un equipo pequeño que diseña y construye en la misma sala.",
+      roles: { ceo: "Director ejecutivo", coo: "Director de operaciones" },
+    },
+    contact: {
+      title: "Hablemos de",
+      titleAccent: "tu proyecto.",
+      intro: "Cuéntanos qué necesitas. Te respondemos por correo.",
+    },
   },
   hero: {
     eyebrow: "Estudio de software · 2026",

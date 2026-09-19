@@ -9,6 +9,9 @@ import { LOCALES, toSegment, type Locale } from "./locale";
 export const SECTION_SEGMENTS = {
   cases: { ES: "casos", EN: "cases" },
   projects: { ES: "proyectos", EN: "projects" },
+  services: { ES: "servicios", EN: "services" },
+  team: { ES: "equipo", EN: "team" },
+  contact: { ES: "contacto", EN: "contact" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type Section = keyof typeof SECTION_SEGMENTS;
@@ -23,7 +26,12 @@ export const paths = {
     `/${SECTION_SEGMENTS.cases[locale]}/${slug}`,
   project: (slug: string): PagePath => (locale) =>
     `/${SECTION_SEGMENTS.projects[locale]}/${slug}`,
-  service: (slug: string): PagePath => () => `/services/${slug}`,
+  projects: ((locale) => `/${SECTION_SEGMENTS.projects[locale]}`) as PagePath,
+  services: ((locale) => `/${SECTION_SEGMENTS.services[locale]}`) as PagePath,
+  service: (slug: string): PagePath => (locale) =>
+    `/${SECTION_SEGMENTS.services[locale]}/${slug}`,
+  team: ((locale) => `/${SECTION_SEGMENTS.team[locale]}`) as PagePath,
+  contact: ((locale) => `/${SECTION_SEGMENTS.contact[locale]}`) as PagePath,
 };
 
 /** Full localized href, e.g. href("EN", paths.government) → "/en/government". */

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
 import { toSegment } from "@/lib/locale";
+import { href, paths } from "@/lib/routes";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 export function Navbar() {
@@ -14,33 +15,18 @@ export function Navbar() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const { locale, isLoading } = useLocale();
   const t = useT();
-  // Anchors are written absolute (/en#work) so they also resolve from a case
-  // study or service page, where those sections don't exist in the document.
+  // Every entry is a page of its own, in the language being read.
   const home = `/${toSegment(locale)}`;
+  const contactHref = href(locale, paths.contact);
   const navItems = [
-    { label: t.nav.home, href: `${home}#hero` },
-    { label: t.nav.services, href: `${home}#services` },
-    { label: t.nav.work, href: `${home}#work` },
+    { label: t.nav.home, href: home },
+    { label: t.nav.services, href: href(locale, paths.services) },
+    { label: t.nav.work, href: href(locale, paths.projects) },
+    { label: t.nav.team, href: href(locale, paths.team) },
   ];
 
-  const mobileNavItems = [
-    ...navItems,
-    { label: t.nav.contact, href: `${home}#contact` },
-  ];
+  const mobileNavItems = [...navItems, { label: t.nav.contact, href: contactHref }];
 
-  const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    const id = href.split("#")[1];
-    const el = id ? document.getElementById(id) : null;
-    if (el) {
-      // Same page: scroll instead of navigating.
-      e.preventDefault();
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else if (id === "hero" && window.location.pathname === home) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    // Otherwise let the browser follow the link back to the home page.
-  };
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50);
@@ -128,7 +114,6 @@ export function Navbar() {
               <a
                 key={item.label}
                 href={item.href}
-                onClick={(e) => smoothScroll(e, item.href)}
                 className={`relative text-sm font-medium px-4 py-2 rounded-full transition-colors duration-300 ${
                   scrolled
                     ? "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
@@ -140,8 +125,7 @@ export function Navbar() {
             ))}
 
             <a
-              href={`${home}#contact`}
-              onClick={(e) => smoothScroll(e, `${home}#contact`)}
+              href={contactHref}
               className={`ml-1 inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
                 scrolled
                   ? "bg-slate-900 text-white hover:bg-blue-500"
@@ -202,9 +186,8 @@ export function Navbar() {
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         items={mobileNavItems}
-        contactHref={`${home}#contact`}
+        contactHref={contactHref}
         startLabel={t.mobileMenu.startProject}
-        smoothScroll={smoothScroll}
         triggerRef={toggleRef}
       />
     </>
@@ -217,11 +200,10 @@ type MobileMenuProps = {
   items: { label: string; href: string }[];
   contactHref: string;
   startLabel: string;
-  smoothScroll: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 };
 
-function MobileMenu({ open, onClose, items, contactHref, startLabel, smoothScroll, triggerRef }: MobileMenuProps) {
+function MobileMenu({ open, onClose, items, contactHref, startLabel, triggerRef }: MobileMenuProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const asideRef = useRef<HTMLElement>(null);
   const wasOpen = useRef(false);
@@ -315,7 +297,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, smoothScrol
             <a
               key={item.label}
               href={item.href}
-              onClick={(e) => { smoothScroll(e, item.href); onClose(); }}
+              onClick={onClose}
               className="group flex items-center justify-between py-4 border-b border-slate-100"
               style={{
                 opacity: open ? 1 : 0,
@@ -343,7 +325,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, smoothScrol
         >
           <a
             href={contactHref}
-            onClick={(e) => { smoothScroll(e, contactHref); onClose(); }}
+            onClick={onClose}
             className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-slate-900 text-white text-base font-medium hover:bg-blue-500 transition-colors duration-300"
           >
             {startLabel}

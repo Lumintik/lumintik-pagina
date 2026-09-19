@@ -5,6 +5,7 @@ import { findServiceBySlug, services } from "@/data/services";
 import { messages } from "@/i18n/messages";
 import { serviceDetails } from "@/i18n/serviceDetails";
 import { LOCALES, OG_LOCALES, fromSegment, toSegment } from "@/lib/locale";
+import { href, paths } from "@/lib/routes";
 import { SITE_NAME, absoluteUrl, localizedAlternates } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -15,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/services/[slug]">): Promise<Metadata> {
+}: PageProps<"/[locale]/servicios/[slug]">): Promise<Metadata> {
   const { locale: segment, slug } = await params;
   const locale = fromSegment(segment);
   const service = findServiceBySlug(slug);
@@ -24,7 +25,7 @@ export async function generateMetadata({
   const t = messages[locale];
   const item = t.services.items[service.key];
   const title = t.seo.service.titleTemplate.replace("%s", item.title);
-  const path = `/services/${service.slug}`;
+  const path = paths.service(service.slug);
   // The overview reads better as a meta description than the one-line teaser.
   const description = serviceDetails[locale][service.key].overview;
 
@@ -47,7 +48,7 @@ export async function generateMetadata({
 
 export default async function ServicePage({
   params,
-}: PageProps<"/[locale]/services/[slug]">) {
+}: PageProps<"/[locale]/servicios/[slug]">) {
   const { locale: segment, slug } = await params;
   const locale = fromSegment(segment);
   const service = findServiceBySlug(slug);
@@ -69,7 +70,7 @@ export default async function ServicePage({
         upcoming && upcoming.slug !== service.slug
           ? {
               title: t.services.items[upcoming.key].title,
-              href: `/${toSegment(locale)}/services/${upcoming.slug}`,
+              href: href(locale, paths.service(upcoming.slug)),
             }
           : undefined
       }

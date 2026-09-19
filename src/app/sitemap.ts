@@ -12,7 +12,11 @@ function routes(): ((locale: "ES" | "EN") => string)[] {
     () => "",
     ...CASES.map((c) => paths.caseStudy(c.slug)),
     ...MORE_PROJECTS.map((p) => paths.project(p.key)),
-    ...services.map((s) => () => `/services/${s.slug}`),
+    ...services.map((s) => paths.service(s.slug)),
+    paths.services,
+    paths.projects,
+    paths.team,
+    paths.contact,
   ];
 }
 
