@@ -174,6 +174,8 @@ export type Messages = {
     solution: string;
     why: string;
     tools: string;
+    tour: string;
+    tourIntro: string;
     open: string;
     visit: string;
     back: string;
@@ -632,6 +634,8 @@ const en: Messages = {
     solution: "The solution",
     why: "Why it worked",
     tools: "Tools",
+    tour: "A tour of the product",
+    tourIntro: "Real screens from the platform in production. Hover to pause, or pick a stop on the rail.",
     open: "Read the full case study",
     visit: "Visit the site",
     back: "All case studies",
@@ -1099,6 +1103,8 @@ const es: Messages = {
     solution: "La solución",
     why: "Por qué funcionó",
     tools: "Herramientas",
+    tour: "Un recorrido por el producto",
+    tourIntro: "Pantallas reales de la plataforma en producción. Pasa el cursor para pausar, o elige una parada en el riel.",
     open: "Ver el caso completo",
     visit: "Visitar el sitio",
     back: "Todos los casos",

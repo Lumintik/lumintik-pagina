@@ -1,5 +1,7 @@
 "use client";
 
+import { ProductTour } from "@/components/sections/ProductTour";
+import { TOURS } from "@/data/tours";
 import Link from "next/link";
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
@@ -110,6 +112,15 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             <section className="mt-16 md:mt-24">
               <CaseBlocks study={study} large />
             </section>
+
+            {TOURS[study.slug] ? (
+              <section className="mt-16 md:mt-24">
+                <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{t.cases.tour}</h2>
+                <p className="mt-3 mb-8 text-slate-500 text-base md:text-lg max-w-[60ch]">{t.cases.tourIntro}</p>
+                {/* Kept under the capture's own width so the zoom stays sharp. */}
+                <ProductTour tour={TOURS[study.slug]} className="max-w-[1180px]" />
+              </section>
+            ) : null}
 
             {study.certification ? (
               <section className="mt-16 md:mt-24">
