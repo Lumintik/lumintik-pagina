@@ -178,7 +178,7 @@ export const TOURS: Record<string, Tour[]> = {
         },
         {
           id: "formulario",
-          image: "/projects/ezmig/portal/formulario.jpg",
+          image: "/projects/ezmig/portal/formulario-v2.jpg",
           label: {
             ES: "El mismo formulario, en el bolsillo",
             EN: "The same form, in a pocket",
