@@ -163,6 +163,20 @@ export const TOURS: Record<string, Tour[]> = {
           click: [50, 85.8],
         },
         {
+          id: "mis-casos",
+          image: "/projects/ezmig/portal/mis-casos.jpg",
+          label: {
+            ES: "Su caso, de un vistazo",
+            EN: "Their case, at a glance",
+          },
+          caption: {
+            ES: "El cliente ve su caso, qué formulario le toca, su rol y cuánto le falta. Nada del trabajo interno del despacho.",
+            EN: "The client sees their case, which form is theirs, their role and how much is left. None of the firm's internal work.",
+          },
+          focus: { at: [50, 48], zoom: 1.03 },
+          click: [83, 46.5],
+        },
+        {
           id: "formulario",
           image: "/projects/ezmig/portal/formulario.jpg",
           label: {
