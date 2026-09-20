@@ -113,14 +113,14 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               <CaseBlocks study={study} large />
             </section>
 
-            {TOURS[study.slug] ? (
-              <section className="mt-16 md:mt-24">
-                <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{t.cases.tour}</h2>
-                <p className="mt-3 mb-8 text-slate-500 text-base md:text-lg max-w-[60ch]">{t.cases.tourIntro}</p>
+            {(TOURS[study.slug] ?? []).map((tour) => (
+              <section key={tour.id} className="mt-16 md:mt-24">
+                <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{tour.title[locale]}</h2>
+                <p className="mt-3 mb-8 text-slate-500 text-base md:text-lg max-w-[60ch]">{tour.intro[locale]}</p>
                 {/* Kept under the capture's own width so the zoom stays sharp. */}
-                <ProductTour tour={TOURS[study.slug]} className="max-w-[1180px]" />
+                <ProductTour tour={tour} className={tour.device === "browser" ? "max-w-[1180px]" : "max-w-[1000px]"} />
               </section>
-            ) : null}
+            ))}
 
             {study.certification ? (
               <section className="mt-16 md:mt-24">

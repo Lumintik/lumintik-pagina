@@ -52,6 +52,108 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
 
   const step = tour.steps[index];
 
+  /** The stacked screens, the camera and the cursor; shared by both devices. */
+  const screens = tour.steps.map((s, i) => {
+    const active = i === index;
+    return (
+      <div key={s.id} aria-hidden={!active} className="absolute inset-0 transition-opacity duration-700 ease-out" style={{ opacity: active ? 1 : 0 }}>
+        {/* The camera eases toward the focus once the screen is in */}
+        <div
+          className="absolute inset-0"
+          style={{
+            transformOrigin: `${s.focus.at[0]}% ${s.focus.at[1]}%`,
+            transform: active && phase !== "enter" ? `scale(${s.focus.zoom})` : "scale(1)",
+            transition: "transform 3200ms cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          <Image src={s.image} alt="" fill sizes={tour.device === "phone" ? "340px" : "(min-width: 1280px) 1100px, 100vw"} className="object-cover" priority={i === 0} />
+
+          {/* Cursor on a browser, a fingertip on a phone; both ride with the camera */}
+          <span
+            className="absolute z-10"
+            style={{
+              left: `${active && phase !== "enter" ? s.click[0] : 50}%`,
+              top: `${active && phase !== "enter" ? s.click[1] : 70}%`,
+              opacity: active ? 1 : 0,
+              transition: "left 2600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, top 2600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, opacity 400ms",
+            }}
+          >
+            <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border-2 border-slate-900/70 transition-all duration-500", active && phase === "click" ? "scale-150 opacity-0" : "scale-50 opacity-0")} />
+            {tour.device === "phone" ? (
+              <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border border-white/70 bg-slate-900/25 shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-transform duration-200", active && phase === "click" ? "scale-75" : "scale-100")} />
+            ) : (
+              <>
+                <span className={cn("absolute -left-2.5 -top-2.5 size-5 rounded-full bg-slate-900/15 transition-transform duration-200", active && phase === "click" ? "scale-100" : "scale-0")} />
+                <svg width="20" height="20" viewBox="0 0 24 24" className={cn("drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)] transition-transform duration-150", active && phase === "click" ? "scale-90" : "")}>
+                  <path d="M5 3l14 8-6 1.5L16 19l-2.5 1-3-6.5L6 18z" fill="#fff" stroke="#0f172a" strokeWidth="1.2" strokeLinejoin="round" />
+                </svg>
+              </>
+            )}
+          </span>
+        </div>
+      </div>
+    );
+  });
+
+  const railFill = (active: boolean) =>
+    active ? (
+      <span
+        key={run}
+        className="block h-full rounded-full bg-slate-900 tour-rail-fill"
+        style={{ animationDuration: `${STEP_MS}ms`, animationPlayState: paused || !inView ? "paused" : "running" }}
+      />
+    ) : null;
+
+  if (tour.device === "phone") {
+    return (
+      <div ref={rootRef} className={cn("w-full", className)} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
+          {/* The stops, each with its line; the active one opens */}
+          <ol className="order-2 flex flex-col gap-2 md:order-1">
+            {tour.steps.map((s, i) => {
+              const active = i === index;
+              return (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    onClick={() => goTo(i)}
+                    aria-current={active ? "step" : undefined}
+                    className={cn("w-full rounded-2xl p-5 text-left transition-colors duration-300", active ? "bg-slate-50" : "hover:bg-slate-50/60")}
+                  >
+                    <span className={cn("flex items-center gap-3 text-lg font-semibold transition-colors duration-300 md:text-xl", active ? "text-slate-900" : "text-slate-400")}>
+                      <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium", active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300")}>{i + 1}</span>
+                      {s.label[locale]}
+                    </span>
+                    <span className={cn("grid transition-[grid-template-rows,opacity] duration-500 ease-out", active ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
+                      <span className="overflow-hidden">
+                        <span className="mt-3 block pl-10 text-base leading-relaxed text-slate-600">{s.caption[locale]}</span>
+                        <span className="mt-4 ml-10 block h-[3px] overflow-hidden rounded-full bg-slate-200">{railFill(active)}</span>
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+
+          {/* The phone */}
+          <div className="order-1 mx-auto md:order-2">
+            <div className="relative w-[270px] rounded-[2.8rem] bg-slate-950 p-2.5 shadow-[0_50px_100px_-40px_rgba(15,23,42,0.6),inset_0_0_0_2px_rgba(255,255,255,0.08)] md:w-[320px]">
+              <div className="relative w-full overflow-hidden rounded-[2.2rem] bg-white" style={{ aspectRatio: `${tour.width} / ${tour.height}` }}>
+                {screens}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          @keyframes tour-rail { from { width: 0; } to { width: 100%; } }
+          .tour-rail-fill { animation: tour-rail linear forwards; }
+        `}</style>
+      </div>
+    );
+  }
+
   return (
     <div ref={rootRef} className={cn("w-full", className)} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       {/* The rail: one stop per screen */}
@@ -68,15 +170,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
                 className={cn("flex h-full w-full flex-col justify-end text-left transition-colors duration-300", active ? "text-slate-900" : "text-slate-400 hover:text-slate-600")}
               >
                 <span className="hidden md:flex min-h-[2.5em] items-end text-sm font-medium leading-tight text-balance">{s.label[locale]}</span>
-                <span className="md:mt-2.5 block h-[3px] w-full overflow-hidden rounded-full bg-slate-200">
-                  {active ? (
-                    <span
-                      key={run}
-                      className="block h-full rounded-full bg-slate-900 tour-rail-fill"
-                      style={{ animationDuration: `${STEP_MS}ms`, animationPlayState: paused || !inView ? "paused" : "running" }}
-                    />
-                  ) : null}
-                </span>
+                <span className="md:mt-2.5 block h-[3px] w-full overflow-hidden rounded-full bg-slate-200">{railFill(active)}</span>
               </button>
             </li>
           );
@@ -97,46 +191,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
         </div>
 
         <div className="relative w-full overflow-hidden bg-slate-100" style={{ aspectRatio: `${tour.width} / ${tour.height}` }}>
-          {tour.steps.map((s, i) => {
-            const active = i === index;
-            return (
-              <div
-                key={s.id}
-                aria-hidden={!active}
-                className="absolute inset-0 transition-opacity duration-700 ease-out"
-                style={{ opacity: active ? 1 : 0 }}
-              >
-                {/* The camera eases toward the focus once the screen is in */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    transformOrigin: `${s.focus.at[0]}% ${s.focus.at[1]}%`,
-                    transform: active && phase !== "enter" ? `scale(${s.focus.zoom})` : "scale(1)",
-                    transition: "transform 3200ms cubic-bezier(0.22, 1, 0.36, 1)",
-                  }}
-                >
-                  <Image src={s.image} alt="" fill sizes="(min-width: 1280px) 1100px, 100vw" className="object-cover" priority={i === 0} />
-
-                  {/* Cursor: rides with the camera, so it lands on the control */}
-                  <span
-                    className="absolute z-10"
-                    style={{
-                      left: `${active && phase !== "enter" ? s.click[0] : 50}%`,
-                      top: `${active && phase !== "enter" ? s.click[1] : 70}%`,
-                      opacity: active ? 1 : 0,
-                      transition: "left 2600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, top 2600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, opacity 400ms",
-                    }}
-                  >
-                    <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border-2 border-slate-900/70 transition-all duration-500", active && phase === "click" ? "scale-150 opacity-0" : "scale-50 opacity-0")} />
-                    <span className={cn("absolute -left-2.5 -top-2.5 size-5 rounded-full bg-slate-900/15 transition-transform duration-200", active && phase === "click" ? "scale-100" : "scale-0")} />
-                    <svg width="20" height="20" viewBox="0 0 24 24" className={cn("drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)] transition-transform duration-150", active && phase === "click" ? "scale-90" : "")}>
-                      <path d="M5 3l14 8-6 1.5L16 19l-2.5 1-3-6.5L6 18z" fill="#fff" stroke="#0f172a" strokeWidth="1.2" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+          {screens}
 
           {/* Caption, in glass */}
           <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 md:inset-x-auto md:bottom-5 md:left-5 md:max-w-[46ch]">
