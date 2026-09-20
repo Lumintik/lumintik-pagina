@@ -164,7 +164,7 @@ export const TOURS: Record<string, Tour[]> = {
         },
         {
           id: "mis-casos",
-          image: "/projects/ezmig/portal/mis-casos.jpg",
+          image: "/projects/ezmig/portal/mis-casos-v2.jpg",
           label: {
             ES: "Su caso, de un vistazo",
             EN: "Their case, at a glance",
