@@ -206,5 +206,72 @@ export const TOURS: Record<string, Tour[]> = {
         },
       ],
     },
+    {
+      id: "admin",
+      device: "browser",
+      title: { ES: "El panel de administración", EN: "The admin panel" },
+      intro: {
+        ES: "Lo que mantiene la plataforma al día con USCIS: el catálogo de formularios, su mapeo al PDF oficial y un vigilante de cambios de edición. Los datos son de prueba.",
+        EN: "What keeps the platform current with USCIS: the form catalog, its mapping onto the official PDF and a watcher for edition changes. The data is test data.",
+      },
+      url: "ezmig.ai/admin",
+      width: 1512,
+      height: 806,
+      steps: [
+        {
+          id: "formularios",
+          image: "/projects/ezmig/admin/formularios.jpg",
+          label: { ES: "Catálogo de formularios", EN: "Form catalog" },
+          caption: {
+            ES: "Diecinueve formularios de USCIS como esquemas versionados: edición vigente, estado, uso, y un aviso cuando una edición necesita atención.",
+            EN: "Nineteen USCIS forms as versioned schemas: current edition, status, usage, and a flag when an edition needs attention.",
+          },
+          focus: { at: [60, 45], zoom: 1.08 },
+          click: [88.6, 52.3],
+        },
+        {
+          id: "mapeo-pdf",
+          image: "/projects/ezmig/admin/mapeo-pdf.jpg",
+          label: {
+            ES: "Del formulario al PDF oficial",
+            EN: "From the form to the official PDF",
+          },
+          caption: {
+            ES: "Cada respuesta cae en su casilla del PDF de USCIS. En el I-130, 189 de 190 campos mapeados, con el documento oficial al lado para comprobarlo.",
+            EN: "Every answer lands in its box on the USCIS PDF. On the I-130, 189 of 190 fields mapped, with the official document beside it to check.",
+          },
+          focus: { at: [45, 50], zoom: 1.1 },
+          click: [16, 75.9],
+        },
+        {
+          id: "uscis",
+          image: "/projects/ezmig/admin/uscis.jpg",
+          label: {
+            ES: "Vigilante de ediciones de USCIS",
+            EN: "USCIS edition watcher",
+          },
+          caption: {
+            ES: "Un proceso revisa las publicaciones de USCIS y avisa cuando una edición deja de aceptarse, con la fecha de corte, la severidad y el enlace a la fuente oficial.",
+            EN: "A process checks what USCIS publishes and raises a notice when an edition stops being accepted, with the cutover date, the severity and the link to the official source.",
+          },
+          focus: { at: [55, 40], zoom: 1.1 },
+          click: [94.4, 11.2],
+        },
+        {
+          id: "analitica",
+          image: "/projects/ezmig/admin/analitica.jpg",
+          label: {
+            ES: "La plataforma en números",
+            EN: "The platform in numbers",
+          },
+          caption: {
+            ES: "Usuarios por rol, despachos, casos, documentos y solicitudes a la IA, con la actividad del día, la semana y el mes.",
+            EN: "Users by role, firms, cases, documents and AI requests, with activity for the day, the week and the month.",
+          },
+          focus: { at: [58, 40], zoom: 1.08 },
+          click: [4.3, 77.9],
+        },
+      ],
+    },
   ],
 };
