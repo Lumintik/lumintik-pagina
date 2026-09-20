@@ -162,6 +162,34 @@ export const TOURS: Record<string, Tour[]> = {
           focus: { at: [50, 60], zoom: 1.03 },
           click: [50, 85.8],
         },
+        {
+          id: "formulario",
+          image: "/projects/ezmig/portal/formulario.jpg",
+          label: {
+            ES: "El mismo formulario, en el bolsillo",
+            EN: "The same form, in a pocket",
+          },
+          caption: {
+            ES: "El cliente retoma el N-400 donde lo dejó el abogado, con lo que el despacho ya sabía de él. Lo que corrige aquí actualiza su perfil.",
+            EN: "The client picks the N-400 up where the attorney left it, with what the firm already knew about them. What they correct here updates their profile.",
+          },
+          focus: { at: [50, 60], zoom: 1.03 },
+          click: [81, 86.6],
+        },
+        {
+          id: "asistente",
+          image: "/projects/ezmig/portal/asistente.jpg",
+          label: {
+            ES: "Respuestas sin llamar al despacho",
+            EN: "Answers without calling the firm",
+          },
+          caption: {
+            ES: "El asistente le explica al cliente en qué estado va su caso y qué sigue, con enlaces a las fuentes.",
+            EN: "The assistant tells the client where their case stands and what comes next, with links to the sources.",
+          },
+          focus: { at: [50, 50], zoom: 1.03 },
+          click: [90.5, 86.8],
+        },
       ],
     },
   ],
