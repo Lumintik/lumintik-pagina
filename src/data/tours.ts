@@ -274,4 +274,76 @@ export const TOURS: Record<string, Tour[]> = {
       ],
     },
   ],
+  ezdocuai: [
+    {
+      id: "traductor",
+      device: "browser",
+      title: {
+        ES: "El espacio de trabajo del traductor",
+        EN: "The translator's workspace",
+      },
+      intro: {
+        ES: "Pantallas reales de la plataforma en producción. Pasa el cursor para pausar, o elige una parada en el riel.",
+        EN: "Real screens from the platform in production. Hover to pause, or pick a stop on the rail.",
+      },
+      url: "ezdocu.ai/dashboard",
+      width: 1512,
+      height: 757,
+      steps: [
+        {
+          id: "panel",
+          image: "/projects/ezdocu/tour/panel.jpg",
+          label: {
+            ES: "Todas las órdenes, en un panel",
+            EN: "Every order, on one panel",
+          },
+          caption: {
+            ES: "Créditos, órdenes por estado y pares de idiomas más usados. Cada documento avanza por OCR, revisión y traducción.",
+            EN: "Credits, orders by status and the language pairs used most. Every document moves through OCR, review and translation.",
+          },
+          focus: { at: [55, 45], zoom: 1.08 },
+          click: [5.8, 33.8],
+        },
+        {
+          id: "terminos",
+          image: "/projects/ezdocu/tour/terminos.jpg",
+          label: {
+            ES: "El vocabulario del traductor",
+            EN: "The translator's own vocabulary",
+          },
+          caption: {
+            ES: "Glosarios propios por idioma y tipo de documento, con documentos de ejemplo y reglas de estilo. La IA traduce con los términos de quien firma.",
+            EN: "Personal glossaries by language and document type, with sample documents and style rules. The AI translates with the terms of the person who signs.",
+          },
+          focus: { at: [45, 45], zoom: 1.1 },
+          click: [24, 33.7],
+        },
+        {
+          id: "editor",
+          image: "/projects/ezdocu/tour/editor.jpg",
+          label: {
+            ES: "El diseño se reconstruye solo",
+            EN: "The layout rebuilds itself",
+          },
+          caption: {
+            ES: "A la izquierda, el escaneo de un artículo de 1971. A la derecha, el mismo documento con su título, sus columnas y sus negritas, listo para editar en vez de transcribir.",
+            EN: "On the left, the scan of a 1971 article. On the right, the same document with its title, columns and bold type, ready to edit instead of retype.",
+          },
+          focus: { at: [62, 62], zoom: 1.12 },
+          click: [95, 10.6],
+        },
+        {
+          id: "eliminacion",
+          image: "/projects/ezdocu/tour/eliminacion.jpg",
+          label: { ES: "Borrado con constancia", EN: "Deletion with proof" },
+          caption: {
+            ES: "Al terminar, los archivos se eliminan de forma permanente y la orden conserva su certificado de eliminación. Ningún documento queda guardado.",
+            EN: "Once finished, the files are permanently deleted and the order keeps its deletion certificate. No document stays stored.",
+          },
+          focus: { at: [50, 78], zoom: 1.12 },
+          click: [29, 84.9],
+        },
+      ],
+    },
+  ],
 };
