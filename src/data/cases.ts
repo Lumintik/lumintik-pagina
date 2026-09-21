@@ -106,9 +106,9 @@ export const CASES: CaseStudy[] = [
         },
       },
       {
-        src: "/projects/samsung/dashboard-orders.png",
-        width: 1200,
-        height: 1227,
+        src: "/projects/imagiq/tour/operacion/ordenes.jpg",
+        width: 1512,
+        height: 806,
         alt: {
           ES: "Panel interno de órdenes con el estado de cada envío",
           EN: "Internal orders dashboard with the status of each shipment",
