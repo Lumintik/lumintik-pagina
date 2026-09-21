@@ -34,6 +34,13 @@ export type CaseImage = {
  * only one, or by its own label when a case links to more than one site. */
 export type CaseLink = { label: string; href: string };
 
+/** Photos of the team on site, with the story of what that visit was for. */
+export type CaseFieldwork = {
+  title: Record<Locale, string>;
+  body: Record<Locale, string>;
+  images: CaseImage[];
+};
+
 export type CaseMetric = {
   value: string;
   label: Record<Locale, string>;
@@ -73,6 +80,7 @@ export type CaseStudy = {
   /** Figures measured on the live product or verifiable in the code, with where they come from. */
   metrics?: CaseMetric[];
   metricsSource?: CaseMetricsSource;
+  fieldwork?: CaseFieldwork;
   /** First image is the cover. An empty list shows a pending placeholder. */
   images: CaseImage[];
   /** Thumbnail for the work grid when the case has no photos of its own. */
@@ -300,6 +308,36 @@ export const CASES: CaseStudy[] = [
           EN: "FUTTEM app on Android and iPhone, in the staging environment",
         },
       },
+      {
+        src: "/projects/futtem/tour/club.jpg",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Pantalla de un club con su plantilla y sus próximas partidas", EN: "A club screen with its squad and upcoming matches" },
+      },
+      {
+        src: "/projects/futtem/tour/partida.jpg",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Detalle de una partida: cancha, hora, cupos y costo", EN: "A match in detail: pitch, time, spots and cost" },
+      },
+      {
+        src: "/projects/futtem/tour/jugadores.jpg",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Los convocados repartidos en dos equipos, con la lista de espera", EN: "The players called up split into two teams, with the waiting list" },
+      },
+      {
+        src: "/projects/futtem/tour/entreno.jpg",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Videos de entrenamiento, físico y promocionales", EN: "Training, fitness and promotional videos" },
+      },
+      {
+        src: "/projects/futtem/tour/crear-partida.jpg",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Formulario para convocar una partida nueva", EN: "The form to call a new match" },
+      },
     ],
     copy: {
       ES: {
@@ -396,6 +434,24 @@ export const CASES: CaseStudy[] = [
       { value: "74%", label: { ES: "de los documentos llegan escaneados, no digitales", EN: "of documents arrive scanned, not digital" } },
     ],
     metricsSource: { ES: "Consola de operación en producción, semana del 14 al 20 de septiembre de 2026.", EN: "Live operations console, week of September 14 to 20, 2026." },
+    fieldwork: {
+      title: {
+        ES: "En el patio, antes de escribir una línea",
+        EN: "On the yard, before writing a line",
+      },
+      body: {
+        ES: "Fuimos al puerto con el equipo de Griver: ver de dónde sale cada documento, cómo se mueve un contenedor y qué mira un agente aduanal cuando revisa un pedimento. Lo que se construye después se parece a lo que pasa en el patio, no a lo que uno se imagina desde una oficina.",
+        EN: "We went to the port with Griver's team: to see where each document comes from, how a container moves and what a customs agent looks at when reviewing an entry. What gets built afterwards resembles what happens on the yard, not what you picture from an office.",
+      },
+      images: [
+        { src: "/projects/reco/puerto/equipo-contenedores.jpg", width: 960, height: 1280, alt: { ES: "Equipo de Lumintik entre pilas de contenedores en el puerto", EN: "The Lumintik team among stacks of containers at the port" } },
+        { src: "/projects/reco/puerto/equipo-grua.jpg", width: 960, height: 1280, alt: { ES: "El equipo frente a una grúa de patio y contenedores Maersk y Hapag Lloyd", EN: "The team in front of a yard crane and Maersk and Hapag Lloyd containers" } },
+        { src: "/projects/reco/puerto/recorrido-patio.jpg", width: 960, height: 1280, alt: { ES: "Recorrido por el patio de contenedores con casco de seguridad", EN: "Walking the container yard in hard hats" } },
+        { src: "/projects/reco/puerto/equipo-patio.jpg", width: 960, height: 1280, alt: { ES: "Conversación con el equipo de operación en el patio", EN: "Talking with the operations team on the yard" } },
+        { src: "/projects/reco/puerto/revision-patio.jpg", width: 960, height: 1280, alt: { ES: "Revisión de documentos junto a un contenedor", EN: "Reviewing documents next to a container" } },
+        { src: "/projects/reco/puerto/bodega-revision.jpg", width: 960, height: 1280, alt: { ES: "Visita a la bodega donde se revisa la mercancía", EN: "Visiting the warehouse where the goods are inspected" } },
+      ],
+    },
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
     images: [
       {

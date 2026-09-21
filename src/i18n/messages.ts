@@ -175,6 +175,7 @@ export type Messages = {
     why: string;
     tools: string;
     metrics: string;
+    fieldwork: string;
     tour: string;
     tourIntro: string;
     open: string;
@@ -648,6 +649,7 @@ const en: Messages = {
     solution: "The solution",
     why: "Why it worked",
     metrics: "In numbers",
+    fieldwork: "On site",
     tools: "Tools",
     tour: "A tour of the product",
     tourIntro: "Real screens from the platform in production. Hover to pause, or pick a stop on the rail.",
@@ -1131,6 +1133,7 @@ const es: Messages = {
     solution: "La solución",
     why: "Por qué funcionó",
     metrics: "En cifras",
+    fieldwork: "En terreno",
     tools: "Herramientas",
     tour: "Un recorrido por el producto",
     tourIntro: "Pantallas reales de la plataforma en producción. Pasa el cursor para pausar, o elige una parada en el riel.",

@@ -120,10 +120,12 @@ export function Navbar() {
   const [panelKey, setPanelKey] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // A panel opens on hover only after the cursor has rested on the entry for
-  // a while: crossing the bar on the way somewhere else should not unfold
-  // anything. Keyboard focus and clicks open it at once.
-  const HOVER_OPEN_MS = 2000;
+  // A panel opens on hover only after the cursor has rested on the entry:
+  // crossing the bar on the way somewhere else should not unfold anything.
+  // 450 ms is the window Baymard and NN/g land on, long enough to filter a
+  // passing cursor and short enough that someone aiming at the menu does not
+  // think it is broken. Keyboard focus and clicks open it at once.
+  const HOVER_OPEN_MS = 450;
   const openPanel = (key: string | null) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     if (openTimer.current) clearTimeout(openTimer.current);

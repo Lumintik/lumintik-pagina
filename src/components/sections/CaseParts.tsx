@@ -127,8 +127,8 @@ export function CaseFrame({
   }
   if (tall) {
     return (
-      <div className={cn("flex w-full justify-center rounded-2xl bg-slate-50 py-10", className)}>
-        <IphoneFrame className="h-[420px] w-auto md:h-[600px]" aspect={aspect}>
+      <div className={cn("flex w-full justify-center", className)}>
+        <IphoneFrame className="w-full max-w-[300px]" aspect={aspect}>
           <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes="300px" className="object-contain" />
         </IphoneFrame>
       </div>

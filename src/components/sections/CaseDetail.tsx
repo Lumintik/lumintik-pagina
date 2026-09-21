@@ -2,7 +2,9 @@
 
 import { ProductTour } from "@/components/sections/ProductTour";
 import { TOURS } from "@/data/tours";
+import Image from "next/image";
 import Link from "next/link";
+import { cn } from "@/lib/cn";
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { ContactSection } from "@/components/sections/ContactSection";
@@ -140,6 +142,35 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               </section>
             ))}
 
+            {study.fieldwork ? (
+              <section className="mt-16 md:mt-24">
+                <h2 className="text-xs font-medium text-slate-400">{t.cases.fieldwork}</h2>
+                <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
+                  <div className="md:col-span-5">
+                    <p className="text-slate-900 text-2xl md:text-3xl font-semibold leading-snug">
+                      {study.fieldwork.title[locale]}
+                    </p>
+                    <p className="mt-4 text-slate-500 text-lg leading-relaxed">{study.fieldwork.body[locale]}</p>
+                  </div>
+                  {/* Photographs, not screens: no device frame, and never cropped. */}
+                  <ul className="md:col-span-7 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+                    {study.fieldwork.images.map((image) => (
+                      <li key={image.src} className="overflow-hidden rounded-2xl bg-slate-100">
+                        <Image
+                          src={image.src}
+                          alt={image.alt[locale]}
+                          width={image.width}
+                          height={image.height}
+                          sizes="(min-width: 768px) 260px, 45vw"
+                          className="h-auto w-full"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+            ) : null}
+
             {study.certification ? (
               <section className="mt-16 md:mt-24">
                 <CaseCertification certification={study.certification} />
@@ -161,10 +192,19 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             {gallery.length ? (
               <section className="mt-16 md:mt-24">
                 <h2 className="text-xs font-medium text-slate-400">{t.cases.gallery}</h2>
-                <ul className="mt-6 grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:gap-8">
+                {/* Phone captures sit three or four across; wider ones take half
+                    the row, so the grid never leaves a hole beside them. */}
+                <ul
+                  className={cn(
+                    "mt-6 grid items-center gap-6 md:gap-8",
+                    gallery.every((i) => i.height / i.width > 1.4)
+                      ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
+                      : "grid-cols-1 sm:grid-cols-2",
+                  )}
+                >
                   {gallery.map((image) => (
                     <li key={image.src} className="min-w-0">
-                      <CaseFrame image={image} sizes="(min-width: 1600px) 760px, (min-width: 640px) 50vw, 100vw" />
+                      <CaseFrame image={image} sizes="(min-width: 1024px) 320px, (min-width: 640px) 33vw, 45vw" />
                     </li>
                   ))}
                 </ul>
