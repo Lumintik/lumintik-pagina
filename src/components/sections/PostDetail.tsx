@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { ContactSection } from "@/components/sections/ContactSection";
-import { PostCard } from "@/components/sections/PostCard";
+import { PostCard, coverAddress } from "@/components/sections/PostCard";
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
 import type { Post } from "@/data/posts";
@@ -44,6 +44,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
   const fmt = new Intl.DateTimeFormat(LOCALE_TAGS[locale], { day: "numeric", month: "long", year: "numeric" });
   const updated = post.updated ? fmt.format(new Date(`${post.updated}T12:00:00Z`)) : null;
   const minutes = readingMinutes(copy.sections);
+  const coverUrl = coverAddress(post);
   const related = post.relatedCase ? CASES.find((c) => c.slug === post.relatedCase) : undefined;
   const [current, setCurrent] = useState<string>(headingId(copy.sections[0]?.heading ?? ""));
   const [copied, setCopied] = useState(false);
@@ -103,7 +104,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                 </IphoneFrame>
               </div>
             ) : (
-              <MacWindowFrame dark title={post.cover.alt[locale]} className="mt-6">
+              <MacWindowFrame dark url={coverUrl} title={post.cover.alt[locale]} className="mt-6">
                 <div className="relative w-full" style={{ aspectRatio: `${post.cover.width} / ${post.cover.height}` }}>
                   <Image src={post.cover.src} alt={post.cover.alt[locale]} fill priority sizes="(min-width: 1100px) 1000px, 100vw" className="object-contain" />
                 </div>

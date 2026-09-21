@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { IphoneFrame, MacbookFrame } from "@/components/ui/DeviceFrames";
+import { IphoneFrame, MacbookFrame, MacWindowFrame } from "@/components/ui/DeviceFrames";
 import { cn } from "@/lib/cn";
 import type { CaseImage, CaseStudy } from "@/data/cases";
 import { TOOLS, toolName, type ToolId } from "@/data/tools";
@@ -110,10 +110,21 @@ export function CaseFrame({
   className?: string;
 }) {
   const { locale } = useLocale();
-  const tall = image.height > image.width;
+  const ratio = image.height / image.width;
+  const tall = ratio > 1.4;
   const aspect = `${image.width} / ${image.height}`;
   // The capture keeps its own aspect ratio inside the device and is never
-  // cropped: a phone for portrait captures, a laptop for the rest.
+  // cropped: a phone for phone shaped captures, a macOS window for the ones
+  // near square (tall dashboards), a laptop for the wide ones.
+  if (!tall && ratio > 0.8) {
+    return (
+      <MacWindowFrame title={image.alt[locale]} className={className}>
+        <div className="relative w-full" style={{ aspectRatio: aspect }}>
+          <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
+        </div>
+      </MacWindowFrame>
+    );
+  }
   if (tall) {
     return (
       <div className={cn("flex w-full justify-center rounded-2xl bg-slate-50 py-10", className)}>
@@ -153,7 +164,15 @@ export function CaseCover({
       </div>
     );
   }
-  return <CaseFrame image={cover} priority={priority} sizes={sizes} />;
+  // The opening capture sits in a Safari window with the client's address.
+  const host = study.links[0]?.href.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  return (
+    <MacWindowFrame url={host} title={cover.alt[locale]}>
+      <div className="relative w-full" style={{ aspectRatio: `${cover.width} / ${cover.height}` }}>
+        <Image src={cover.src} alt={cover.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
+      </div>
+    </MacWindowFrame>
+  );
 }
 
 /** Official evidence for a case, each item linking to its source document. */

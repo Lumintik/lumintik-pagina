@@ -7,7 +7,12 @@ import { cn } from "@/lib/cn";
  * No images: gradients and shadows only, so they stay sharp at any size.
  */
 
-/** An iPhone with a titanium band, black bezel and the island at the top. */
+/**
+ * An iPhone with a titanium band, black bezel and the island at the top.
+ * Give it a width or a height: the other side follows from the screen's
+ * aspect ratio, and the screen keeps exactly that ratio, so the capture
+ * inside is never cropped.
+ */
 export function IphoneFrame({
   children,
   className,
@@ -18,8 +23,12 @@ export function IphoneFrame({
   /** Screen aspect ratio, `width / height`. */
   aspect?: string;
 }) {
+  const [w, h] = aspect.split("/").map((n) => Number(n.trim()));
+  // Band and bezel add 3% of the width on every side, so the outer box is a
+  // little wider and taller than the screen; this keeps the screen exact.
+  const outer = `${w * 1.06} / ${h + 0.06 * w}`;
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative", className)} style={{ aspectRatio: outer }}>
       {/* Side buttons sit on the band, so they go behind it */}
       <span aria-hidden className="absolute -left-[3px] top-[19%] h-[5%] w-[3px] rounded-l-[2px] bg-gradient-to-b from-[#c9c9cf] via-[#7d7d84] to-[#b8b8be]" />
       <span aria-hidden className="absolute -left-[3px] top-[27%] h-[8%] w-[3px] rounded-l-[2px] bg-gradient-to-b from-[#c9c9cf] via-[#7d7d84] to-[#b8b8be]" />
@@ -28,13 +37,13 @@ export function IphoneFrame({
 
       {/* Titanium band */}
       <div
-        className="relative rounded-[15.5%/7.2%] p-[3px] shadow-[0_60px_120px_-40px_rgba(15,23,42,0.55),0_20px_40px_-20px_rgba(15,23,42,0.35)]"
+        className="absolute inset-0 rounded-[15.5%/7.2%] p-[0.9%] shadow-[0_60px_120px_-40px_rgba(15,23,42,0.55),0_20px_40px_-20px_rgba(15,23,42,0.35)]"
         style={{ background: "linear-gradient(155deg, #f1f1f4 0%, #b9b9c0 22%, #6f6f76 48%, #a7a7ad 72%, #e6e6ea 100%)" }}
       >
         {/* Black bezel */}
-        <div className="relative rounded-[15%/7%] bg-[#050506] p-[9px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
-          {/* Screen */}
-          <div className="relative w-full overflow-hidden rounded-[12.5%/5.8%] bg-black" style={{ aspectRatio: aspect }}>
+        <div className="relative h-full w-full rounded-[15%/7%] bg-[#050506] p-[2.1%] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+          {/* Screen: exactly the capture's aspect ratio */}
+          <div className="relative h-full w-full overflow-hidden rounded-[12.5%/5.8%] bg-black">
             {children}
             {/* Dynamic Island */}
             <span aria-hidden className="pointer-events-none absolute left-1/2 top-[1.6%] h-[3.2%] w-[31%] -translate-x-1/2 rounded-full bg-[#050506] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]" />
@@ -51,7 +60,7 @@ export function IphoneFrame({
   );
 }
 
-/** A MacBook: thin black lid with the notch, aluminum base with the lip. */
+/** A MacBook Pro in space black: aluminum lid around a black bezel, the notch, and the base with its lip. */
 export function MacbookFrame({
   children,
   className,
@@ -63,50 +72,62 @@ export function MacbookFrame({
 }) {
   return (
     <div className={cn("relative w-full", className)}>
-      {/* Lid */}
-      <div className="relative mx-[6%] rounded-t-[1.4vw] rounded-b-[0.6vw] bg-[#0c0c0e] p-[1.1%] pt-[1.2%] shadow-[0_50px_100px_-40px_rgba(15,23,42,0.6),inset_0_0_0_1px_rgba(255,255,255,0.08)]">
-        <div className="relative w-full overflow-hidden rounded-[0.6vw] bg-black" style={{ aspectRatio: aspect }}>
-          {children}
-        </div>
-        {/* Notch with the camera */}
-        <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 flex h-[2.4%] w-[12%] -translate-x-1/2 items-center justify-center rounded-b-[0.5vw] bg-[#0c0c0e]">
-          <span className="block size-[5px] rounded-full bg-[#1c1c22] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
-        </span>
-        {/* Reflection on the glass */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-t-[1.4vw] rounded-b-[0.6vw]"
-          style={{ background: "linear-gradient(110deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 30%, rgba(255,255,255,0) 50%)" }}
-        />
-      </div>
-      {/* Base */}
+      {/* Lid: space black aluminum around the glass */}
       <div
-        className="relative h-[1.4vw] min-h-[10px] w-full rounded-b-[1vw] shadow-[0_30px_60px_-30px_rgba(15,23,42,0.5)]"
-        style={{ background: "linear-gradient(180deg, #e9e9ec 0%, #c7c7cc 45%, #9d9da3 100%)" }}
+        className="relative mx-[6%] rounded-t-[1.4vw] rounded-b-[0.5vw] p-[0.45%] shadow-[0_50px_100px_-40px_rgba(15,23,42,0.65)]"
+        style={{ background: "linear-gradient(160deg, #4a4a4f 0%, #2b2b2f 30%, #1d1d21 60%, #3a3a3f 100%)" }}
       >
-        {/* Lip where the lid opens */}
-        <span aria-hidden className="absolute left-1/2 top-0 h-[45%] w-[14%] -translate-x-1/2 rounded-b-[0.5vw] bg-gradient-to-b from-[#b6b6bc] to-[#d9d9de]" />
-        {/* Edge highlight */}
-        <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-white/70" />
+        <div className="relative rounded-t-[1.2vw] rounded-b-[0.4vw] bg-[#050506] p-[0.9%] pt-[1.1%]">
+          <div className="relative w-full overflow-hidden rounded-[0.45vw] bg-black" style={{ aspectRatio: aspect }}>
+            {children}
+          </div>
+          {/* Notch with the camera */}
+          <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 flex h-[2.6%] w-[11%] -translate-x-1/2 items-center justify-center rounded-b-[0.45vw] bg-[#050506]">
+            <span className="block size-[5px] rounded-full bg-[#17171c] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
+          </span>
+          {/* Reflection on the glass */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-t-[1.2vw] rounded-b-[0.4vw]"
+            style={{ background: "linear-gradient(110deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 30%, rgba(255,255,255,0) 50%)" }}
+          />
+        </div>
+      </div>
+      {/* Base: the wider body the lid sits on */}
+      <div
+        className="relative h-[1.5vw] min-h-[11px] w-full rounded-b-[1.1vw] shadow-[0_30px_60px_-30px_rgba(15,23,42,0.6)]"
+        style={{ background: "linear-gradient(180deg, #56565b 0%, #34343a 40%, #202024 100%)" }}
+      >
+        <span aria-hidden className="absolute left-1/2 top-0 h-[42%] w-[13%] -translate-x-1/2 rounded-b-[0.5vw] bg-gradient-to-b from-[#232327] to-[#3d3d42]" />
+        <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-white/25" />
       </div>
     </div>
   );
 }
 
-/** A macOS window: traffic lights, a centered title or address, then the content. */
+/**
+ * A macOS window, the way Safari draws it: traffic lights, back and forward,
+ * the address in the middle with its lock, and the content below. Pass `url`
+ * for the address bar or `title` for a plain title.
+ */
 export function MacWindowFrame({
   children,
   title,
+  url,
   className,
   dark,
 }: {
   children: ReactNode;
-  /** The address or the title shown in the middle of the bar. */
+  /** A plain title in the middle of the bar. */
   title?: string;
+  /** An address; shown in Safari's pill with the lock. Wins over `title`. */
+  url?: string;
   className?: string;
   /** A dark bar for screens that are dark themselves. */
   dark?: boolean;
 }) {
+  const fg = dark ? "#c5c5cc" : "#5b5b66";
+  const pill = dark ? "rgba(255,255,255,0.07)" : "rgba(15,23,42,0.06)";
   return (
     <div
       className={cn(
@@ -115,17 +136,31 @@ export function MacWindowFrame({
         className,
       )}
     >
-      <div className={cn("flex h-10 items-center px-4 md:h-11", dark ? "bg-[#2a2a2f]" : "bg-[#f3f3f5]")}>
+      <div className={cn("relative flex h-11 items-center gap-3 px-4 md:h-12", dark ? "bg-[#2a2a2f]" : "bg-[#f3f3f5]")}>
         <span aria-hidden className="flex gap-2">
           <span className="size-3 rounded-full bg-[#ff5f57] shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.15)]" />
           <span className="size-3 rounded-full bg-[#febc2e] shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.15)]" />
           <span className="size-3 rounded-full bg-[#28c840] shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.15)]" />
         </span>
-        {title ? (
-          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 max-w-[55%] truncate rounded-md px-3 py-1 text-[11px] md:text-xs" style={{ color: dark ? "#c5c5cc" : "#5b5b66", background: dark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.05)" }}>
-            {title}
+        <span aria-hidden className="ml-2 hidden gap-3 md:flex" style={{ color: fg }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40"><path d="M9 6l6 6-6 6" /></svg>
+        </span>
+        {url || title ? (
+          <span
+            className="pointer-events-none absolute left-1/2 flex h-7 max-w-[56%] -translate-x-1/2 items-center gap-1.5 truncate rounded-lg px-3 text-[11px] md:text-xs"
+            style={{ color: fg, background: pill }}
+          >
+            {url ? (
+              <svg aria-hidden width="10" height="10" viewBox="0 0 24 24" fill="currentColor" className="shrink-0 opacity-70"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zm-8-2a3 3 0 0 1 6 0v2H9V7z" /></svg>
+            ) : null}
+            <span className="truncate">{url ?? title}</span>
           </span>
         ) : null}
+        <span aria-hidden className="ml-auto hidden gap-3 md:flex" style={{ color: fg }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v12M8 7l4-4 4 4" /></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+        </span>
       </div>
       <div className="relative">{children}</div>
     </div>

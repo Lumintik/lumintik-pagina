@@ -158,14 +158,13 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             )}
 
             {gallery.length ? (
-              <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-                <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
-                  {t.cases.gallery}
-                </h2>
-                <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+              {/* The label sits on top and the frames take the whole width. */}
+              <section className="mt-16 md:mt-24">
+                <h2 className="text-xs font-medium text-slate-400">{t.cases.gallery}</h2>
+                <ul className="mt-6 grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:gap-8">
                   {gallery.map((image) => (
-                    <li key={image.src}>
-                      <CaseFrame image={image} sizes="(min-width: 768px) 600px, 100vw" />
+                    <li key={image.src} className="min-w-0">
+                      <CaseFrame image={image} sizes="(min-width: 1600px) 760px, (min-width: 640px) 50vw, 100vw" />
                     </li>
                   ))}
                 </ul>

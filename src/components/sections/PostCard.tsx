@@ -6,7 +6,14 @@ import type { Post } from "@/data/posts";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { href, paths } from "@/lib/routes";
 import { cn } from "@/lib/cn";
+import { CASES } from "@/data/cases";
 import { IphoneFrame, MacWindowFrame } from "@/components/ui/DeviceFrames";
+
+/** The address Safari shows over a cover: the related client's site, or ours. */
+export function coverAddress(post: Post): string {
+  const site = post.relatedCase ? CASES.find((c) => c.slug === post.relatedCase)?.links[0]?.href : undefined;
+  return (site ?? "https://www.lumintik.com").replace(/^https?:\/\//, "").replace(/\/$/, "");
+}
 
 /**
  * A post in the blog grid: the cover in a device frame, the author, the title
@@ -17,6 +24,7 @@ export function PostCard({ post, dark }: { post: Post; dark?: boolean }) {
   const { locale } = useLocale();
   const copy = post.copy[locale];
   const portrait = post.cover.height > post.cover.width;
+  const coverUrl = coverAddress(post);
   const sizes = "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw";
 
   return (
@@ -33,7 +41,7 @@ export function PostCard({ post, dark }: { post: Post; dark?: boolean }) {
             <Image src={post.cover.src} alt={post.cover.alt[locale]} fill sizes="200px" className="object-contain" />
           </IphoneFrame>
         ) : (
-          <MacWindowFrame dark title={post.cover.alt[locale]} className="w-full rounded-b-none md:rounded-b-none">
+          <MacWindowFrame dark url={coverUrl} title={post.cover.alt[locale]} className="w-full rounded-b-none md:rounded-b-none">
             <div className="relative w-full" style={{ aspectRatio: `${post.cover.width} / ${post.cover.height}` }}>
               <Image src={post.cover.src} alt={post.cover.alt[locale]} fill sizes={sizes} className="object-contain" />
             </div>

@@ -119,12 +119,26 @@ export function Navbar() {
 
   const [panelKey, setPanelKey] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // A panel opens on hover only after the cursor has rested on the entry for
+  // a while: crossing the bar on the way somewhere else should not unfold
+  // anything. Keyboard focus and clicks open it at once.
+  const HOVER_OPEN_MS = 2000;
   const openPanel = (key: string | null) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (openTimer.current) clearTimeout(openTimer.current);
     setPanelKey(key);
+  };
+  const openPanelAfterHover = (key: string | null) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (openTimer.current) clearTimeout(openTimer.current);
+    // Once a panel is open, moving to a sibling entry switches it at once.
+    if (panelKey || !key) return setPanelKey(key);
+    openTimer.current = setTimeout(() => setPanelKey(key), HOVER_OPEN_MS);
   };
   const closePanelSoon = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (openTimer.current) clearTimeout(openTimer.current);
     closeTimer.current = setTimeout(() => setPanelKey(null), 120);
   };
   const activePanel = navItems.find((n) => n.key === panelKey)?.panel ?? null;
@@ -232,8 +246,14 @@ export function Navbar() {
               <a
                 key={item.key}
                 href={item.href}
-                onMouseEnter={() => openPanel(item.panel ? item.key : null)}
+                onMouseEnter={() => openPanelAfterHover(item.panel ? item.key : null)}
                 onFocus={() => openPanel(item.panel ? item.key : null)}
+                onClick={(e) => {
+                  if (item.panel && panelKey !== item.key) {
+                    e.preventDefault();
+                    openPanel(item.key);
+                  }
+                }}
                 aria-haspopup={item.panel ? "true" : undefined}
                 aria-expanded={item.panel ? panelKey === item.key : undefined}
                 className={`relative inline-flex items-center gap-1 whitespace-nowrap text-[13px] font-medium px-3.5 py-2 rounded-full transition-colors duration-300 ${
