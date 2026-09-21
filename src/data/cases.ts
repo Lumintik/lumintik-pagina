@@ -25,6 +25,8 @@ export type CaseCopy = {
 
 export type CaseImage = {
   src: string;
+  /** The capture already has a device drawn around it: do not add another. */
+  framed?: boolean;
   width: number;
   height: number;
   alt: Record<Locale, string>;
@@ -132,13 +134,10 @@ export const CASES: CaseStudy[] = [
         },
       },
       {
-        src: "/projects/samsung/cart-mobile.webp",
-        width: 1179,
-        height: 1980,
-        alt: {
-          ES: "Carrito de compras de la tienda en celular",
-          EN: "Shopping cart of the store on a phone",
-        },
+        src: "/projects/mobile/imagiq.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "La tienda de Imagiq en un iPhone", EN: "The Imagiq store on an iPhone" },
       },
     ],
     copy: {
@@ -198,6 +197,12 @@ export const CASES: CaseStudy[] = [
       ],
     },
     images: [
+      {
+        src: "/projects/mobile/ezmig.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "EZMig en un iPhone", EN: "EZMig on an iPhone" },
+      },
       {
         src: "/projects/ezmig/home.webp",
         width: 2000,
@@ -387,13 +392,10 @@ export const CASES: CaseStudy[] = [
         },
       },
       {
-        src: "/projects/ezdocu/editor-mobile.webp",
-        width: 780,
-        height: 1688,
-        alt: {
-          ES: "Editor de traducción de EZDocuAI en celular",
-          EN: "EZDocuAI translation editor on a phone",
-        },
+        src: "/projects/mobile/ezdocu.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "EZDocuAI en un iPhone", EN: "EZDocuAI on an iPhone" },
       },
     ],
     copy: {
@@ -464,13 +466,10 @@ export const CASES: CaseStudy[] = [
         },
       },
       {
-        src: "/projects/reco/plataforma-mobile.webp",
-        width: 1170,
-        height: 2532,
-        alt: {
-          ES: "Plataforma RECO en celular",
-          EN: "The RECO platform on a phone",
-        },
+        src: "/projects/mobile/reco.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Sitio de RECO en un iPhone", EN: "The RECO site on an iPhone" },
       },
     ],
     copy: {
@@ -520,6 +519,7 @@ export const CASES: CaseStudy[] = [
     images: [
       {
         src: "/projects/ia-multicanal/imagiq.png",
+        framed: true,
         width: 706,
         height: 1453,
         alt: {
@@ -529,6 +529,7 @@ export const CASES: CaseStudy[] = [
       },
       {
         src: "/projects/ia-multicanal/accesify.png",
+        framed: true,
         width: 706,
         height: 1453,
         alt: {
@@ -538,6 +539,7 @@ export const CASES: CaseStudy[] = [
       },
       {
         src: "/projects/ia-multicanal/fridoom.png",
+        framed: true,
         width: 706,
         height: 1453,
         alt: {

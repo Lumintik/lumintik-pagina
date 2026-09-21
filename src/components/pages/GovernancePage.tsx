@@ -68,7 +68,7 @@ export function GovernancePage() {
           <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{copy.policiesTitle}</h2>
           <ul className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {copy.policies.map((p) => (
-              <li key={p.title} className="flex flex-col rounded-3xl border border-slate-200 p-6 md:p-8">
+              <li key={p.title} className="flex flex-col rounded-3xl border border-slate-900/15 p-6 md:p-8">
                 <h3 className="text-slate-900 text-xl font-semibold">{p.title}</h3>
                 <p className="mt-3 flex-1 text-slate-900 text-base leading-relaxed">{p.desc}</p>
                 <Link

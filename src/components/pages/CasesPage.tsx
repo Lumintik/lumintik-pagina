@@ -23,7 +23,7 @@ export function CasesPage() {
               <li key={study.slug}>
                 <Link
                   href={href(locale, paths.caseStudy(study.slug))}
-                  className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_-40px_rgba(15,23,42,0.4)] transition-transform duration-500 hover:-translate-y-1"
+                  className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-900/15 bg-white shadow-[0_20px_60px_-40px_rgba(15,23,42,0.4)] transition-transform duration-500 hover:-translate-y-1"
                 >
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900">
                     {cover ? (

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 /*
@@ -32,10 +32,12 @@ const ISLAND_H = ISLAND_W * 0.29;
 export function IphoneFrame({
   children,
   className,
+  style,
   aspect = "402 / 874",
 }: {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   /** Screen aspect ratio, `width / height`. */
   aspect?: string;
 }) {
@@ -47,7 +49,7 @@ export function IphoneFrame({
     "absolute w-[0.9cqw] rounded-[0.3cqw] bg-[linear-gradient(180deg,#d7d7dc,#8e8e96_35%,#6c6c74_65%,#c2c2c9)]";
 
   return (
-    <div className={cn("relative [container-type:inline-size]", className)} style={{ aspectRatio: outer }}>
+    <div className={cn("relative [container-type:inline-size]", className)} style={{ aspectRatio: outer, ...style }}>
       {/* Side buttons, mostly behind the band so only their edge shows */}
       <span aria-hidden className={cn(button, "-left-[0.5cqw] top-[16%] h-[4.4%]")} />
       <span aria-hidden className={cn(button, "-left-[0.5cqw] top-[24%] h-[7.6%]")} />
@@ -105,14 +107,16 @@ export function IphoneFrame({
 export function MacbookFrame({
   children,
   className,
+  style,
   aspect = "16 / 10",
 }: {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   aspect?: string;
 }) {
   return (
-    <div className={cn("relative w-full [container-type:inline-size]", className)}>
+    <div className={cn("relative w-full [container-type:inline-size]", className)} style={style}>
       {/* Lid: space black aluminum around the glass */}
       <div
         className="relative mx-[6cqw] rounded-t-[1.1cqw] rounded-b-[0.4cqw] p-[0.35cqw] shadow-[0_50px_100px_-40px_rgba(15,23,42,0.65)]"

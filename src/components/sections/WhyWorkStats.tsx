@@ -56,7 +56,7 @@ function StatCard({ value, suffix, desc, active, delay }: CardProps) {
   const count = useCounter(value, 1800, active);
   return (
     <div
-      className="bg-slate-100 border border-slate-200 rounded-3xl p-5 md:p-7 flex flex-col justify-between h-[200px] md:h-[260px]"
+      className="bg-slate-100 border border-slate-900/15 rounded-3xl p-5 md:p-7 flex flex-col justify-between h-[200px] md:h-[260px]"
       style={{
         opacity: active ? 1 : 0,
         transform: active ? "translateY(0)" : "translateY(36px)",

@@ -111,7 +111,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             pulled up by 100vh, and without this the content would sit under it. */}
         <div className="relative z-[2] w-full bg-white flex flex-col items-center">
           <div className="mx-auto max-w-[1600px] w-full px-5 md:px-12">
-            <div className="-mt-10 md:-mt-16">
+            <div className="mt-2 md:mt-4">
               <CaseCover study={study} priority sizes="(min-width: 1536px) 1440px, 100vw" />
             </div>
 
@@ -215,7 +215,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               </section>
             ) : null}
 
-            <section className="mt-16 md:mt-24 rounded-md bg-slate-50 border border-slate-200 px-6 py-10 md:px-12 md:py-14">
+            <section className="mt-16 md:mt-24 rounded-md bg-slate-50 border border-slate-900/15 px-6 py-10 md:px-12 md:py-14">
               <p className="text-slate-900 text-2xl md:text-4xl font-semibold leading-[1.25] max-w-[30ch]">
                 {t.cases.ctaTitle}
               </p>

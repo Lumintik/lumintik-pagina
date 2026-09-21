@@ -35,7 +35,7 @@ export function TeamPage() {
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {PEOPLE.map((p) => (
             <li key={p.name} className="flex flex-col">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md border border-slate-200 bg-slate-100 flex items-center justify-center">
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md border border-slate-900/15 bg-slate-100 flex items-center justify-center">
                 {p.photo ? (
                   <Image src={p.photo} alt={p.name} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover object-top" />
                 ) : (
@@ -55,7 +55,7 @@ export function TeamPage() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm text-slate-700 transition-colors hover:border-slate-900 hover:text-slate-900"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-slate-900/15 px-3.5 py-1.5 text-sm text-slate-700 transition-colors hover:border-slate-900 hover:text-slate-900"
                       >
                         {link.label}
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

@@ -79,7 +79,7 @@ export function ServiceDetail({
             pulled up by 100vh, and without this the content would sit under it. */}
         <div className="relative z-[2] w-full bg-white flex flex-col items-center">
           <div className="mx-auto max-w-[1600px] w-full px-5 md:px-12">
-            <div className="-mt-10 md:-mt-16 relative w-full rounded-md overflow-hidden bg-slate-100 border border-slate-200 aspect-[16/9]">
+            <div className="-mt-10 md:-mt-16 relative w-full rounded-md overflow-hidden bg-slate-100 border border-slate-900/15 aspect-[16/9]">
               <video
                 src={video.src}
                 poster={video.poster}
@@ -156,7 +156,7 @@ export function ServiceDetail({
             </section>
 
             {/* Outcome */}
-            <section className="mt-16 md:mt-24 rounded-md bg-slate-50 border border-slate-200 px-6 py-10 md:px-12 md:py-14">
+            <section className="mt-16 md:mt-24 rounded-md bg-slate-50 border border-slate-900/15 px-6 py-10 md:px-12 md:py-14">
               <p className="text-slate-900 text-2xl md:text-4xl font-semibold leading-[1.25] max-w-[40ch]">
                 {content.outcome}
               </p>

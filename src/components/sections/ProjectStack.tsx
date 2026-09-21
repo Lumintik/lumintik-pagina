@@ -60,7 +60,7 @@ export function ProjectStack() {
         >
           <Link
             href={card.href}
-            className="group relative block h-[48vh] min-h-[300px] md:h-[60vh] w-full overflow-hidden rounded-md border border-slate-200 bg-slate-900 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.45)]"
+            className="group relative block h-[48vh] min-h-[300px] md:h-[60vh] w-full overflow-hidden rounded-md border border-slate-900/15 bg-slate-900 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.45)]"
           >
             {card.image ? (
               <Image

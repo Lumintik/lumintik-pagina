@@ -342,7 +342,7 @@ export function HeroDemo({
       ref={stageRef}
       aria-hidden
       className={cn(
-        "relative w-full aspect-[4/3] overflow-hidden rounded-2xl border border-white/10",
+        "relative w-full aspect-[4/3] overflow-hidden rounded-2xl border border-white/30",
         "bg-[radial-gradient(120%_90%_at_30%_10%,rgba(59,130,246,0.22),rgba(15,23,42,0)_60%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]",
         "shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]",
         className,
@@ -617,7 +617,7 @@ export function HeroDemo({
               </div>
               <div className={cn("grid grid-cols-3 gap-1.5 rounded-md p-2 transition-colors duration-300", frame.page.block === 3 ? "bg-blue-50 ring-1 ring-blue-300" : "")}>
                 {[0, 1, 2].map((k) => (
-                  <div key={k} className={cn("rounded border p-1.5", k === 1 ? "border-slate-800" : "border-slate-200")}>
+                  <div key={k} className={cn("rounded border p-1.5", k === 1 ? "border-slate-800" : "border-slate-900/15")}>
                     <div className="h-1 w-2/3 rounded bg-slate-400" />
                     <div className="mt-1 h-1.5 w-1/2 rounded bg-slate-800" />
                   </div>
@@ -635,7 +635,7 @@ export function HeroDemo({
       {frame.analytics ? (
         <div
           className={cn(
-            "absolute -translate-x-1/2 -translate-y-1/2 w-[44%] min-w-[200px] rounded-xl border border-white/10 bg-slate-950/85 p-3 text-white backdrop-blur transition-[opacity,filter] duration-500",
+            "absolute -translate-x-1/2 -translate-y-1/2 w-[44%] min-w-[200px] rounded-xl border border-white/30 bg-slate-950/85 p-3 text-white backdrop-blur transition-[opacity,filter] duration-500",
             fade,
           )}
           style={{ ...pct(frame.analytics.at), animation: "hero-pop 380ms cubic-bezier(.22,1,.36,1) backwards" }}
@@ -686,7 +686,7 @@ export function HeroDemo({
           key={c.id}
           className={cn(
             "absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-medium whitespace-nowrap",
-            "bg-slate-900/80 border-white/15 text-white backdrop-blur",
+            "bg-slate-900/80 border-white/30 text-white backdrop-blur",
             frame.dragging === c.id ? "scale-105 border-blue-300/60 shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]" : "",
             fade,
           )}

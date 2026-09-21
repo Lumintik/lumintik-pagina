@@ -74,7 +74,7 @@ export function IndustryDetail({ id }: { id: string }) {
                   <p className="text-xs font-medium text-slate-900">{chrome.stack}</p>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {industry.stack.map((tool) => (
-                      <li key={tool} className="rounded-full border border-slate-200 px-3.5 py-1.5 text-sm text-slate-700">{tool}</li>
+                      <li key={tool} className="rounded-full border border-slate-900/15 px-3.5 py-1.5 text-sm text-slate-700">{tool}</li>
                     ))}
                   </ul>
                 </div>
@@ -125,7 +125,7 @@ export function IndustryDetail({ id }: { id: string }) {
               <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {others.map((other) => (
                   <li key={other.id}>
-                    <Link href={href(locale, paths.industry(other.id))} className="group flex h-full flex-col justify-between rounded-2xl border border-slate-200 p-6 transition-colors hover:bg-slate-50">
+                    <Link href={href(locale, paths.industry(other.id))} className="group flex h-full flex-col justify-between rounded-2xl border border-slate-900/15 p-6 transition-colors hover:bg-slate-50">
                       <span className="text-xs font-medium text-slate-900">{t.industries.items[other.id].category}</span>
                       <span className="mt-6 flex items-center justify-between gap-3 text-slate-900 text-lg font-semibold leading-snug">
                         {t.industries.items[other.id].title}

@@ -73,7 +73,7 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
                   href={project.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/40 text-white text-sm font-medium hover:bg-white hover:text-slate-900 transition-colors duration-300"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/30 text-white text-sm font-medium hover:bg-white hover:text-slate-900 transition-colors duration-300"
                 >
                   {t.cases.visit}
                   <ArrowUpRight />
@@ -85,9 +85,9 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
 
         <div className="relative z-[2] w-full bg-white flex flex-col items-center">
           <div className="mx-auto max-w-[1600px] w-full px-5 md:px-12">
-            <div className="-mt-10 md:-mt-16">
+            <div className="mt-2 md:mt-4">
               {project.video ? (
-                <div className="relative w-full overflow-hidden rounded-md border border-slate-200 bg-slate-900 aspect-[16/10]">
+                <div className="relative w-full overflow-hidden rounded-md border border-slate-900/15 bg-slate-900 aspect-[16/10]">
                   <video
                     src={project.video}
                     poster={project.image.src}

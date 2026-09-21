@@ -32,7 +32,7 @@ export function PostCard({ post, dark }: { post: Post; dark?: boolean }) {
       href={href(locale, paths.post(post.slug))}
       className={cn(
         "group flex flex-col overflow-hidden rounded-3xl border transition-transform duration-500 hover:-translate-y-1",
-        dark ? "border-white/10 bg-[#0d0d10]" : "border-slate-200 bg-white shadow-[0_20px_60px_-40px_rgba(15,23,42,0.4)]",
+        dark ? "border-white/30 bg-[#0d0d10]" : "border-slate-900/15 bg-white shadow-[0_20px_60px_-40px_rgba(15,23,42,0.4)]",
       )}
     >
       <div className={cn("relative flex aspect-[16/10] w-full items-end justify-center overflow-hidden px-6 pt-6", dark ? "bg-[#151519]" : "bg-slate-100")}>

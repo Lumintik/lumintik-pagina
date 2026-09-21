@@ -53,7 +53,7 @@ export function ServiceTile({ title, description, group, href, videoSrc, posterS
       <span className="relative flex items-start justify-between gap-4">
         <span className="text-xs font-medium text-slate-900">{group}</span>
         <span
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/70 px-3 py-1.5 text-xs font-medium text-white transition-colors duration-300 group-hover:bg-white group-hover:text-slate-900"
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-3 py-1.5 text-xs font-medium text-white transition-colors duration-300 group-hover:bg-white group-hover:text-slate-900"
         >
           {cta}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5">

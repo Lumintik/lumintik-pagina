@@ -60,7 +60,7 @@ export function ContactSection() {
       id="contact"
       className="relative box-border outline-none px-5 py-20 md:px-10 md:py-32 w-full z-[2] bg-white border-none"
     >
-      <div className="box-border max-w-none w-full mx-auto md:max-w-[1150px] bg-gradient-to-br from-[#171717] to-[#0a0a0a] md:p-10 p-6 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-white/10 overflow-hidden relative">
+      <div className="box-border max-w-none w-full mx-auto md:max-w-[1150px] bg-gradient-to-br from-[#171717] to-[#0a0a0a] md:p-10 p-6 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.25)] border border-white/30 overflow-hidden relative">
         <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,0,0,0.1),transparent_50%)] pointer-events-none" />
         <div className="text-left mb-10 relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-3">
@@ -92,7 +92,7 @@ export function ContactSection() {
                 name="name"
                 type="text"
                 aria-invalid={invalid("name")}
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-white/30 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
                 required
               />
             </div>
@@ -104,7 +104,7 @@ export function ContactSection() {
                 id="service"
                 name="service"
                 aria-invalid={invalid("service")}
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white focus:outline-none focus:border-white transition-colors appearance-none cursor-pointer"
+                className="w-full px-1 py-3 rounded-none border-b border-white/30 bg-transparent text-white focus:outline-none focus:border-white transition-colors appearance-none cursor-pointer"
                 defaultValue=""
                 required
               >
@@ -128,7 +128,7 @@ export function ContactSection() {
                 name="email"
                 type="email"
                 aria-invalid={invalid("email")}
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-white/30 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
                 required
               />
             </div>
@@ -140,7 +140,7 @@ export function ContactSection() {
                 <select
                   id="countryCode"
                   name="countryCode"
-                  className="border-b border-slate-700 h-[49px] bg-transparent text-white pr-2 mr-2 focus:outline-none focus:border-white transition-colors cursor-pointer text-sm"
+                  className="border-b border-white/30 h-[49px] bg-transparent text-white pr-2 mr-2 focus:outline-none focus:border-white transition-colors cursor-pointer text-sm"
                   defaultValue="+57"
                   aria-label="Country code"
                 >
@@ -155,7 +155,7 @@ export function ContactSection() {
                   id="phone"
                   name="phone"
                   type="tel"
-                  className="w-full px-1 py-3 h-[49px] rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
+                  className="w-full px-1 py-3 h-[49px] rounded-none border-b border-white/30 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
             </div>
@@ -168,7 +168,7 @@ export function ContactSection() {
                 id="company"
                 name="company"
                 type="text"
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-white/30 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -179,7 +179,7 @@ export function ContactSection() {
                 id="role"
                 name="role"
                 type="text"
-                className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
+                className="w-full px-1 py-3 rounded-none border-b border-white/30 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors"
               />
             </div>
           </div>
@@ -192,7 +192,7 @@ export function ContactSection() {
               id="message"
               name="message"
               rows={2}
-              className="w-full px-1 py-3 rounded-none border-b border-slate-700 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors resize-y"
+              className="w-full px-1 py-3 rounded-none border-b border-white/30 bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:border-white transition-colors resize-y"
             ></textarea>
           </div>
 

@@ -99,7 +99,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
           >
             <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border-2 border-slate-900/70 transition-all duration-500", active && phase === "click" ? "scale-150 opacity-0" : "scale-50 opacity-0")} />
             {tour.device === "phone" ? (
-              <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border border-white/70 bg-slate-900/25 shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-transform duration-200", active && phase === "click" ? "scale-75" : "scale-100")} />
+              <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border border-white/30 bg-slate-900/25 shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-transform duration-200", active && phase === "click" ? "scale-75" : "scale-100")} />
             ) : (
               <>
                 <span className={cn("absolute -left-2.5 -top-2.5 size-5 rounded-full bg-slate-900/15 transition-transform duration-200", active && phase === "click" ? "scale-100" : "scale-0")} />
@@ -140,7 +140,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
                     className={cn("w-full rounded-2xl p-5 text-left transition-colors duration-300", active ? "bg-slate-50" : "hover:bg-slate-50/60")}
                   >
                     <span className={cn("flex items-center gap-3 text-lg font-semibold transition-colors duration-300 md:text-xl", active ? "text-slate-900" : "text-slate-900")}>
-                      <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium", active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300")}>{i + 1}</span>
+                      <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium", active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-900/25")}>{i + 1}</span>
                       {s.label[locale]}
                     </span>
                     <span className={cn("grid transition-[grid-template-rows,opacity] duration-500 ease-out", active ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
@@ -204,7 +204,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
           <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 md:inset-x-auto md:bottom-5 md:left-5 md:max-w-[46ch]">
             <p
               key={step.id}
-              className="rounded-2xl border border-white/40 bg-slate-950/70 px-4 py-3 text-sm leading-relaxed text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_20px_40px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl md:text-base tour-caption"
+              className="rounded-2xl border border-white/30 bg-slate-950/70 px-4 py-3 text-sm leading-relaxed text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_20px_40px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl md:text-base tour-caption"
             >
               {step.caption[locale]}
             </p>

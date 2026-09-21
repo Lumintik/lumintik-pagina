@@ -39,7 +39,7 @@ export function ToolPill({ id }: { id: ToolId }) {
   const name = toolName(tool, locale);
   const { logo } = tool;
   return (
-    <li className="inline-flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700">
+    <li className="inline-flex h-9 items-center gap-2 rounded-full border border-slate-900/15 bg-white px-4 text-sm font-medium text-slate-700">
       {logo.kind === "icon" && <logo.icon aria-hidden className="size-4 shrink-0" style={{ color: logo.color }} />}
       {logo.kind === "glyph" && <span className="size-4 shrink-0 text-slate-700">{logo.node}</span>}
       {logo.kind === "image" && (
@@ -110,6 +110,20 @@ export function CaseFrame({
   className?: string;
 }) {
   const { locale } = useLocale();
+  if (image.framed) {
+    // The capture already has its device: show it as it is.
+    return (
+      <Image
+        src={image.src}
+        alt={image.alt[locale]}
+        width={image.width}
+        height={image.height}
+        priority={priority}
+        sizes={sizes}
+        className={cn("h-auto w-full", className)}
+      />
+    );
+  }
   const ratio = image.height / image.width;
   const tall = ratio > 1.4;
   const aspect = `${image.width} / ${image.height}`;
@@ -170,7 +184,7 @@ export function CaseCover({
   const cover = desktop ?? mobile ?? study.images[0];
   if (!cover) {
     return (
-      <div className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-3 rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+      <div className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-3 rounded-md border border-dashed border-slate-900/25 bg-slate-50 p-6 text-center">
         <span className="text-slate-900 font-semibold">{t.cases.pendingImages}</span>
         <span className="max-w-[70ch] text-sm text-slate-900">
           <Pending /> {study.imagesPending?.[locale]}
@@ -179,29 +193,59 @@ export function CaseCover({
     );
   }
 
-  const phone = mobile ? (
-    <IphoneFrame className="w-[22%] min-w-[110px] max-w-[190px] shrink-0" aspect={`${mobile.width} / ${mobile.height}`}>
-      <Image src={mobile.src} alt={mobile.alt[locale]} fill priority={priority} sizes="190px" className="object-contain" />
-    </IphoneFrame>
-  ) : null;
-
-  // No desktop capture (an app with no web of its own): the phone leads.
+  // No desktop capture: the phones lead, up to three across.
   if (!desktop) {
+    const phones = study.images.filter((i) => i.height / i.width > 1.4).slice(0, 3);
     return (
-      <div className="flex w-full justify-center py-6 md:py-10">
-        <IphoneFrame className="w-full max-w-[280px]" aspect={`${cover.width} / ${cover.height}`}>
-          <Image src={cover.src} alt={cover.alt[locale]} fill priority={priority} sizes="280px" className="object-contain" />
-        </IphoneFrame>
+      <div className="flex w-full items-end justify-center gap-4 py-6 md:gap-10 md:py-10">
+        {(phones.length ? phones : [cover]).map((img) =>
+          img.framed ? (
+            <Image
+              key={img.src}
+              src={img.src}
+              alt={img.alt[locale]}
+              width={img.width}
+              height={img.height}
+              priority={priority}
+              sizes="280px"
+              className="h-auto w-full max-w-[260px]"
+            />
+          ) : (
+            <IphoneFrame key={img.src} className="w-full max-w-[260px]" aspect={`${img.width} / ${img.height}`}>
+              <Image src={img.src} alt={img.alt[locale]} fill priority={priority} sizes="280px" className="object-contain" />
+            </IphoneFrame>
+          ),
+        )}
       </div>
     );
   }
 
+  // The two frames end up the same height, so they read as one machine and
+  // one pocket rather than two loose pictures. A laptop is about
+  // 0.88 * ratio + 0.045 tall for its width, and a phone 0.93 * ratio + 0.07;
+  // that gives the share of the row each one needs.
+  const laptopK = 0.88 * (desktop.height / desktop.width) + 0.045;
+  const phoneK = mobile ? 0.93 * (mobile.height / mobile.width) + 0.07 : 0;
+  const phoneShare = mobile ? (laptopK / phoneK) / (1 + laptopK / phoneK) : 0;
+
   return (
     <div className="flex w-full items-end justify-center gap-4 md:gap-8">
-      <MacbookFrame className="min-w-0 flex-1 max-w-[900px]" aspect={`${desktop.width} / ${desktop.height}`}>
+      <MacbookFrame
+        className="min-w-0"
+        style={{ width: `${(1 - phoneShare) * 100}%` }}
+        aspect={`${desktop.width} / ${desktop.height}`}
+      >
         <Image src={desktop.src} alt={desktop.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
       </MacbookFrame>
-      {phone}
+      {mobile ? (
+        <IphoneFrame
+          className="shrink-0"
+          style={{ width: `${phoneShare * 100}%` }}
+          aspect={`${mobile.width} / ${mobile.height}`}
+        >
+          <Image src={mobile.src} alt={mobile.alt[locale]} fill priority={priority} sizes="240px" className="object-contain" />
+        </IphoneFrame>
+      ) : null}
     </div>
   );
 }
@@ -219,7 +263,7 @@ export function CaseCertification({ certification }: { certification: NonNullabl
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 transition-colors hover:border-slate-900"
+              className="flex items-center gap-3 rounded-xl border border-slate-900/15 bg-white px-4 py-3 transition-colors hover:border-slate-900"
             >
               <span
                 aria-hidden

@@ -39,20 +39,20 @@ export function ClientWall() {
     <section aria-label={t.buildingFor.aria} className="relative w-full z-[3]">
       <div className="px-6 md:px-12 xl:px-20">
         {/* The bottom of the wall fades out, as if it went on. */}
-        <ul className="mx-auto grid w-full max-w-[1600px] grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border border-white/10 rounded-t-2xl overflow-hidden [mask-image:linear-gradient(to_bottom,black_62%,transparent_100%)]">
+        <ul className="mx-auto grid w-full max-w-[1600px] grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 border border-white/30 rounded-t-2xl overflow-hidden [mask-image:linear-gradient(to_bottom,black_62%,transparent_100%)]">
           {CLIENTS.map((client) => {
             const cell = "relative flex h-24 md:h-28 w-full items-center justify-center px-6 opacity-80 transition-opacity duration-300 hover:opacity-100";
             const inner = (
               <>
                 <Mark client={client} />
                 {/* The country, bottom left */}
-                <span className="absolute left-3 bottom-3 flex size-7 items-center justify-center rounded-full border border-white/20 bg-slate-950/60 p-1">
+                <span className="absolute left-3 bottom-3 flex size-7 items-center justify-center rounded-full border border-white/30 bg-slate-950/60 p-1">
                   <Flag country={client.country} className="size-full" />
                 </span>
               </>
             );
             return (
-              <li key={client.key} className="border border-white/10 -m-px">
+              <li key={client.key} className="border border-white/30 -m-px">
                 {client.href ? (
                   <a href={client.href} target="_blank" rel="noopener noreferrer" className={cell}>
                     {inner}

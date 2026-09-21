@@ -131,7 +131,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
             {post.tags?.length ? (
               <ul className="mt-5 flex flex-wrap gap-2" aria-label={t.pages.blog.topics}>
                 {post.tags.map((tag) => (
-                  <li key={tag} className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-900">
+                  <li key={tag} className="rounded-full border border-slate-900/15 px-3 py-1 text-xs font-medium text-slate-900">
                     {tag}
                   </li>
                 ))}
@@ -172,7 +172,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
             <div className="sticky top-28 flex flex-col gap-10">
               <nav aria-label={t.pages.blog.toc}>
                 <p className="text-xs font-medium text-slate-900">{t.pages.blog.toc}</p>
-                <ol className="mt-4 flex flex-col border-l border-slate-200">
+                <ol className="mt-4 flex flex-col border-l border-slate-900/15">
                   {copy.sections.map((section) => {
                     const id = headingId(section.heading);
                     const active = id === current;
@@ -199,7 +199,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                   <button
                     type="button"
                     onClick={copyLink}
-                    className="inline-flex h-9 items-center rounded-full border border-slate-200 px-4 text-sm text-slate-700 transition-colors hover:border-slate-900"
+                    className="inline-flex h-9 items-center rounded-full border border-slate-900/15 px-4 text-sm text-slate-700 transition-colors hover:border-slate-900"
                   >
                     {copied ? t.pages.blog.copied : t.pages.blog.copyLink}
                   </button>
@@ -207,7 +207,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                     href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="inline-flex h-9 items-center rounded-full border border-slate-200 px-4 text-sm text-slate-700 transition-colors hover:border-slate-900"
+                    className="inline-flex h-9 items-center rounded-full border border-slate-900/15 px-4 text-sm text-slate-700 transition-colors hover:border-slate-900"
                   >
                     LinkedIn
                   </a>
@@ -215,7 +215,7 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                     href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(copy.title)}`}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="inline-flex h-9 items-center rounded-full border border-slate-200 px-4 text-sm text-slate-700 transition-colors hover:border-slate-900"
+                    className="inline-flex h-9 items-center rounded-full border border-slate-900/15 px-4 text-sm text-slate-700 transition-colors hover:border-slate-900"
                   >
                     X
                   </a>
