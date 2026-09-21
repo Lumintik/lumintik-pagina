@@ -221,6 +221,9 @@ export function Navbar() {
     <>
       <header
         onMouseLeave={closePanelSoon}
+        /* Focus reaching a hidden bar brings it back: otherwise the keyboard
+           lands on a link nobody can see. */
+        onFocusCapture={() => setHidden(false)}
         className={`fixed top-0 left-0 right-0 z-[50] transition-all duration-500 ${
           panelKey ? "bg-white" : bgVisible ? "bg-white/70 backdrop-blur-md" : "bg-transparent"
         }`}
