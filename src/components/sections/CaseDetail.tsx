@@ -157,8 +157,8 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               </section>
             )}
 
+            {/* The gallery label sits on top and the frames take the whole width. */}
             {gallery.length ? (
-              {/* The label sits on top and the frames take the whole width. */}
               <section className="mt-16 md:mt-24">
                 <h2 className="text-xs font-medium text-slate-400">{t.cases.gallery}</h2>
                 <ul className="mt-6 grid grid-cols-1 items-center gap-6 sm:grid-cols-2 md:gap-8">
