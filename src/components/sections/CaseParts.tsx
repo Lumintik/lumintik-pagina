@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { IphoneFrame, MacbookFrame, MacWindowFrame } from "@/components/ui/DeviceFrames";
+import { IpadFrame, IphoneFrame, MacbookFrame, MacWindowFrame, WatchFrame } from "@/components/ui/DeviceFrames";
 import { cn } from "@/lib/cn";
 import type { CaseImage, CaseStudy } from "@/data/cases";
 import { TOOLS, toolName, type ToolId } from "@/data/tools";
@@ -125,8 +125,26 @@ export function CaseFrame({
     );
   }
   const ratio = image.height / image.width;
-  const tall = ratio > 1.4;
+  const tall = image.device === "phone" || (!image.device && ratio > 1.4);
   const aspect = `${image.width} / ${image.height}`;
+  if (image.device === "watch") {
+    return (
+      <div className={cn("flex w-full justify-center", className)}>
+        <WatchFrame className="w-full max-w-[220px]" aspect={aspect}>
+          <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes="220px" className="object-contain" />
+        </WatchFrame>
+      </div>
+    );
+  }
+  if (image.device === "ipad") {
+    return (
+      <div className={cn("flex w-full justify-center", className)}>
+        <IpadFrame className="w-full max-w-[420px]" aspect={aspect}>
+          <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes="420px" className="object-contain" />
+        </IpadFrame>
+      </div>
+    );
+  }
   // The capture keeps its own aspect ratio inside the device and is never
   // cropped: a phone for phone shaped captures, a macOS window for the ones
   // near square (tall dashboards), a laptop for the wide ones.

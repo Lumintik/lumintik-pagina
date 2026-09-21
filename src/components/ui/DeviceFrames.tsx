@@ -229,3 +229,106 @@ export function MacWindowFrame({
     </div>
   );
 }
+
+/**
+ * An iPad: thin aluminium band, even black bezel on all four sides and a
+ * front camera on the long edge, the way a modern iPad Pro sits in landscape
+ * or portrait. Same rules as the phone: radii in `cqw`, screen untouched.
+ */
+export function IpadFrame({
+  children,
+  className,
+  style,
+  aspect = "834 / 1210",
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  aspect?: string;
+}) {
+  const [w, h] = aspect.split("/").map((n) => Number(n.trim()));
+  const BAND_I = 0.9;
+  const BEZEL_I = 3.2;
+  const SCREEN = 100 - 2 * (BAND_I + BEZEL_I);
+  const R = SCREEN * 0.055;
+  const portrait = h >= w;
+  const outer = `100 / ${(SCREEN * h) / w + 2 * (BAND_I + BEZEL_I)}`;
+  return (
+    <div className={cn("relative [container-type:inline-size]", className)} style={{ aspectRatio: outer, ...style }}>
+      <div
+        className="absolute inset-0 shadow-[0_45px_100px_-40px_rgba(15,23,42,0.5)]"
+        style={{
+          borderRadius: `${R + BEZEL_I + BAND_I}cqw`,
+          padding: `${BAND_I}cqw`,
+          background: "linear-gradient(150deg, #f2f2f5 0%, #c2c2c9 20%, #8b8b93 46%, #b5b5bc 72%, #eaeaee 100%)",
+        }}
+      >
+        <div
+          className="relative h-full w-full bg-[#050506]"
+          style={{ borderRadius: `${R + BEZEL_I}cqw`, padding: `${BEZEL_I}cqw` }}
+        >
+          <div className="relative h-full w-full overflow-hidden bg-black" style={{ borderRadius: `${R}cqw` }}>
+            {children}
+          </div>
+          {/* Camera, centred on the long edge */}
+          <span
+            aria-hidden
+            className={cn(
+              "pointer-events-none absolute block rounded-full bg-[#15151a] shadow-[inset_0_0_0_0.06cqw_rgba(255,255,255,0.25)]",
+              portrait ? "left-1/2 top-[1.1cqw] -translate-x-1/2" : "left-[1.1cqw] top-1/2 -translate-y-1/2",
+            )}
+            style={{ width: "0.9cqw", height: "0.9cqw" }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * An Apple Watch: titanium case, flat black display, the crown and the side
+ * button on the right. The band is left out on purpose, so the screen stays
+ * the subject.
+ */
+export function WatchFrame({
+  children,
+  className,
+  style,
+  aspect = "422 / 514",
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+  aspect?: string;
+}) {
+  const [w, h] = aspect.split("/").map((n) => Number(n.trim()));
+  const CASE_W = 8;
+  const SCREEN = 100 - 2 * CASE_W;
+  const R = SCREEN * 0.3;
+  const outer = `100 / ${(SCREEN * h) / w + 2 * CASE_W}`;
+  return (
+    <div className={cn("relative [container-type:inline-size]", className)} style={{ aspectRatio: outer, ...style }}>
+      {/* Digital crown and side button */}
+      <span
+        aria-hidden
+        className="absolute -right-[1.6cqw] top-[27%] h-[13%] w-[3.4cqw] rounded-[1.2cqw] bg-[linear-gradient(180deg,#e4e4e9,#9a9aa2_40%,#74747c_70%,#cfcfd6)]"
+      />
+      <span
+        aria-hidden
+        className="absolute -right-[0.9cqw] top-[46%] h-[14%] w-[1.9cqw] rounded-[0.8cqw] bg-[linear-gradient(180deg,#d8d8de,#8f8f98_45%,#c5c5cc)]"
+      />
+      <div
+        className="absolute inset-0 shadow-[0_35px_70px_-30px_rgba(15,23,42,0.55)]"
+        style={{
+          borderRadius: `${R + CASE_W}cqw`,
+          padding: `${CASE_W}cqw`,
+          background: "linear-gradient(155deg, #efeff2 0%, #b9b9c1 22%, #6f6f78 52%, #a9a9b1 74%, #e6e6ea 100%)",
+        }}
+      >
+        <div className="relative h-full w-full overflow-hidden bg-black" style={{ borderRadius: `${R}cqw` }}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}

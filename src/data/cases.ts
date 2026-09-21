@@ -29,6 +29,8 @@ export type CaseImage = {
   framed?: boolean;
   /** A short silent loop of the product in use; the capture is its poster. */
   video?: string;
+  /** Which device to draw around it; inferred from the shape when left out. */
+  device?: "phone" | "ipad" | "watch" | "laptop" | "window";
   width: number;
   height: number;
   alt: Record<Locale, string>;
@@ -313,6 +315,16 @@ export const CASES: CaseStudy[] = [
         alt: {
           ES: "App de FUTTEM en Android y iPhone, en el ambiente de pruebas",
           EN: "FUTTEM app on Android and iPhone, in the staging environment",
+        },
+      },
+      {
+        src: "/projects/futtem/watch/notificaciones.webp",
+        device: "watch",
+        width: 422,
+        height: 514,
+        alt: {
+          ES: "Convocatorias de FUTTEM en el Apple Watch",
+          EN: "FUTTEM call ups on the Apple Watch",
         },
       },
       {
@@ -720,6 +732,13 @@ export const MORE_PROJECTS: MoreProject[] = [
         width: 2000,
         height: 1250,
         alt: { ES: "Página de inicio de Fridoom", EN: "Fridoom home page" },
+      },
+      {
+        src: "/projects/fridoom/ipad.webp",
+        device: "ipad",
+        width: 834,
+        height: 1210,
+        alt: { ES: "Fridoom en un iPad", EN: "Fridoom on an iPad" },
       },
     ],
   },
