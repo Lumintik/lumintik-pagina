@@ -292,9 +292,9 @@ export const CASES: CaseStudy[] = [
     tools: ["aws", "nestjs", "flutter", "postgresql", "socketio", "firebase", "opentelemetry", "posthog"],
     images: [
       {
-        src: "/projects/futtem/app.png",
-        width: 980,
-        height: 960,
+        src: "/projects/futtem/tour/inicio.jpg",
+        width: 603,
+        height: 1311,
         alt: {
           ES: "App de FUTTEM en Android y iPhone, en el ambiente de pruebas",
           EN: "FUTTEM app on Android and iPhone, in the staging environment",

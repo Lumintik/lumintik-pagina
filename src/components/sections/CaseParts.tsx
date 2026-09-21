@@ -164,8 +164,18 @@ export function CaseCover({
       </div>
     );
   }
-  // The opening capture sits in a Safari window with the client's address.
+  // A phone shaped cover (an app) goes in the phone; anything else opens in
+  // a Safari window with the client's address.
   const host = study.links[0]?.href.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  if (cover.height / cover.width > 1.4) {
+    return (
+      <div className="flex w-full justify-center rounded-3xl bg-slate-50 py-12 md:py-16">
+        <IphoneFrame className="h-[520px] md:h-[680px]" aspect={`${cover.width} / ${cover.height}`}>
+          <Image src={cover.src} alt={cover.alt[locale]} fill priority={priority} sizes="340px" className="object-contain" />
+        </IphoneFrame>
+      </div>
+    );
+  }
   return (
     <MacWindowFrame url={host} title={cover.alt[locale]}>
       <div className="relative w-full" style={{ aspectRatio: `${cover.width} / ${cover.height}` }}>
