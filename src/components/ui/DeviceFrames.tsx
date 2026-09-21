@@ -122,14 +122,17 @@ export function MacbookFrame({
         className="relative mx-[6cqw] rounded-t-[1.1cqw] rounded-b-[0.4cqw] p-[0.35cqw] shadow-[0_50px_100px_-40px_rgba(15,23,42,0.65)]"
         style={{ background: "linear-gradient(160deg, #4a4a4f 0%, #2b2b2f 30%, #1d1d21 60%, #3a3a3f 100%)" }}
       >
-        <div className="relative rounded-t-[0.95cqw] rounded-b-[0.3cqw] bg-[#050506] p-[0.8cqw] pt-[1cqw]">
+        <div className="relative rounded-t-[0.95cqw] rounded-b-[0.3cqw] bg-[#050506] p-[0.8cqw]">
           <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: aspect }}>
             {children}
+            {/* The notch cuts into the screen, the way a MacBook Pro does */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-0 flex h-[1.5cqw] w-[11cqw] -translate-x-1/2 items-center justify-center rounded-b-[0.5cqw] bg-black"
+            >
+              <span className="block size-[0.32cqw] rounded-full bg-[#1b1b21] shadow-[inset_0_0_0_0.06cqw_rgba(255,255,255,0.18)]" />
+            </span>
           </div>
-          {/* Notch with the camera */}
-          <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 flex h-[0.95cqw] w-[10cqw] -translate-x-1/2 items-center justify-center rounded-b-[0.35cqw] bg-[#050506]">
-            <span className="block size-[0.3cqw] rounded-full bg-[#17171c] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
-          </span>
           {/* Reflection on the glass */}
           <span
             aria-hidden

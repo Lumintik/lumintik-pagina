@@ -77,7 +77,10 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               {copy.about}
             </p>
 
-            <dl className="mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
+            {/* The facts and the two buttons share one row: the header stays
+                short and the cover starts higher up the page. */}
+            <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+            <dl className="grid max-w-3xl flex-1 grid-cols-1 gap-6 sm:grid-cols-3">
               {[
                 { label: t.cases.client, value: copy.client },
                 { label: t.cases.country, value: t.cases.countries[study.country] },
@@ -92,7 +95,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               ))}
             </dl>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <a
                 href={`${home}#contact`}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-slate-200 transition-colors duration-300"
@@ -104,6 +107,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
                 <CaseLinks study={study} />
               </span>
             </div>
+            </div>
           </div>
         </header>
 
@@ -111,7 +115,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             pulled up by 100vh, and without this the content would sit under it. */}
         <div className="relative z-[2] w-full bg-white flex flex-col items-center">
           <div className="mx-auto max-w-[1600px] w-full px-5 md:px-12">
-            <div className="mt-2 md:mt-4">
+            <div className="-mt-8 md:-mt-14">
               <CaseCover study={study} priority sizes="(min-width: 1536px) 1440px, 100vw" />
             </div>
 

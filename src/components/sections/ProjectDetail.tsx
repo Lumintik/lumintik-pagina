@@ -85,7 +85,7 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
 
         <div className="relative z-[2] w-full bg-white flex flex-col items-center">
           <div className="mx-auto max-w-[1600px] w-full px-5 md:px-12">
-            <div className="mt-2 md:mt-4">
+            <div className="-mt-8 md:-mt-14">
               {project.video ? (
                 <div className="relative w-full overflow-hidden rounded-md border border-slate-900/15 bg-slate-900 aspect-[16/10]">
                   <video

@@ -155,6 +155,32 @@ export function CaseFrame({
   );
 }
 
+/**
+ * What goes inside a frame: a silent looping video when the case has one (with
+ * the capture as its poster, so there is never an empty box), the capture
+ * otherwise. The loop never plays for someone who asked for less motion.
+ */
+function Screen({ image, priority, sizes }: { image: CaseImage; priority?: boolean; sizes: string }) {
+  const { locale } = useLocale();
+  if (image.video) {
+    return (
+      <video
+        className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+        poster={image.src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={image.alt[locale]}
+      >
+        <source src={image.video} type="video/mp4" />
+      </video>
+    );
+  }
+  return <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />;
+}
+
 /** The first landscape capture and the first phone one, if the case has them. */
 export function coverPair(study: CaseStudy): { desktop?: CaseImage; mobile?: CaseImage } {
   const real = study.images.filter((i) => !i.src.startsWith("/badges/"));
@@ -235,7 +261,7 @@ export function CaseCover({
         style={{ width: `${(1 - phoneShare) * 100}%` }}
         aspect={`${desktop.width} / ${desktop.height}`}
       >
-        <Image src={desktop.src} alt={desktop.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
+        <Screen image={desktop} priority={priority} sizes={sizes} />
       </MacbookFrame>
       {mobile ? (
         <IphoneFrame
@@ -243,7 +269,7 @@ export function CaseCover({
           style={{ width: `${phoneShare * 100}%` }}
           aspect={`${mobile.width} / ${mobile.height}`}
         >
-          <Image src={mobile.src} alt={mobile.alt[locale]} fill priority={priority} sizes="240px" className="object-contain" />
+          <Screen image={mobile} priority={priority} sizes="240px" />
         </IphoneFrame>
       ) : null}
     </div>

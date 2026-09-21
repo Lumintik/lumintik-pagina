@@ -27,6 +27,8 @@ export type CaseImage = {
   src: string;
   /** The capture already has a device drawn around it: do not add another. */
   framed?: boolean;
+  /** A short silent loop of the product in use; the capture is its poster. */
+  video?: string;
   width: number;
   height: number;
   alt: Record<Locale, string>;
@@ -467,8 +469,9 @@ export const CASES: CaseStudy[] = [
       },
       {
         src: "/projects/mobile/reco.webp",
-        width: 603,
-        height: 1311,
+        video: "/projects/video/reco-mobile.mp4",
+        width: 604,
+        height: 1314,
         alt: { ES: "Sitio de RECO en un iPhone", EN: "The RECO site on an iPhone" },
       },
     ],
