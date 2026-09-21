@@ -203,7 +203,7 @@ export const CASES: CaseStudy[] = [
         src: "/projects/mobile/imagiq.webp",
         video: "/projects/video/imagiq-mobile.mp4",
         width: 604,
-        height: 1308,
+        height: 1314,
         alt: { ES: "La tienda de Imagiq en un iPhone", EN: "The Imagiq store on an iPhone" },
       },
       {
@@ -305,7 +305,7 @@ export const CASES: CaseStudy[] = [
         src: "/projects/mobile/ezmig.webp",
         video: "/projects/video/ezmig-mobile.mp4",
         width: 604,
-        height: 1308,
+        height: 1314,
         alt: { ES: "EZMig en un iPhone", EN: "EZMig on an iPhone" },
       },
       {
@@ -423,7 +423,7 @@ export const CASES: CaseStudy[] = [
         src: "/projects/futtem/tour/inicio.jpg",
         video: "/projects/video/futtem-app.mp4",
         width: 604,
-        height: 1312,
+        height: 1314,
         alt: {
           ES: "App de FUTTEM en Android y iPhone, en el ambiente de pruebas",
           EN: "FUTTEM app on Android and iPhone, in the staging environment",
@@ -531,7 +531,7 @@ export const CASES: CaseStudy[] = [
         src: "/projects/mobile/ezdocu.webp",
         video: "/projects/video/ezdocu-mobile.mp4",
         width: 604,
-        height: 1308,
+        height: 1314,
         alt: { ES: "EZDocuAI en un iPhone", EN: "EZDocuAI on an iPhone" },
       },
     ],
@@ -601,7 +601,8 @@ export const CASES: CaseStudy[] = [
         alt: {
           ES: "Portal de entrenamiento de RECO: al pasar el cursor por un campo, el documento se acerca a ese dato",
           EN: "RECO's training portal: hovering a field brings the document up to that value",
-        },      },
+        },
+      },
       {
         src: "/projects/mobile/reco.webp",
         video: "/projects/video/reco-mobile.mp4",

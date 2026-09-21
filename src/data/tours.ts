@@ -789,7 +789,7 @@ export const TOURS: Record<string, Tour[]> = {
         src: "/projects/mobile/imagiq.webp",
         video: "/projects/video/imagiq-mobile.mp4",
         width: 604,
-        height: 1308,
+        height: 1314,
         alt: {
           ES: "La misma tienda en un iPhone",
           EN: "The same store on an iPhone",

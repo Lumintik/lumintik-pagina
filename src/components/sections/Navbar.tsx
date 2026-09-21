@@ -19,6 +19,10 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [darkText, setDarkText] = useState(false);
   const [bgVisible, setBgVisible] = useState(false);
+  // The bar gets out of the way while you read down the page and comes back
+  // on the first gesture up, which is where a reader looks for it.
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const { locale, isLoading } = useLocale();
@@ -176,6 +180,14 @@ export function Navbar() {
         setDarkText(window.scrollY > 12);
         setBgVisible(window.scrollY > 12);
       }
+      // Going down it takes a little travel to leave, so a wobble never hides
+      // it. Going up it comes back at once.
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+      lastY.current = y;
+      if (y < 140) setHidden(false);
+      else if (delta > 8) setHidden(true);
+      else if (delta < -4) setHidden(false);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -187,6 +199,8 @@ export function Navbar() {
 
   // The bar reads dark on white while a panel is open, whatever the scroll.
   const scrolled = darkText || panelKey !== null;
+  // It never leaves while a menu is open: that would take the menu with it.
+  const away = hidden && panelKey === null && !menuOpen;
 
   // Lock body scroll when menu is open and close on Escape.
   useEffect(() => {
@@ -212,9 +226,10 @@ export function Navbar() {
         }`}
         style={{
           opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(-24px)",
-          transition:
-            "opacity 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, background-color 0.4s, backdrop-filter 0.4s, border-color 0.4s",
+          transform: !mounted ? "translateY(-24px)" : away ? "translateY(-110%)" : "translateY(0)",
+          transition: mounted
+            ? "transform 0.42s cubic-bezier(0.22,1,0.36,1), opacity 0.4s, background-color 0.4s, backdrop-filter 0.4s, border-color 0.4s"
+            : "opacity 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, transform 0.7s cubic-bezier(0.22,1,0.36,1) 100ms, background-color 0.4s, backdrop-filter 0.4s, border-color 0.4s",
         }}
       >
         <div className="mx-auto flex items-center justify-between max-w-[1600px] w-full pl-10 pr-6 md:pl-20 md:pr-12 min-[1400px]:pl-12 min-[1400px]:pr-8 py-3 md:py-3">

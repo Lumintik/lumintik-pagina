@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tour } from "@/data/tours";
 import { cn } from "@/lib/cn";
@@ -38,6 +38,34 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  // The phone beside the browser has to end up exactly as tall as it, and the
+  // browser's height depends on its own width, which depends on the phone's.
+  // Measuring the row and solving for it once avoids a resize loop: a laptop
+  // window is its title bar plus width * ratio, and a phone frame is
+  // 0.93 * ratio + 0.07 tall for its width.
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [phoneWidth, setPhoneWidth] = useState<number | null>(null);
+  const mobile = tour.mobile;
+  const measure = useCallback(() => {
+    const el = rowRef.current;
+    if (!el || !mobile) return;
+    const gap = window.innerWidth >= 768 ? 24 : 16;
+    const bar = window.innerWidth >= 768 ? 48 : 44;
+    const r = tour.height / tour.width;
+    const k = 0.93 * (mobile.height / mobile.width) + 0.07;
+    const w = (bar + (el.clientWidth - gap) * r) / (k + r);
+    setPhoneWidth(Math.round(w));
+  }, [mobile, tour.height, tour.width]);
+  useEffect(() => {
+    if (!mobile) return;
+    measure();
+    const el = rowRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [mobile, measure]);
 
   useEffect(() => {
     if (!inView || paused) return;
@@ -176,7 +204,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
       {/* The browser with its rail, and the same surface on a phone beside it
           when the tour has one: the rail stays exactly as wide as the screen
           it belongs to. */}
-      <div className="flex w-full items-end gap-4 md:gap-6">
+      <div ref={rowRef} className="flex w-full items-end gap-4 md:gap-6">
       <div className="min-w-0 flex-1">
       {/* The rail: one stop per screen */}
       <ol className="grid gap-x-3 md:gap-x-4" style={{ gridTemplateColumns: `repeat(${tour.steps.length}, minmax(0, 1fr))` }}>
@@ -217,7 +245,11 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
       </MacWindowFrame>
       </div>
       {tour.mobile ? (
-        <IphoneFrame className="hidden w-[130px] shrink-0 lg:block xl:w-[160px]" aspect={`${tour.mobile.width} / ${tour.mobile.height}`}>
+        <IphoneFrame
+          className="hidden shrink-0 lg:block"
+          style={phoneWidth ? { width: phoneWidth } : undefined}
+          aspect={`${tour.mobile.width} / ${tour.mobile.height}`}
+        >
           {tour.mobile.video ? (
             <video
               className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
