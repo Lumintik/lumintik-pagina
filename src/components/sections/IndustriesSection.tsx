@@ -34,7 +34,7 @@ export function IndustriesSection() {
           <p className="text-xs md:text-sm font-medium text-slate-500">
             {copy.eyebrow}
           </p>
-          <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05] max-w-[18ch]">
+          <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05]">
             {copy.title}{" "}
             <span className="italic text-slate-500">{copy.titleAccent}</span>
           </h2>

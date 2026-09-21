@@ -22,7 +22,7 @@ export function ServicesSection() {
     <section id="services" className="relative w-full px-5 pt-4 pb-14 md:px-12 md:pt-6 md:pb-24 z-[2]">
       <div className="mx-auto max-w-[1600px] w-full">
         <p className="text-xs md:text-sm font-medium text-slate-500">{t.services.eyebrow}</p>
-        <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight max-w-[18ch]">
+        <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
           {t.services.title} <span className="italic text-slate-500">{t.services.titleAccent}</span>
         </h2>
 

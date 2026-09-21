@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { IphoneFrame, MacbookFrame } from "@/components/ui/DeviceFrames";
 import { cn } from "@/lib/cn";
 import type { CaseImage, CaseStudy } from "@/data/cases";
 import { TOOLS, toolName, type ToolId } from "@/data/tools";
@@ -110,25 +111,22 @@ export function CaseFrame({
 }) {
   const { locale } = useLocale();
   const tall = image.height > image.width;
+  const aspect = `${image.width} / ${image.height}`;
+  // The capture keeps its own aspect ratio inside the device and is never
+  // cropped: a phone for portrait captures, a laptop for the rest.
+  if (tall) {
+    return (
+      <div className={cn("flex w-full justify-center rounded-2xl bg-slate-50 py-10", className)}>
+        <IphoneFrame className="h-[420px] w-auto md:h-[600px]" aspect={aspect}>
+          <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes="300px" className="object-contain" />
+        </IphoneFrame>
+      </div>
+    );
+  }
   return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-md border border-slate-200 bg-slate-100",
-        // Phone screenshots get the fixed height the old cards used, so a tall
-        // capture does not take over the page.
-        tall ? "h-[420px] md:h-[600px]" : "aspect-[16/9]",
-        className,
-      )}
-    >
-      <Image
-        src={image.src}
-        alt={image.alt[locale]}
-        fill
-        priority={priority}
-        sizes={sizes}
-        className={tall ? "object-contain" : "object-cover object-top"}
-      />
-    </div>
+    <MacbookFrame className={className} aspect={aspect}>
+      <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
+    </MacbookFrame>
   );
 }
 

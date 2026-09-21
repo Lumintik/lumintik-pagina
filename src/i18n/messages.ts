@@ -54,7 +54,7 @@ export type Messages = {
     services: { title: string; titleAccent: string; intro: string };
     projects: { title: string; titleAccent: string; intro: string };
     team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string>; bios: Record<"ceo" | "coo", string> };
-    blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string; readingTime: string; updated: string; topics: string; relatedCase: string };
+    blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string; readingTime: string; updated: string; topics: string; relatedCase: string; toc: string; share: string; copyLink: string; copied: string; suggestions: string };
     contact: { title: string; titleAccent: string; intro: string };
     industries: { title: string; titleAccent: string; intro: string };
     cases: { title: string; titleAccent: string; intro: string };
@@ -330,6 +330,11 @@ const en: Messages = {
       updated: "Updated",
       topics: "Topics",
       relatedCase: "Read the case study",
+      toc: "In this post",
+      share: "Share",
+      copyLink: "Copy link",
+      copied: "Link copied",
+      suggestions: "Keep reading",
     },
     contact: {
       title: "Let's talk about",
@@ -808,6 +813,11 @@ const es: Messages = {
       updated: "Actualizado",
       topics: "Temas",
       relatedCase: "Leer el caso",
+      toc: "En esta entrada",
+      share: "Compartir",
+      copyLink: "Copiar enlace",
+      copied: "Enlace copiado",
+      suggestions: "Sigue leyendo",
     },
     contact: {
       title: "Hablemos de",

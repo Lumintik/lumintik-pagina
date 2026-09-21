@@ -64,7 +64,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             <p className="mt-10 text-xs font-medium text-slate-400">
               {copy.topic}
             </p>
-            <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
+            <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               {title}
             </h1>
             <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">
@@ -135,7 +135,8 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
                 <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{tour.title[locale]}</h2>
                 <p className="mt-3 mb-8 text-slate-500 text-base md:text-lg max-w-[60ch]">{tour.intro[locale]}</p>
                 {/* Kept under the capture's own width so the zoom stays sharp. */}
-                <ProductTour tour={tour} className={tour.device === "browser" ? "max-w-[1180px]" : "max-w-[1000px]"} />
+                {/* Capped by the viewport height so a whole stop fits on screen. */}
+                <ProductTour tour={tour} className={tour.device === "browser" ? "max-w-[min(1180px,calc(66vh*1.875))]" : "max-w-[1000px]"} />
               </section>
             ))}
 

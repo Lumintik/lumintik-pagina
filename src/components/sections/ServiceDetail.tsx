@@ -55,7 +55,7 @@ export function ServiceDetail({
             <p className="mt-10 text-xs font-medium text-slate-400">
               {t.services.eyebrow}
             </p>
-            <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
+            <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               {title}
             </h1>
             <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">

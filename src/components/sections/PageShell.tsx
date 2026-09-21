@@ -13,27 +13,29 @@ export type PageShellProps = {
   children: ReactNode;
   /** The contact form at the end; off for the contact page itself. */
   contact?: boolean;
+  /** Black content area instead of white, for pages made of dark cards. */
+  dark?: boolean;
 };
 
 /**
  * The frame every inner page shares: the bar, the dark opening with the
  * title, the white content, the contact form and the footer reveal.
  */
-export function PageShell({ eyebrow, title, titleAccent, intro, children, contact = true }: PageShellProps) {
+export function PageShell({ eyebrow, title, titleAccent, intro, children, contact = true, dark = false }: PageShellProps) {
   return (
-    <div className="relative flex flex-col items-center bg-white min-h-screen">
+    <div className={dark ? "relative flex flex-col items-center bg-black min-h-screen" : "relative flex flex-col items-center bg-white min-h-screen"}>
       <Navbar />
 
       <main className="relative w-full flex flex-col items-center">
         <header
-          className="relative w-full flex justify-center px-5 pt-32 pb-16 md:px-12 md:pt-44 md:pb-24"
+          className="relative w-full flex justify-center px-5 pt-28 pb-10 md:px-12 md:pt-36 md:pb-14"
           style={{
             background: "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)",
           }}
         >
           <div className="mx-auto max-w-[1600px] w-full">
             <p className="text-xs font-medium text-slate-400">{eyebrow}</p>
-            <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[18ch]">
+            <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               {title} <span className="italic text-slate-400">{titleAccent}</span>
             </h1>
             <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">{intro}</p>
@@ -41,10 +43,10 @@ export function PageShell({ eyebrow, title, titleAccent, intro, children, contac
         </header>
 
         {/* z-[2] keeps the content above the footer wrapper, which is pulled up by 100vh. */}
-        <div className="relative z-[2] w-full bg-white flex flex-col items-center">
+        <div className={dark ? "relative z-[2] w-full bg-black flex flex-col items-center" : "relative z-[2] w-full bg-white flex flex-col items-center"}>
           {children}
           {contact ? (
-            <div className="w-full mt-8 md:mt-12">
+            <div className={dark ? "w-full mt-16 md:mt-24 bg-white" : "w-full mt-8 md:mt-12"}>
               <ContactSection />
             </div>
           ) : null}

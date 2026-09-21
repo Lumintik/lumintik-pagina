@@ -32,8 +32,8 @@ const LUMINTIK = { name: "Lumintik", avatar: "/lumintik-icon.png" };
  */
 export const POSTS: Post[] = [
   {
-    slug: "una-funcion-que-moria-por-memoria",
-    date: "2026-09-21",
+    slug: "una-consola-para-ver-cada-documento",
+    date: "2026-09-22",
     author: LUMINTIK,
     cover: {
       src: "/projects/reco/tour/metricas.jpg",
@@ -45,77 +45,72 @@ export const POSTS: Post[] = [
       },
     },
     tags: [
-      "Serverless",
-      "AWS Lambda",
-      "Observabilidad",
-      "Node.js",
+      "Comercio exterior",
+      "IA aplicada",
+      "Operación",
     ],
     relatedCase: "griver",
     copy: {
       ES: {
-        title: "Una función que moría por memoria: cómo pasamos de un 504 a seis segundos",
-        excerpt: "Un panel serverless fallaba con rangos de 30 días. La causa no era la base de datos sino un objeto creado por cada fila. Así lo medimos y lo arreglamos en producción.",
+        title: "Una consola para ver cada documento: lo que una agencia aduanera obtiene además del OCR",
+        excerpt: "Leer facturas y pedimentos con IA es la mitad. La otra mitad es saber cuántos entran, cuánto tardan, qué falla y quién hizo qué. Así es la consola de operación de RECO.",
         sections: [
           {
-            heading: "El síntoma",
+            heading: "Más que una API",
             paragraphs: [
-              "La consola de operación de RECO mostraba un error críptico al pedir las métricas de 30 días: Unexpected end of JSON input. En la red, la petición se quedaba pendiente y a los 29,4 segundos volvía un 504 con cero bytes. La API corre en una función serverless detrás de CloudFront, que corta toda respuesta que pase de 30 segundos, y el navegador intentaba leer ese cuerpo vacío como JSON.",
-              "El primer arreglo fue el obvio: un presupuesto de tiempo para la lectura, que devuelve lo que alcanzó a sumar y lo marca como incompleto, y un lector de JSON en el cliente que no asume que un error trae cuerpo. Con eso el mensaje dejó de ser críptico. Pero la petición de 30 días seguía sin llegar.",
+              "Cuando una agencia aduanera pasa de revisar documentos a mano a procesarlos con inteligencia artificial, la primera pregunta que aparece no es técnica: ¿cuántos van hoy, cuánto tardaron y cuáles se atascaron? La consola de operación de RECO responde eso sin abrir un solo documento: trabaja únicamente con metadatos de negocio, nunca con el contenido.",
+              "En una semana de septiembre de 2026 la consola registró 11.546 documentos y 21.591 páginas. El 74% llegó escaneado, no digital, y aun así el proceso automático por documento estuvo en 18 segundos de mediana.",
             ],
           },
           {
-            heading: "Lo que decían los logs",
+            heading: "Dónde se va el tiempo",
             paragraphs: [
-              "En CloudWatch, cada ejecución de una función Lambda termina con una línea REPORT que dice cuánto duró y cuánta memoria usó. Las nuestras decían 1024 MB de 1024 MB. La función no moría por tiempo: moría por memoria, y el borde traducía esa muerte a un 500 vacío.",
-              "Medimos la misma lectura en local contra los datos de producción: el heap vivo de una petición de 30 días eran unos 70 MB. Es decir, la petición cabía de sobra. Lo que no cabía era la basura acumulada entre peticiones. Bajamos la concurrencia de lectura, convertimos cada día a filas ligeras apenas llega y forzamos una recolección de basura al cerrar cada lote. El máximo bajó de 1024 a unos 780 MB y las peticiones empezaron a responder.",
+              "La vista de entrenamiento parte el recorrido de cada documento en tramos: proceso automático, espera, revisión humana y total. Se ve de inmediato qué parte es de la máquina y cuál de las personas, por agencia y por periodo. Esa es la conversación que un director de operaciones quiere tener con datos: dónde acortar, a quién apoyar.",
             ],
           },
           {
-            heading: "Medir antes de optimizar",
+            heading: "Quién hizo qué",
             paragraphs: [
-              "Aun así, una petición con todos los días ya en caché y cero lecturas a la base de datos tardaba 17 segundos. Antes de tocar nada, publicamos en la cabecera Server-Timing el reparto exacto: cuánto en descomprimir la caché, cuánto en leer, cuánto en mapear, cuánto en agregar, cuánto en recolectar. La respuesta fue contundente: agregar 58.000 filas costaba 10 de los 16 segundos, unos 180 microsegundos por fila.",
-              "La función que decide a qué día local pertenece cada fila construía un Intl.DateTimeFormat nuevo en cada llamada. Crear ese objeto cuesta más que todo lo demás que hace la fila. Un formateador memorizado por zona horaria bajó una prueba de 100.000 filas de 2.978 a 55 milisegundos.",
+              "Cada acción administrativa, humana o de máquina, queda en un registro inmutable: accesos, canjes de credencial, planes asignados. Se filtra por tipo de actor y por evento, y se exporta por evento, por día o por usuario. En un sector regulado, poder mostrar ese registro vale tanto como la velocidad.",
             ],
           },
           {
-            heading: "El resultado",
+            heading: "Probar como una agencia",
             paragraphs: [
-              "Cinco peticiones seguidas de 30 días en producción: todas completas, la primera en frío en 13,5 segundos y las siguientes en 6. La memoria de la instancia bajó de unos 830 a unos 300 MB, porque ya no se crean 58.000 formateadores por petición.",
-              "Dos lecciones que nos llevamos. La primera: una Lambda de 1024 MB tiene poco más de media CPU, así que lo que en un portátil es rápido allí no lo es; hay que medir en producción. La segunda: instrumentar antes de optimizar. Sin el desglose en Server-Timing habríamos seguido culpando a la base de datos.",
+              "La misma consola permite procesar un lote de facturas o conocimientos de embarque por el mismo endpoint público que usan las agencias, con la credencial de cada una. El resultado llega agrupado por factura y los documentos no se guardan. Así el equipo de RECO prueba lo que sus clientes van a ver, antes de que lo vean.",
+              "Las cifras de esta entrada se leyeron en la consola en producción, semana del 14 al 20 de septiembre de 2026.",
             ],
           },
         ],
       },
       EN: {
-        title: "A function that died of memory: from a 504 to six seconds",
-        excerpt: "A serverless panel failed on 30 day ranges. The cause was not the database but an object created for every row. This is how we measured it and fixed it in production.",
+        title: "A console to see every document: what a customs agency gets beyond OCR",
+        excerpt: "Reading invoices and customs entries with AI is half the job. The other half is knowing how many come in, how long they take, what fails and who did what. This is RECO's operations console.",
         sections: [
           {
-            heading: "The symptom",
+            heading: "More than an API",
             paragraphs: [
-              "RECO's operations console showed a cryptic error when asked for 30 days of metrics: Unexpected end of JSON input. On the network tab the request stayed pending and after 29.4 seconds came back as a 504 with zero bytes. The API runs on a serverless function behind CloudFront, which cuts any response longer than 30 seconds, and the browser tried to parse that empty body as JSON.",
-              "The first fix was the obvious one: a time budget for the read, which returns whatever it managed to add up and flags it as incomplete, plus a JSON reader on the client that does not assume an error carries a body. The message stopped being cryptic. But the 30 day request still never arrived.",
+              "When a customs agency moves from reviewing documents by hand to processing them with artificial intelligence, the first question is not technical: how many today, how long did they take and which ones got stuck? RECO's operations console answers that without opening a single document: it works only with business metadata, never with the content.",
+              "In one week of September 2026 the console logged 11,546 documents and 21,591 pages. 74% arrived scanned, not digital, and the automatic processing per document still sat at a median of 18 seconds.",
             ],
           },
           {
-            heading: "What the logs said",
+            heading: "Where the time goes",
             paragraphs: [
-              "In CloudWatch, every execution of a Lambda function ends with a REPORT line stating how long it took and how much memory it used. Ours said 1024 MB out of 1024 MB. The function was not dying of time: it was dying of memory, and the edge translated that death into an empty 500.",
-              "We measured the same read locally against production data: the live heap of a 30 day request was about 70 MB. The request fit comfortably. What did not fit was the garbage accumulated between requests. We lowered the read concurrency, turned each day into light rows as soon as it arrived and forced a garbage collection after every batch. The peak dropped from 1024 to about 780 MB and requests started to answer.",
+              "The training view splits each document's journey into stages: automatic processing, waiting, human review and total. It shows at a glance which part belongs to the machine and which to people, by agency and by period. That is the conversation an operations director wants to have with data: where to cut, whom to support.",
             ],
           },
           {
-            heading: "Measure before optimizing",
+            heading: "Who did what",
             paragraphs: [
-              "Even so, a request with every day already cached and zero database reads took 17 seconds. Before touching anything we published the exact split in the Server-Timing header: decompressing the cache, reading, mapping, aggregating, collecting. The answer was blunt: aggregating 58,000 rows took 10 of the 16 seconds, about 180 microseconds per row.",
-              "The function that decides which local day a row belongs to built a new Intl.DateTimeFormat on every call. Creating that object costs more than everything else the row does. One formatter memoized per time zone took a 100,000 row test from 2,978 to 55 milliseconds.",
+              "Every administrative action, human or machine, lands in an immutable record: logins, credential exchanges, assigned plans. It filters by actor and by event and exports by event, by day or by user. In a regulated sector, being able to show that record is worth as much as speed.",
             ],
           },
           {
-            heading: "The result",
+            heading: "Testing like an agency",
             paragraphs: [
-              "Five consecutive 30 day requests in production: all complete, the first one cold in 13.5 seconds and the rest in 6. The instance's memory dropped from about 830 to about 300 MB, because 58,000 formatters are no longer created per request.",
-              "Two lessons. First: a 1024 MB Lambda has a little over half a CPU, so what is fast on a laptop is not fast there; measure in production. Second: instrument before optimizing. Without the Server-Timing split we would still be blaming the database.",
+              "The same console can process a batch of invoices or bills of lading through the same public endpoint the agencies use, with each one's credential. The result comes back grouped by invoice and the documents are not stored. That is how RECO's team tests what their clients will see, before they see it.",
+              "The figures in this post were read from the live console, week of September 14 to 20, 2026.",
             ],
           },
         ],
@@ -123,151 +118,83 @@ export const POSTS: Post[] = [
     },
   },
   {
-    slug: "responder-a-tiempo-aunque-sea-incompleto",
-    date: "2026-09-21",
+    slug: "37-tiendas-en-un-solo-panel",
+    date: "2026-09-22",
     author: LUMINTIK,
     cover: {
-      src: "/projects/reco/tour/entrenamiento.jpg",
+      src: "/projects/imagiq/tour/operacion/cobertura.jpg",
       width: 1512,
       height: 806,
       alt: {
-        ES: "Tiempos de entrenamiento en la consola de RECO",
-        EN: "Training times in the RECO console",
+        ES: "Zonas de cobertura en el panel de Imagiq",
+        EN: "Coverage zones in the Imagiq admin panel",
       },
     },
     tags: [
-      "APIs",
-      "Serverless",
-      "Diseño de sistemas",
-    ],
-    relatedCase: "griver",
-    copy: {
-      ES: {
-        title: "Responder a tiempo aunque sea incompleto: presupuestos de tiempo detrás de un borde de 30 segundos",
-        excerpt: "Cuando un proxy corta a los 30 segundos, una API que intenta terminar siempre acaba no respondiendo nunca. Cómo diseñamos un presupuesto de tiempo honesto.",
-        sections: [
-          {
-            heading: "El límite que nadie configuró",
-            paragraphs: [
-              "CloudFront, el balanceador de Amplify y muchos otros bordes cortan una respuesta a los 30 segundos. No es un parámetro de la aplicación: es la infraestructura, y no se negocia. Una API que lee 30 días de telemetría y suma decenas de miles de filas puede pasar de ese límite en un mal día, y entonces el usuario recibe un error vacío en lugar de datos.",
-              "Nuestra primera versión del presupuesto contaba 20 segundos desde que empezaba a leer. Fallaba en instancias frías: el arranque del servidor, la obtención de credenciales, la agregación y la serialización de 2,4 MB de JSON se sumaban y pasaban de 30. Ahora el reloj arranca cuando entra la petición y deja 14 segundos para leer; el resto es margen para todo lo demás.",
-            ],
-          },
-          {
-            heading: "Cortar con gracia",
-            paragraphs: [
-              "El presupuesto no cancela lo que está en vuelo: compite con él. Cada lectura de un día corre contra un temporizador; si el reloj gana, la respuesta sale con lo que se alcanzó a sumar y un campo truncated en true. Lo leído de más no se pierde: entra a la caché de días inmutables y la siguiente petición llega más lejos.",
-              "El orden importa. Se lee de lo más reciente a lo más antiguo, de modo que lo que falta cuando se corta es siempre lo viejo, nunca lo que la vista muestra arriba.",
-            ],
-          },
-          {
-            heading: "Decirlo",
-            paragraphs: [
-              "Una respuesta parcial que no se anuncia es una mentira: los días no leídos aparecen en cero y nadie distingue eso de un día sin actividad. La vista muestra un aviso cuando truncated es verdadero y explica que los días más antiguos pueden faltar. Y la cabecera Server-Timing dice cuántos días salieron de la caché y cuántos de la base, para que quien diagnostique lo haga con números del servidor y no a ojo.",
-              "Con el presupuesto, la caché comprimida y las optimizaciones de CPU que contamos en otra entrada, el rango de 30 días dejó de truncarse. Pero el presupuesto sigue ahí, porque el día que un cliente procese el triple de documentos, la respuesta seguirá llegando.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "Answering on time even when incomplete: time budgets behind a 30 second edge",
-        excerpt: "When a proxy cuts at 30 seconds, an API that tries to finish no matter what ends up never answering. How we designed an honest time budget.",
-        sections: [
-          {
-            heading: "The limit nobody configured",
-            paragraphs: [
-              "CloudFront, Amplify's balancer and many other edges cut a response at 30 seconds. It is not an application parameter: it is infrastructure, and it is not negotiable. An API that reads 30 days of telemetry and adds up tens of thousands of rows can cross that limit on a bad day, and then the user gets an empty error instead of data.",
-              "Our first version of the budget counted 20 seconds from the start of the read. It failed on cold instances: server start, credentials, aggregation and serializing 2.4 MB of JSON added up and went past 30. Now the clock starts when the request enters and leaves 14 seconds for reading; the rest is margin for everything else.",
-            ],
-          },
-          {
-            heading: "Cutting gracefully",
-            paragraphs: [
-              "The budget does not cancel what is in flight: it races it. Each day's read runs against a timer; if the clock wins, the response leaves with whatever was added up and a truncated field set to true. Extra reads are not wasted: they enter the cache of immutable days and the next request gets further.",
-              "Order matters. Reads go from newest to oldest, so what is missing when the cut happens is always the old part, never what the view shows at the top.",
-            ],
-          },
-          {
-            heading: "Saying so",
-            paragraphs: [
-              "A partial response that is not announced is a lie: unread days show as zero and nobody can tell that apart from a quiet day. The view shows a notice when truncated is true and explains that the oldest days may be missing. And the Server-Timing header states how many days came from the cache and how many from the database, so whoever diagnoses does it with server numbers rather than by eye.",
-              "With the budget, the compressed cache and the CPU optimizations we describe in another post, the 30 day range stopped being truncated. But the budget stays, because the day a client processes three times as many documents, the answer will still arrive.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
-    slug: "tasa-de-entrega-cero-por-ciento",
-    date: "2026-09-21",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/imagiq/tour/operacion/ordenes.jpg",
-      width: 1512,
-      height: 806,
-      alt: {
-        ES: "Tabla de órdenes del panel de Imagiq",
-        EN: "Orders table in the Imagiq admin panel",
-      },
-    },
-    tags: [
-      "SQL",
-      "Datos",
       "Comercio electrónico",
+      "Logística",
+      "Operación",
     ],
     relatedCase: "imagiq",
     copy: {
       ES: {
-        title: "Tasa de entrega 0,0% con diez entregadas: cuando el SQL cuenta la guía equivocada",
-        excerpt: "Un tablero decía 0% de entregas junto a diez órdenes entregadas. La consulta contaba las guías anuladas. Una lección sobre numeradores, denominadores y poblaciones.",
+        title: "37 tiendas en un solo panel: cómo Imagiq administra la red, las entregas y la demanda",
+        excerpt: "Cuando la tienda en línea y los puntos de venta comparten un mismo inventario, el panel de administración se vuelve el centro de la operación. Un recorrido por el de Imagiq.",
         sections: [
           {
-            heading: "Dos números que no cuadran",
+            heading: "La red completa",
             paragraphs: [
-              "En el panel de Imagiq, la tarjeta Tasa de entrega mostraba 0,0% y, justo debajo, 10 entregadas. Nadie lo había reportado: un número raro en una esquina se acepta con facilidad si el resto del tablero parece bien. Lo vimos recorriendo el producto para documentarlo.",
-              "La tasa salía de una consulta que dividía guías entregadas entre guías totales, filtrando por activo = false. En el sistema de pagos, la guía vigente de una orden es la que tiene activo = true; activo = false es la guía que se anuló al regenerarla. La tasa se calculaba, entonces, solo sobre guías anuladas, mientras el conteo de entregadas de al lado sí miraba las vigentes.",
+              "Imagiq, el distribuidor oficial de Samsung en Colombia, tiene 37 tiendas en 13 ciudades. Cada una aparece en el panel con su código, su dirección y su horario, junto a las órdenes de kiosko que se cobran en tienda y las recogidas pendientes de verificar. La misma lista alimenta el mapa público donde el cliente elige a dónde ir.",
             ],
           },
           {
-            heading: "La regla",
+            heading: "Zonas dibujadas a mano",
             paragraphs: [
-              "Numerador y denominador tienen que salir de la misma población que el resto de las métricas del tablero. Si una tarjeta cuenta órdenes con guía vigente, la tasa de al lado no puede contar otra cosa. El arreglo fue una línea: activo = true, con un comentario en la consulta que explica por qué.",
-              "Tras el despliegue la tarjeta pasó a 62,5%, un número que sí cuadra con las diez entregadas.",
+              "Las zonas de entrega de cada ciudad se dibujan sobre el mapa, con las tiendas encima, y se pueden verificar con una dirección antes de prometerle una entrega a alguien. Es un detalle pequeño que evita la peor experiencia posible en comercio electrónico: vender lo que no se puede entregar.",
             ],
           },
           {
-            heading: "Cómo evitarlo",
+            heading: "La demanda que no se ve",
             paragraphs: [
-              "Nombrar en el código qué significa cada bandera. Un booleano llamado activo se lee de tres formas distintas por tres personas; un comentario de una línea junto al filtro evita la tercera.",
-              "Y mirar los tableros como los mira un cliente: dos números vecinos que se contradicen son un bug aunque cada consulta, por separado, sea correcta.",
+              "La bodega muestra los productos agotados que los clientes siguen pidiendo, ordenados por cuántos esperan, y debajo el estado de cada guía de envío en tiempo real: en transporte, en terminal destino, entregada. Reponer lo que la gente pide, y no lo que se supone que pide, sale de esa lista.",
+            ],
+          },
+          {
+            heading: "Cada orden con su historia",
+            paragraphs: [
+              "Las órdenes muestran su estado y su medio de pago: datáfono en tienda, transferencia bancaria o crédito. Se filtran por estado, por pago o por cliente, y el catálogo de 587 referencias se administra desde el mismo lugar.",
+              "Las cifras se leyeron en la tienda y en el panel de administración en producción, en septiembre de 2026.",
             ],
           },
         ],
       },
       EN: {
-        title: "Delivery rate 0.0% next to ten deliveries: when the SQL counts the wrong label",
-        excerpt: "A dashboard said 0% deliveries next to ten delivered orders. The query was counting cancelled shipping labels. A lesson about numerators, denominators and populations.",
+        title: "37 stores on a single panel: how Imagiq runs the network, deliveries and demand",
+        excerpt: "When the online store and the points of sale share one inventory, the admin panel becomes the center of the operation. A walk through Imagiq's.",
         sections: [
           {
-            heading: "Two numbers that do not add up",
+            heading: "The whole network",
             paragraphs: [
-              "In Imagiq's admin panel, the Delivery rate card showed 0.0% and, right below it, 10 delivered. Nobody had reported it: an odd number in a corner is easy to accept when the rest of the dashboard looks fine. We noticed it while walking through the product to document it.",
-              "The rate came from a query dividing delivered labels by total labels, filtered by activo = false. In the payments system, an order's live label is the one with activo = true; activo = false is the label that was voided when a new one was generated. The rate was computed only over voided labels, while the delivered count next to it looked at the live ones.",
+              "Imagiq, Samsung's official distributor in Colombia, has 37 stores in 13 cities. Each one appears in the panel with its code, address and opening hours, next to the kiosk orders paid in store and the pickups waiting to be verified. The same list feeds the public map where the customer chooses where to go.",
             ],
           },
           {
-            heading: "The rule",
+            heading: "Zones drawn by hand",
             paragraphs: [
-              "Numerator and denominator must come from the same population as the rest of the dashboard's metrics. If one card counts orders with a live label, the rate beside it cannot count something else. The fix was one line: activo = true, with a comment in the query explaining why.",
-              "After the deploy the card read 62.5%, a number that does add up with the ten deliveries.",
+              "Each city's delivery zones are drawn on the map, with the stores on top, and an address can be checked before promising anyone a delivery. A small detail that avoids the worst experience in e commerce: selling what cannot be delivered.",
             ],
           },
           {
-            heading: "How to avoid it",
+            heading: "The demand you cannot see",
             paragraphs: [
-              "Name in the code what each flag means. A boolean called activo gets read three different ways by three people; a one line comment next to the filter prevents the third.",
-              "And look at dashboards the way a customer does: two neighboring numbers that contradict each other are a bug even if each query, on its own, is correct.",
+              "The warehouse view lists sold out products customers keep asking for, ranked by how many are waiting, and below it the live status of every shipping label: in transit, at the destination terminal, delivered. Restocking what people ask for, rather than what they are supposed to ask for, comes out of that list.",
+            ],
+          },
+          {
+            heading: "Every order with its story",
+            paragraphs: [
+              "Orders show their status and payment method: in store card terminal, bank transfer or credit. They filter by status, payment or customer, and the catalog of 587 products is managed from the same place.",
+              "The figures were read from the live store and admin panel in September 2026.",
             ],
           },
         ],
@@ -275,75 +202,167 @@ export const POSTS: Post[] = [
     },
   },
   {
-    slug: "pantalla-roja-en-flutter-por-leer-traducciones-en-initstate",
-    date: "2026-09-21",
+    slug: "un-club-de-futbol-en-el-bolsillo",
+    date: "2026-09-22",
     author: LUMINTIK,
     cover: {
-      src: "/projects/futtem/tour/partida.jpg",
+      src: "/projects/futtem/tour/club.jpg",
       width: 603,
       height: 1311,
       alt: {
-        ES: "Pantalla de una partida en la app FUTTEM",
-        EN: "A match screen in the FUTTEM app",
+        ES: "Pantalla de un club en la app FUTTEM",
+        EN: "A club screen in the FUTTEM app",
       },
     },
     tags: [
-      "Flutter",
       "Móvil",
-      "Calidad",
+      "Deporte",
+      "Producto",
     ],
     relatedCase: "futtem",
     copy: {
       ES: {
-        title: "Pantalla roja en Flutter por leer traducciones en initState",
-        excerpt: "Dos pantallas de una app en staging reventaban al abrirse. La causa: pedir las traducciones antes de que el widget tuviera contexto. El arreglo, y cómo comprobamos que no había más.",
+        title: "Un club de fútbol en el bolsillo: cómo FUTTEM organiza partidas, convocatorias y entrenamiento",
+        excerpt: "Convocar a un partido, saber quién va, repartir los equipos y confirmar desde el teléfono. Lo que hace la app de FUTTEM por un club amateur.",
         sections: [
           {
-            heading: "El error",
+            heading: "Del grupo de chat a la app",
             paragraphs: [
-              "En la build de staging de FUTTEM, abrir la pestaña Jugadores de una partida o los ajustes de un club mostraba la pantalla roja de Flutter: dependOnInheritedWidgetOfExactType fue llamado antes de que initState terminara. El código leía context.l10n dentro de initState para poner nombres traducidos a los equipos y a las pestañas.",
-              "En initState el widget aún no tiene acceso a sus dependencias heredadas, y las traducciones son una. Flutter lo reprocha con un assert. En una build de release ese assert no existe, así que producción no reventaba; pero era el mismo código, y cualquier build de pruebas lo hacía.",
+              "Organizar un partido amateur suele vivir en un grupo de chat: quién va, quién falta, a qué hora, cuánto se paga. FUTTEM lo pone en una app: cada jugador entra a sus clubes, ve las próximas partidas y confirma su asistencia con un toque.",
             ],
           },
           {
-            heading: "El arreglo",
+            heading: "Convocar en un minuto",
             paragraphs: [
-              "Mover esa inicialización a didChangeDependencies, que Flutter llama después de initState y cada vez que cambia una dependencia heredada. Para los equipos, una sola vez, con una bandera; para las pestañas, cada vez, de modo que si cambia el idioma se rehacen con él.",
-              "Antes de cerrar buscamos el mismo patrón en todo el código y en las tres ramas: main, qa y staging. Un script recorre cada initState y avisa si dentro lee un widget heredado. Solo aparecieron esas dos pantallas.",
+              "Crear una partida pide nombre, fecha, hora, ciudad, cancha, duración, tipo de juego y número de jugadores. La convocatoria sale a todo el club y cada uno recibe la notificación con la hora y la partida. Los convocados se reparten en dos equipos, con los cupos que faltan, los que están por confirmar y la lista de espera.",
             ],
           },
           {
-            heading: "Por qué importa en staging",
+            heading: "La cancha y el grupo",
             paragraphs: [
-              "Que producción no falle no significa que el código esté bien. Los asserts de Flutter existen para avisar de estados que en release simplemente quedan indefinidos. Por eso mantenemos tres ambientes y probamos en el de pruebas con la misma cuenta que usaría un jugador.",
-              "El arreglo salió a staging el mismo día, verificado en el simulador antes de mezclarlo.",
+              "Cada partida muestra la cancha y su ubicación, cómo llegar, el grupo de WhatsApp, cuándo se lanza la convocatoria, los cupos y el costo por jugador. Y el club se administra desde el teléfono: escudo, reglas y plantilla.",
+            ],
+          },
+          {
+            heading: "Lo que no se ve",
+            paragraphs: [
+              "La app está publicada en App Store y Google Play, con widget y Apple Watch. Cada cambio pasa por tres ambientes (pruebas, control de calidad y producción) con trazas de extremo a extremo antes de llegar a los jugadores. Es lo que permite mejorarla cada semana sin interrumpir un solo partido.",
+              "Las pantallas del caso se grabaron en el ambiente de pruebas con una cuenta de prueba, en septiembre de 2026.",
             ],
           },
         ],
       },
       EN: {
-        title: "Red screen in Flutter from reading translations in initState",
-        excerpt: "Two screens of an app in staging crashed on open. The cause: asking for translations before the widget had context. The fix, and how we checked there were no more.",
+        title: "A football club in your pocket: how FUTTEM organizes matches, call ups and training",
+        excerpt: "Calling a match, knowing who is coming, splitting the teams and confirming from the phone. What the FUTTEM app does for an amateur club.",
         sections: [
           {
-            heading: "The error",
+            heading: "From the chat group to the app",
             paragraphs: [
-              "In FUTTEM's staging build, opening the Players tab of a match or a club's settings showed Flutter's red screen: dependOnInheritedWidgetOfExactType was called before initState completed. The code read context.l10n inside initState to give translated names to the teams and the tabs.",
-              "Inside initState the widget has no access to its inherited dependencies yet, and translations are one of them. Flutter complains with an assert. In a release build that assert does not exist, so production did not crash; but it was the same code, and any test build did.",
+              "Organizing an amateur match usually lives in a chat group: who is in, who is out, what time, how much. FUTTEM puts it in an app: every player opens their clubs, sees the upcoming matches and confirms with a tap.",
             ],
           },
           {
-            heading: "The fix",
+            heading: "Call a match in a minute",
             paragraphs: [
-              "Move that initialization to didChangeDependencies, which Flutter calls after initState and whenever an inherited dependency changes. For the teams, once, behind a flag; for the tabs, every time, so a language change rebuilds them.",
-              "Before closing we searched for the same pattern across the whole codebase and the three branches: main, qa and staging. A script walks every initState and flags any that reads an inherited widget. Only those two screens showed up.",
+              "Creating a match asks for name, date, time, city, pitch, duration, game type and number of players. The call up goes out to the whole club and everyone gets a notification with the time and the match. The players are split into two teams, with the open spots, the ones yet to confirm and the waiting list.",
             ],
           },
           {
-            heading: "Why staging matters",
+            heading: "The pitch and the group",
             paragraphs: [
-              "Production not failing does not mean the code is right. Flutter's asserts exist to warn about states that in release simply become undefined. That is why we keep three environments and test in the staging one with the same account a player would use.",
-              "The fix shipped to staging the same day, verified on the simulator before merging.",
+              "Every match shows the pitch and its location, directions, the WhatsApp group, when the call up goes out, the spots and the cost per player. And the club is run from the phone: crest, rules and squad.",
+            ],
+          },
+          {
+            heading: "What you do not see",
+            paragraphs: [
+              "The app is live on the App Store and Google Play, with a widget and Apple Watch. Every change goes through three environments (testing, quality control and production) with end to end traces before it reaches the players. That is what lets it improve every week without interrupting a single match.",
+              "The case screens were recorded on the staging environment with a test account, in September 2026.",
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
+    slug: "formularios-de-uscis-sin-errores",
+    date: "2026-09-22",
+    author: LUMINTIK,
+    cover: {
+      src: "/projects/ezmig/tour/formularios-demo.jpg",
+      width: 1512,
+      height: 806,
+      alt: {
+        ES: "Formularios de un caso en el portal del abogado de EZMig",
+        EN: "Case forms in the EZMig attorney portal",
+      },
+    },
+    tags: [
+      "Inmigración",
+      "IA aplicada",
+      "Producto",
+    ],
+    relatedCase: "ezmig",
+    copy: {
+      ES: {
+        title: "Formularios de USCIS sin errores: cómo EZMig guía al abogado, al cliente y al despacho",
+        excerpt: "Diecinueve formularios, tres idiomas y tres portales. Cómo un despacho de inmigración pasa de llenar PDF a mano a un flujo guiado que valida antes de generar el documento oficial.",
+        sections: [
+          {
+            heading: "Diecinueve formularios, un flujo",
+            paragraphs: [
+              "Un despacho de inmigración vive de formularios largos de USCIS: I-130, I-485, N-400 y otros dieciséis. EZMig los convierte en un flujo guiado, parte por parte, con validación antes de generar el PDF oficial. Lo que el abogado ya sabe del cliente no se vuelve a escribir.",
+            ],
+          },
+          {
+            heading: "El cliente, desde el teléfono",
+            paragraphs: [
+              "El cliente del abogado entra desde un enlace de invitación, sin instalar nada, escanea su documento y completa su parte desde el teléfono en español, inglés o portugués. Retoma el formulario donde lo dejó el abogado, y lo que corrige actualiza su perfil. Un asistente de inteligencia artificial responde sus dudas sin llamar al despacho.",
+            ],
+          },
+          {
+            heading: "El despacho, con control",
+            paragraphs: [
+              "El portal de administración define los formularios, su mapeo al PDF de USCIS y la analítica del despacho. Cuando USCIS cambia una versión, el cambio se hace una vez y aplica a todos los casos.",
+            ],
+          },
+          {
+            heading: "Por qué importa",
+            paragraphs: [
+              "Un error en un formulario de inmigración se paga en meses. Un flujo que valida, que reutiliza lo que ya se sabe y que habla el idioma del cliente reduce ese riesgo en cada caso, no solo en los que revisa el abogado más experimentado.",
+              "Verificable en el producto en producción, septiembre de 2026.",
+            ],
+          },
+        ],
+      },
+      EN: {
+        title: "USCIS forms without mistakes: how EZMig guides the attorney, the client and the firm",
+        excerpt: "Nineteen forms, three languages and three portals. How an immigration firm goes from filling PDFs by hand to a guided flow that validates before generating the official document.",
+        sections: [
+          {
+            heading: "Nineteen forms, one flow",
+            paragraphs: [
+              "An immigration firm lives on long USCIS forms: I-130, I-485, N-400 and sixteen more. EZMig turns them into a guided flow, part by part, with validation before the official PDF is generated. What the attorney already knows about the client is never typed twice.",
+            ],
+          },
+          {
+            heading: "The client, from the phone",
+            paragraphs: [
+              "The attorney's client comes in from an invitation link, without installing anything, scans their document and completes their part from the phone in Spanish, English or Portuguese. They pick the form up where the attorney left it, and whatever they correct updates their profile. An AI assistant answers their questions without calling the firm.",
+            ],
+          },
+          {
+            heading: "The firm, in control",
+            paragraphs: [
+              "The admin portal defines the forms, their mapping to the USCIS PDF and the firm's analytics. When USCIS changes a version, the change is made once and applies to every case.",
+            ],
+          },
+          {
+            heading: "Why it matters",
+            paragraphs: [
+              "A mistake on an immigration form costs months. A flow that validates, reuses what is already known and speaks the client's language lowers that risk on every case, not only on the ones the most experienced attorney reviews.",
+              "Verifiable in the live product, September 2026.",
             ],
           },
         ],
@@ -392,8 +411,8 @@ export const POSTS: Post[] = [
           {
             heading: "Lo que se encuentra por el camino",
             paragraphs: [
-              "Recorrer un producto con ojos de cliente saca bugs que ningún reporte trae. En un solo día: un botón de crear campaña sin acción, una paginación que decía página 1 de menos uno, un estado sin traducir, una tasa de entrega en cero, dos pantallas que reventaban en pruebas. Todos salieron arreglados el mismo día, cada uno con su pull request.",
-              "Documentar no es solo escribir lo que hay. Es la mejor prueba de aceptación que conocemos.",
+              "Recorrer un producto con ojos de cliente enseña más que cualquier reporte: se ve qué pantalla explica sola lo que hace, cuál necesita una frase, dónde un detalle de diseño se quedó atrás. Todo lo que encontramos en ese recorrido volvió al producto el mismo día, con su revisión y su despliegue.",
+              "Documentar no es solo escribir lo que hay. Es la mejor manera que conocemos de volver a mirar un producto como lo mira quien lo usa.",
             ],
           },
         ],
@@ -420,8 +439,8 @@ export const POSTS: Post[] = [
           {
             heading: "What you find along the way",
             paragraphs: [
-              "Walking a product with a customer's eyes surfaces bugs no report brings. In a single day: a create campaign button with no action, a pagination that read page 1 of minus one, an untranslated status, a delivery rate stuck at zero, two screens crashing in testing. All fixed the same day, each with its own pull request.",
-              "Documenting is not just writing down what exists. It is the best acceptance test we know.",
+              "Walking a product with a customer's eyes teaches more than any report: you see which screen explains itself, which one needs a sentence, where a design detail fell behind. Everything we found on that walk went back into the product the same day, reviewed and deployed.",
+              "Documenting is not just writing down what exists. It is the best way we know to look at a product again the way its users do.",
             ],
           },
         ],
@@ -601,8 +620,8 @@ export const POSTS: Post[] = [
     relatedCase: "griver",
     copy: {
       ES: {
-        title: "Cinco hábitos para medir en producción sin adivinar",
-        excerpt: "Lo que aprendimos arreglando una API serverless en un solo día: cabeceras Server-Timing, líneas REPORT de Lambda, presupuestos honestos y la regla de instrumentar antes de optimizar.",
+        title: "Cómo cuidamos un producto después de lanzarlo: cinco hábitos para medir en producción",
+        excerpt: "Lanzar es la mitad del trabajo. Estos son los hábitos con los que mantenemos rápidas y estables las plataformas que ya usan nuestros clientes: medir en producción, publicar los tiempos y decidir con números.",
         sections: [
           {
             heading: "1. Publicar el reparto del tiempo",
@@ -613,13 +632,13 @@ export const POSTS: Post[] = [
           {
             heading: "2. Leer las líneas REPORT",
             paragraphs: [
-              "Cada ejecución de Lambda deja en CloudWatch una línea con duración, duración de arranque y memoria máxima. Es la única fuente que dice si una función muere por tiempo o por memoria. Un 500 vacío en el navegador no distingue las dos cosas; el REPORT sí.",
+              "Cada ejecución de una función serverless deja en CloudWatch una línea con duración, arranque y memoria máxima. Es la fuente que dice cuánto margen queda antes de que un pico de uso se note en la pantalla de alguien.",
             ],
           },
           {
             heading: "3. Exponer la memoria",
             paragraphs: [
-              "Añadimos al Server-Timing el heap vivo, el heap comprometido, el techo de V8 y el RSS al entrar y al responder. Así supimos que el techo real de esa Lambda eran 620 MB de heap y que la instancia arrastraba cientos de MB entre peticiones.",
+              "Añadimos al Server-Timing la memoria viva, la comprometida y el techo real del proceso. Con eso las decisiones sobre caché y concurrencia dejan de ser opiniones.",
             ],
           },
           {
@@ -632,14 +651,14 @@ export const POSTS: Post[] = [
             heading: "5. Medir donde corre",
             paragraphs: [
               "Una Lambda de 1024 MB tiene poco más de media CPU. Un bucle que en un portátil tarda un segundo allí tarda diez. Medimos localmente contra datos de producción para entender la memoria, pero las decisiones de CPU se tomaron con números de la función real.",
-              "Con esos cinco hábitos, una API que fallaba pasó a responder en seis segundos. Ninguno requiere herramientas nuevas: solo mirar lo que ya está ahí.",
+              "Con esos cinco hábitos, la consola de operación de uno de nuestros clientes pasó a entregar un mes completo de métricas en seis segundos. Ninguno requiere herramientas nuevas: solo mirar lo que ya está ahí, todas las semanas.",
             ],
           },
         ],
       },
       EN: {
-        title: "Five habits for measuring in production without guessing",
-        excerpt: "What we learned fixing a serverless API in a single day: Server-Timing headers, Lambda REPORT lines, honest budgets and the rule of instrumenting before optimizing.",
+        title: "How we look after a product after launch: five habits for measuring in production",
+        excerpt: "Launching is half the work. These are the habits that keep the platforms our clients already use fast and stable: measuring in production, publishing timings and deciding with numbers.",
         sections: [
           {
             heading: "1. Publish the time split",
@@ -650,13 +669,13 @@ export const POSTS: Post[] = [
           {
             heading: "2. Read the REPORT lines",
             paragraphs: [
-              "Every Lambda execution leaves a line in CloudWatch with duration, init duration and peak memory. It is the only source that says whether a function dies of time or of memory. An empty 500 in the browser does not tell the two apart; the REPORT does.",
+              "Every serverless execution leaves a line in CloudWatch with duration, init time and peak memory. It is the source that says how much headroom is left before a usage spike shows up on someone's screen.",
             ],
           },
           {
             heading: "3. Expose memory",
             paragraphs: [
-              "We added the live heap, the committed heap, V8's limit and the RSS on entry and on response to Server-Timing. That is how we learned the real heap limit of that Lambda was 620 MB and that the instance carried hundreds of MB between requests.",
+              "We added live memory, committed memory and the real ceiling of the process to Server-Timing. With that, decisions about caching and concurrency stop being opinions.",
             ],
           },
           {
@@ -669,7 +688,7 @@ export const POSTS: Post[] = [
             heading: "5. Measure where it runs",
             paragraphs: [
               "A 1024 MB Lambda has a little over half a CPU. A loop that takes one second on a laptop takes ten there. We measured locally against production data to understand memory, but CPU decisions were made with numbers from the real function.",
-              "With those five habits, an API that failed went on to answer in six seconds. None of them needs new tools: only looking at what is already there.",
+              "With those five habits, the operations console of one of our clients went on to deliver a full month of metrics in six seconds. None of them needs new tools: only looking at what is already there, every week.",
             ],
           },
         ],

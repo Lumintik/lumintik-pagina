@@ -5,8 +5,16 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tour } from "@/data/tours";
 import { cn } from "@/lib/cn";
+import { IphoneFrame, MacWindowFrame } from "@/components/ui/DeviceFrames";
 
-const STEP_MS = 5200;
+// Each stop: the screen fades in, the camera settles on the focus, then it
+// follows the cursor to the next control, clicks, and moves on.
+const STEP_MS = 4600;
+const SETTLE_AT = 250;
+const TRAVEL_AT = 1150;
+const CLICK_AT = STEP_MS - 650;
+// How much closer the camera gets while it follows the cursor.
+const TRAVEL_ZOOM = 1.05;
 
 /**
  * A guided tour over real screens of the product: the camera eases toward
@@ -17,7 +25,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
   const { locale } = useLocale();
   const [index, setIndex] = useState(0);
   const [run, setRun] = useState(0);
-  const [phase, setPhase] = useState<"enter" | "settled" | "click">("enter");
+  const [phase, setPhase] = useState<"enter" | "settled" | "travel" | "click">("enter");
   const [paused, setPaused] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -34,14 +42,15 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
   useEffect(() => {
     if (!inView || paused) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t1 = setTimeout(() => setPhase("settled"), reduced ? 0 : 500);
-    const t2 = setTimeout(() => setPhase("click"), STEP_MS - 900);
-    const t3 = setTimeout(() => {
+    const t1 = setTimeout(() => setPhase("settled"), reduced ? 0 : SETTLE_AT);
+    const t2 = setTimeout(() => setPhase("travel"), TRAVEL_AT);
+    const t3 = setTimeout(() => setPhase("click"), CLICK_AT);
+    const t4 = setTimeout(() => {
       setPhase("enter");
       setIndex((i) => (i + 1) % tour.steps.length);
       setRun((r) => r + 1);
     }, STEP_MS);
-    return () => [t1, t2, t3].forEach(clearTimeout);
+    return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, [index, run, inView, paused, tour.steps.length]);
 
   const goTo = (i: number) => {
@@ -57,13 +66,23 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
     const active = i === index;
     return (
       <div key={s.id} aria-hidden={!active} className="absolute inset-0 transition-opacity duration-700 ease-out" style={{ opacity: active ? 1 : 0 }}>
-        {/* The camera eases toward the focus once the screen is in */}
+        {/* The camera settles on the focus, then follows the cursor to the
+            control it is heading for: the origin travels with it and the
+            zoom tightens a little, so the eye goes where the click will be. */}
         <div
           className="absolute inset-0"
           style={{
-            transformOrigin: `${s.focus.at[0]}% ${s.focus.at[1]}%`,
-            transform: active && phase !== "enter" ? `scale(${s.focus.zoom})` : "scale(1)",
-            transition: "transform 3200ms cubic-bezier(0.22, 1, 0.36, 1)",
+            transformOrigin:
+              active && (phase === "travel" || phase === "click")
+                ? `${s.click[0]}% ${s.click[1]}%`
+                : `${s.focus.at[0]}% ${s.focus.at[1]}%`,
+            transform:
+              active && (phase === "travel" || phase === "click")
+                ? `scale(${s.focus.zoom * TRAVEL_ZOOM})`
+                : active && phase === "settled"
+                  ? `scale(${s.focus.zoom})`
+                  : "scale(1)",
+            transition: "transform 1300ms cubic-bezier(0.22, 1, 0.36, 1), transform-origin 1300ms cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         >
           <Image src={s.image} alt="" fill sizes={tour.device === "phone" ? "340px" : "(min-width: 1280px) 1100px, 100vw"} className="object-cover" priority={i === 0} />
@@ -72,10 +91,10 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
           <span
             className="absolute z-10"
             style={{
-              left: `${active && phase !== "enter" ? s.click[0] : 50}%`,
-              top: `${active && phase !== "enter" ? s.click[1] : 70}%`,
-              opacity: active ? 1 : 0,
-              transition: "left 2600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, top 2600ms cubic-bezier(0.22, 1, 0.36, 1) 600ms, opacity 400ms",
+              left: `${active && (phase === "travel" || phase === "click") ? s.click[0] : s.focus.at[0]}%`,
+              top: `${active && (phase === "travel" || phase === "click") ? s.click[1] : s.focus.at[1]}%`,
+              opacity: active && phase !== "enter" ? 1 : 0,
+              transition: "left 1200ms cubic-bezier(0.22, 1, 0.36, 1), top 1200ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms",
             }}
           >
             <span className={cn("absolute -left-4 -top-4 size-8 rounded-full border-2 border-slate-900/70 transition-all duration-500", active && phase === "click" ? "scale-150 opacity-0" : "scale-50 opacity-0")} />
@@ -138,11 +157,9 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
 
           {/* The phone */}
           <div className="order-1 mx-auto md:order-2">
-            <div className="relative w-[270px] rounded-[2.8rem] bg-slate-950 p-2.5 shadow-[0_50px_100px_-40px_rgba(15,23,42,0.6),inset_0_0_0_2px_rgba(255,255,255,0.08)] md:w-[320px]">
-              <div className="relative w-full overflow-hidden rounded-[2.2rem] bg-white" style={{ aspectRatio: `${tour.width} / ${tour.height}` }}>
-                {screens}
-              </div>
-            </div>
+            <IphoneFrame className="w-[270px] md:w-[320px]" aspect={`${tour.width} / ${tour.height}`}>
+              {screens}
+            </IphoneFrame>
           </div>
         </div>
 
@@ -179,17 +196,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
       <p className="md:hidden mt-3 text-sm font-medium text-slate-900">{step.label[locale]}</p>
 
       {/* The browser */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_40px_90px_-40px_rgba(15,23,42,0.45)]">
-        <div className="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-4 py-2.5">
-          <span className="flex gap-1.5">
-            {[0, 1, 2].map((k) => (
-              <span key={k} className="size-2.5 rounded-full bg-slate-300" />
-            ))}
-          </span>
-          <span className="mx-auto w-full max-w-sm truncate rounded-full bg-white px-4 py-1 text-center text-xs text-slate-500 shadow-[inset_0_0_0_1px_rgba(15,23,42,0.06)]">{tour.url}</span>
-          <span className="w-10" />
-        </div>
-
+      <MacWindowFrame title={tour.url} className="mt-6">
         <div className="relative w-full overflow-hidden bg-slate-100" style={{ aspectRatio: `${tour.width} / ${tour.height}` }}>
           {screens}
 
@@ -203,7 +210,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
             </p>
           </div>
         </div>
-      </div>
+      </MacWindowFrame>
 
       <style>{`
         @keyframes tour-rail { from { width: 0; } to { width: 100%; } }
