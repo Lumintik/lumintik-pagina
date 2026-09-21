@@ -17,7 +17,7 @@ export function useCaseTitle(study: CaseStudy) {
 /** A fact the team has not confirmed yet. */
 export function Pending() {
   return (
-    <span className="inline-block rounded border border-dashed border-slate-400 px-1.5 text-slate-500">
+    <span className="inline-block rounded border border-dashed border-slate-400 px-1.5 text-slate-900">
       [dato pendiente]
     </span>
   );
@@ -26,7 +26,7 @@ export function Pending() {
 /** Small blue label above a title, the way the rest of the site writes them. */
 export function Eyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className={cn("text-xs font-medium text-slate-500", className)}>
+    <p className={cn("text-xs font-medium text-slate-900", className)}>
       {children}
     </p>
   );
@@ -58,7 +58,7 @@ export function ToolList({ tools }: { tools: ToolId[] | null }) {
   const t = useT();
   if (!tools) {
     return (
-      <p className="text-slate-500">
+      <p className="text-slate-900">
         <span className="sr-only">{t.cases.tools}: </span>
         <Pending />
       </p>
@@ -88,7 +88,7 @@ export function CaseBlocks({ study, large }: { study: CaseStudy; large?: boolean
       {blocks.map((b) => (
         <div key={b.label}>
           <h4 className={cn("text-slate-900 font-semibold", large ? "text-xl" : "text-lg")}>{b.label}</h4>
-          <p className={cn("mt-2 text-slate-500 leading-relaxed", large ? "text-lg" : "text-base")}>
+          <p className={cn("mt-2 text-slate-900 leading-relaxed", large ? "text-lg" : "text-base")}>
             {b.text ?? <Pending />}
           </p>
         </div>
@@ -141,11 +141,24 @@ export function CaseFrame({
   );
 }
 
-/** The cover, or a placeholder when the photos are still missing. */
+/** The first landscape capture and the first phone one, if the case has them. */
+export function coverPair(study: CaseStudy): { desktop?: CaseImage; mobile?: CaseImage } {
+  const real = study.images.filter((i) => !i.src.startsWith("/badges/"));
+  return {
+    desktop: real.find((i) => i.height / i.width <= 1),
+    mobile: real.find((i) => i.height / i.width > 1.4),
+  };
+}
+
+/**
+ * The cover: the desktop screen on a laptop at the left and the phone one at
+ * the right, both whole and both small enough to fit on screen at once. Every
+ * project is responsive, and the cover says so without a word.
+ */
 export function CaseCover({
   study,
   priority,
-  sizes = "(min-width: 1536px) 1440px, 100vw",
+  sizes = "(min-width: 1536px) 1100px, 80vw",
 }: {
   study: CaseStudy;
   priority?: boolean;
@@ -153,35 +166,43 @@ export function CaseCover({
 }) {
   const t = useT();
   const { locale } = useLocale();
-  const cover = study.images[0];
+  const { desktop, mobile } = coverPair(study);
+  const cover = desktop ?? mobile ?? study.images[0];
   if (!cover) {
     return (
       <div className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-3 rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
         <span className="text-slate-900 font-semibold">{t.cases.pendingImages}</span>
-        <span className="max-w-[70ch] text-sm text-slate-500">
+        <span className="max-w-[70ch] text-sm text-slate-900">
           <Pending /> {study.imagesPending?.[locale]}
         </span>
       </div>
     );
   }
-  // A phone shaped cover (an app) goes in the phone; anything else opens in
-  // a Safari window with the client's address.
-  const host = study.links[0]?.href.replace(/^https?:\/\//, "").replace(/\/$/, "");
-  if (cover.height / cover.width > 1.4) {
+
+  const phone = mobile ? (
+    <IphoneFrame className="w-[22%] min-w-[110px] max-w-[190px] shrink-0" aspect={`${mobile.width} / ${mobile.height}`}>
+      <Image src={mobile.src} alt={mobile.alt[locale]} fill priority={priority} sizes="190px" className="object-contain" />
+    </IphoneFrame>
+  ) : null;
+
+  // No desktop capture (an app with no web of its own): the phone leads.
+  if (!desktop) {
     return (
-      <div className="flex w-full justify-center rounded-3xl bg-slate-50 py-12 md:py-16">
-        <IphoneFrame className="h-[520px] md:h-[680px]" aspect={`${cover.width} / ${cover.height}`}>
-          <Image src={cover.src} alt={cover.alt[locale]} fill priority={priority} sizes="340px" className="object-contain" />
+      <div className="flex w-full justify-center py-6 md:py-10">
+        <IphoneFrame className="w-full max-w-[280px]" aspect={`${cover.width} / ${cover.height}`}>
+          <Image src={cover.src} alt={cover.alt[locale]} fill priority={priority} sizes="280px" className="object-contain" />
         </IphoneFrame>
       </div>
     );
   }
+
   return (
-    <MacWindowFrame url={host} title={cover.alt[locale]}>
-      <div className="relative w-full" style={{ aspectRatio: `${cover.width} / ${cover.height}` }}>
-        <Image src={cover.src} alt={cover.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
-      </div>
-    </MacWindowFrame>
+    <div className="flex w-full items-end justify-center gap-4 md:gap-8">
+      <MacbookFrame className="min-w-0 flex-1 max-w-[900px]" aspect={`${desktop.width} / ${desktop.height}`}>
+        <Image src={desktop.src} alt={desktop.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
+      </MacbookFrame>
+      {phone}
+    </div>
   );
 }
 
@@ -208,7 +229,7 @@ export function CaseCertification({ certification }: { certification: NonNullabl
               </span>
               <span className="flex flex-col">
                 <span className="text-sm font-semibold text-slate-900">{item.title[locale]}</span>
-                <span className="text-sm text-slate-500">{item.date[locale]}</span>
+                <span className="text-sm text-slate-900">{item.date[locale]}</span>
               </span>
             </a>
           </li>

@@ -21,9 +21,9 @@ export function ServicesSection() {
   return (
     <section id="services" className="relative w-full px-5 pt-4 pb-14 md:px-12 md:pt-6 md:pb-24 z-[2]">
       <div className="mx-auto max-w-[1600px] w-full">
-        <p className="text-xs md:text-sm font-medium text-slate-500">{t.services.eyebrow}</p>
+        <p className="text-xs md:text-sm font-medium text-slate-900">{t.services.eyebrow}</p>
         <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
-          {t.services.title} <span className="italic text-slate-500">{t.services.titleAccent}</span>
+          {t.services.title} <span className="italic text-slate-900">{t.services.titleAccent}</span>
         </h2>
 
         <div role="tablist" aria-label={t.services.eyebrow} className="mt-8 md:mt-10 flex flex-wrap gap-2">
@@ -37,7 +37,7 @@ export function ServicesSection() {
                 aria-selected={active}
                 onClick={() => setFilter(f)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
-                  active ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  active ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-900 hover:bg-slate-200"
                 }`}
               >
                 {t.services.filters[f]}

@@ -40,7 +40,7 @@ function Sparkle() {
       height="32"
       viewBox="0 0 24 24"
       fill="currentColor"
-      className="shrink-0 text-white/90"
+      className="shrink-0 text-white"
       aria-hidden
     >
       <path d="M12 0 L13.5 9 L22 10.5 L13.5 12.5 L12 24 L10.5 12.5 L2 10.5 L10.5 9 Z" />

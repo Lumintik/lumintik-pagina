@@ -702,9 +702,9 @@ export const POSTS: Post[] = [
     relatedCase: "griver",
     author: LUMINTIK,
     cover: {
-      src: "/projects/reco/plataforma-desktop.png",
-      width: 2400,
-      height: 1500,
+      src: "/projects/reco/plataforma-desktop.webp",
+      width: 2000,
+      height: 1250,
       alt: { ES: "Plataforma RECO de Griver", EN: "Griver's RECO platform" },
     },
     copy: {
@@ -773,9 +773,9 @@ export const POSTS: Post[] = [
     date: "2026-09-19",
     author: LUMINTIK,
     cover: {
-      src: "/projects/samsung/home-desktop.png",
-      width: 2880,
-      height: 1800,
+      src: "/projects/samsung/home-desktop.webp",
+      width: 2000,
+      height: 1250,
       alt: { ES: "Tienda en línea de Samsung Colombia", EN: "Samsung Colombia online store" },
     },
     copy: {
@@ -840,9 +840,9 @@ export const POSTS: Post[] = [
     date: "2026-09-19",
     author: LUMINTIK,
     cover: {
-      src: "/projects/ezdocu/home-desktop.png",
-      width: 2880,
-      height: 1800,
+      src: "/projects/ezdocu/home-desktop.webp",
+      width: 2000,
+      height: 1250,
       alt: { ES: "Página de inicio de EZDocuAI", EN: "EZDocuAI home page" },
     },
     copy: {

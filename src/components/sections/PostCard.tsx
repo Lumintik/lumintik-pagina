@@ -49,14 +49,14 @@ export function PostCard({ post, dark }: { post: Post; dark?: boolean }) {
         )}
       </div>
       <div className="flex flex-col gap-3 p-6 md:p-8">
-        <span className={cn("inline-flex items-center gap-2 text-sm", dark ? "text-slate-400" : "text-slate-500")}>
+        <span className={cn("inline-flex items-center gap-2 text-sm", dark ? "text-white" : "text-slate-900")}>
           <span className={cn("relative size-6 overflow-hidden rounded-full", dark ? "bg-white/10" : "bg-slate-100")}>
             <Image src={post.author.avatar} alt="" fill sizes="24px" className="object-contain p-1" />
           </span>
           {post.author.name}
         </span>
         <h2 className={cn("text-xl md:text-2xl font-semibold leading-snug text-balance", dark ? "text-white" : "text-slate-900")}>{copy.title}</h2>
-        <p className={cn("text-base leading-relaxed line-clamp-3", dark ? "text-slate-400" : "text-slate-500")}>{copy.excerpt}</p>
+        <p className={cn("text-base leading-relaxed line-clamp-3", dark ? "text-white" : "text-slate-900")}>{copy.excerpt}</p>
       </div>
     </Link>
   );

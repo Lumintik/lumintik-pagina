@@ -34,11 +34,11 @@ export function PageShell({ eyebrow, title, titleAccent, intro, children, contac
           }}
         >
           <div className="mx-auto max-w-[1600px] w-full">
-            <p className="text-xs font-medium text-slate-400">{eyebrow}</p>
+            <p className="text-xs font-medium text-white">{eyebrow}</p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
-              {title} <span className="italic text-slate-400">{titleAccent}</span>
+              {title} <span className="italic text-white">{titleAccent}</span>
             </h1>
-            <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">{intro}</p>
+            <p className="mt-6 text-white text-lg md:text-2xl leading-relaxed max-w-[60ch]">{intro}</p>
           </div>
         </header>
 

@@ -139,13 +139,13 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
                     aria-current={active ? "step" : undefined}
                     className={cn("w-full rounded-2xl p-5 text-left transition-colors duration-300", active ? "bg-slate-50" : "hover:bg-slate-50/60")}
                   >
-                    <span className={cn("flex items-center gap-3 text-lg font-semibold transition-colors duration-300 md:text-xl", active ? "text-slate-900" : "text-slate-400")}>
+                    <span className={cn("flex items-center gap-3 text-lg font-semibold transition-colors duration-300 md:text-xl", active ? "text-slate-900" : "text-slate-900")}>
                       <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium", active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300")}>{i + 1}</span>
                       {s.label[locale]}
                     </span>
                     <span className={cn("grid transition-[grid-template-rows,opacity] duration-500 ease-out", active ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
                       <span className="overflow-hidden">
-                        <span className="mt-3 block pl-10 text-base leading-relaxed text-slate-600">{s.caption[locale]}</span>
+                        <span className="mt-3 block pl-10 text-base leading-relaxed text-slate-900">{s.caption[locale]}</span>
                         <span className="mt-4 ml-10 block h-[3px] overflow-hidden rounded-full bg-slate-200">{railFill(active)}</span>
                       </span>
                     </span>
@@ -184,7 +184,7 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
                 onClick={() => goTo(i)}
                 aria-current={active ? "step" : undefined}
                 aria-label={s.label[locale]}
-                className={cn("flex h-full w-full flex-col justify-end text-left transition-colors duration-300", active ? "text-slate-900" : "text-slate-400 hover:text-slate-600")}
+                className={cn("flex h-full w-full flex-col justify-end text-left transition-colors duration-300", active ? "text-slate-900" : "text-slate-900 hover:text-slate-600")}
               >
                 <span className="hidden md:flex min-h-[2.5em] items-end text-sm font-medium leading-tight text-balance">{s.label[locale]}</span>
                 <span className="md:mt-2.5 block h-[3px] w-full overflow-hidden rounded-full bg-slate-200">{railFill(active)}</span>

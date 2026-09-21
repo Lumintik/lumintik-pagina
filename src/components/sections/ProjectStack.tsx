@@ -74,7 +74,7 @@ export function ProjectStack() {
                 className="object-contain object-top md:object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
             ) : (
-              <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-white/70">
+              <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-white">
                 {t.cases.pendingImages}
               </span>
             )}
@@ -84,7 +84,7 @@ export function ProjectStack() {
             <span className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent" />
 
             <span className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-6 md:p-10">
-              <span className="text-xs font-medium text-white/90">
+              <span className="text-xs font-medium text-white">
                 {card.name}
               </span>
               <span className="text-white text-xl md:text-3xl font-semibold leading-snug max-w-[34ch]">

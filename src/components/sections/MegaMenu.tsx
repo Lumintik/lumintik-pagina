@@ -45,7 +45,7 @@ export function MegaMenu({ panel, open, onNavigate }: { panel: MenuPanel; open: 
     >
       <div className="mx-auto max-w-[1600px] px-12 py-8">
         <div className="flex items-end justify-between gap-6">
-          <p className="text-slate-500 text-sm max-w-[60ch]">{panel.intro}</p>
+          <p className="text-slate-900 text-sm max-w-[60ch]">{panel.intro}</p>
           <Link
             href={panel.viewAll.href}
             onClick={onNavigate}
@@ -70,11 +70,11 @@ export function MegaMenu({ panel, open, onNavigate }: { panel: MenuPanel; open: 
                 )}
                 <span className="mt-3 flex items-center justify-between gap-2 px-1">
                   <span className="text-slate-900 text-sm font-semibold leading-snug">{item.label}</span>
-                  <span className="text-slate-400 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-slate-900">
+                  <span className="text-slate-900 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-slate-900">
                     <Arrow />
                   </span>
                 </span>
-                {item.desc ? <span className="mt-1 block px-1 text-slate-500 text-xs leading-relaxed line-clamp-2">{item.desc}</span> : null}
+                {item.desc ? <span className="mt-1 block px-1 text-slate-900 text-xs leading-relaxed line-clamp-2">{item.desc}</span> : null}
               </Link>
             </li>
           ))}

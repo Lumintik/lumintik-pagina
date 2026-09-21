@@ -65,9 +65,9 @@ function StatCard({ value, suffix, desc, active, delay }: CardProps) {
     >
       <h3 className="text-slate-900 text-[44px] md:text-[64px] font-semibold tracking-tight leading-none">
         {count}
-        <span className="text-slate-500">{suffix}</span>
+        <span className="text-slate-900">{suffix}</span>
       </h3>
-      <p className="text-slate-600 text-sm md:text-base leading-snug">
+      <p className="text-slate-900 text-sm md:text-base leading-snug">
         {desc}
       </p>
     </div>
@@ -89,7 +89,7 @@ export function WhyWorkStats() {
           transition: "opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1)",
         }}
       >
-        <p className="text-slate-500 text-base md:text-xl font-medium">
+        <p className="text-slate-900 text-base md:text-xl font-medium">
           {t.whyWork.eyebrow}
         </p>
       </div>
@@ -103,7 +103,7 @@ export function WhyWorkStats() {
         }}
       >
         {t.whyWork.headline.lead}{" "}
-        <span className="text-slate-400">{t.whyWork.headline.muted}</span>
+        <span className="text-slate-900">{t.whyWork.headline.muted}</span>
         {t.whyWork.headline.tail}
       </h2>
 

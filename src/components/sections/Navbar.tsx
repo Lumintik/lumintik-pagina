@@ -263,7 +263,7 @@ export function Navbar() {
                     ? "bg-slate-100 text-slate-900"
                     : scrolled
                       ? "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
-                      : "text-white/80 hover:text-white hover:bg-white/10"
+                      : "text-white hover:text-white hover:bg-white/10"
                 }`}
               >
                 {item.label}
@@ -293,7 +293,7 @@ export function Navbar() {
 
             <span
               className={`ml-3 inline-flex transition-colors duration-300 ${
-                scrolled ? "text-slate-700" : "text-white/80"
+                scrolled ? "text-slate-700" : "text-white"
               }`}
             >
               <LanguageSwitcher />
@@ -306,7 +306,7 @@ export function Navbar() {
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
             className={`min-[1400px]:hidden relative inline-flex items-center justify-center w-12 h-12 rounded-full z-[110] transition-colors duration-300 ${
-              scrolled ? "bg-transparent text-slate-500" : "bg-transparent text-white"
+              scrolled ? "bg-transparent text-slate-900" : "bg-transparent text-white"
             }`}
           >
             <span
@@ -465,7 +465,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, closeLabel,
             >
               <a href={item.href} onClick={onClose} className="group flex items-center justify-between py-3">
                 <span className="text-slate-900 text-3xl font-semibold tracking-tight">{item.label}</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 group-hover:text-slate-500 transition-colors" aria-hidden>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-900 group-hover:text-slate-500 transition-colors" aria-hidden>
                   <line x1="7" y1="17" x2="17" y2="7" />
                   <polyline points="7 7 17 7 17 17" />
                 </svg>
@@ -474,7 +474,7 @@ function MobileMenu({ open, onClose, items, contactHref, startLabel, closeLabel,
                 <ul className="mb-2 flex flex-wrap gap-x-5 gap-y-1 pl-1">
                   {item.children.map((c) => (
                     <li key={c.href + c.label}>
-                      <a href={c.href} onClick={onClose} className="text-slate-500 text-base hover:text-slate-900">
+                      <a href={c.href} onClick={onClose} className="text-slate-900 text-base hover:text-slate-900">
                         {c.label}
                       </a>
                     </li>

@@ -46,7 +46,7 @@ export function LanguageSwitcher({ className }: Props) {
               hrefLang={LOCALE_TAGS[code]}
               aria-current={isActive ? "true" : undefined}
               className={`relative block px-2 py-1 cursor-pointer transition-colors duration-200 ${
-                isActive ? "text-slate-900" : "text-slate-400 hover:text-slate-700"
+                isActive ? "text-slate-900" : "text-slate-900 hover:text-slate-700"
               }`}
             >
               <span className={isActive ? "line-through decoration-1 underline-offset-2" : ""}>

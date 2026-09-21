@@ -39,14 +39,14 @@ export function TeamPage() {
                 {p.photo ? (
                   <Image src={p.photo} alt={p.name} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover object-top" />
                 ) : (
-                  <span className="text-slate-400 text-5xl font-semibold tracking-tight" aria-hidden>
+                  <span className="text-slate-900 text-5xl font-semibold tracking-tight" aria-hidden>
                     {p.initials}
                   </span>
                 )}
               </div>
               <h2 className="mt-5 text-slate-900 text-2xl font-semibold">{p.name}</h2>
-              <p className="mt-1 text-slate-500 text-lg">{t.pages.team.roles[p.role]}</p>
-              <p className="mt-4 text-slate-600 text-base leading-relaxed max-w-[42ch]">{t.pages.team.bios[p.role]}</p>
+              <p className="mt-1 text-slate-900 text-lg">{t.pages.team.roles[p.role]}</p>
+              <p className="mt-4 text-slate-900 text-base leading-relaxed max-w-[42ch]">{t.pages.team.bios[p.role]}</p>
               {p.links?.length ? (
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {p.links.map((link) => (

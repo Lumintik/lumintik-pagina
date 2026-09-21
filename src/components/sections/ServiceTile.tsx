@@ -51,7 +51,7 @@ export function ServiceTile({ title, description, group, href, videoSrc, posterS
       <span className={`absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/20 transition-opacity duration-500 ${hover ? "opacity-100" : "opacity-0"}`} />
 
       <span className="relative flex items-start justify-between gap-4">
-        <span className="text-xs font-medium text-slate-400">{group}</span>
+        <span className="text-xs font-medium text-slate-900">{group}</span>
         <span
           className="inline-flex items-center gap-1.5 rounded-full border border-white/70 px-3 py-1.5 text-xs font-medium text-white transition-colors duration-300 group-hover:bg-white group-hover:text-slate-900"
         >
@@ -65,7 +65,7 @@ export function ServiceTile({ title, description, group, href, videoSrc, posterS
         <span className="block text-2xl md:text-3xl font-semibold leading-tight text-white">
           {title}
         </span>
-        <span className="mt-3 block text-base leading-relaxed text-slate-300">
+        <span className="mt-3 block text-base leading-relaxed text-slate-900">
           {description}
         </span>
       </span>

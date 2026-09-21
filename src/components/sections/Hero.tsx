@@ -68,7 +68,7 @@ export function Hero() {
                   aria-label={sc.eyebrow[locale]}
                   className={cn(
                     "group flex h-full w-full flex-col justify-end text-left transition-colors duration-300",
-                    active ? "text-white" : "text-slate-500 hover:text-slate-300",
+                    active ? "text-white" : "text-white hover:text-slate-300",
                   )}
                 >
                   <span className="hidden md:flex min-h-[2.5em] items-end text-sm leading-tight font-medium text-balance">{sc.eyebrow[locale]}</span>
@@ -102,7 +102,7 @@ export function Hero() {
             <h1 className="text-white text-[40px] leading-[1.05] md:text-6xl md:leading-[1.05] xl:text-[clamp(3.75rem,4.6vw,5.5rem)] xl:leading-[1.04] font-semibold tracking-tight text-balance max-w-[14ch] mx-auto xl:mx-0">
               {scene.title[locale]}
             </h1>
-            <p className="mt-6 text-slate-300 text-base md:text-xl leading-relaxed max-w-[46ch] mx-auto xl:mx-0">
+            <p className="mt-6 text-white text-base md:text-xl leading-relaxed max-w-[46ch] mx-auto xl:mx-0">
               {scene.line[locale]}
             </p>
           </div>

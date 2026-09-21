@@ -35,13 +35,13 @@ export function CasesPage() {
                         className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-white/70">{t.cases.pendingImages}</span>
+                      <span className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-white">{t.cases.pendingImages}</span>
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-6 md:p-8">
-                    <span className="text-xs md:text-sm font-medium text-slate-500">{copy.sector}</span>
+                    <span className="text-xs md:text-sm font-medium text-slate-900">{copy.sector}</span>
                     <h2 className="text-slate-900 text-xl md:text-2xl font-semibold leading-snug text-balance">{copy.headline ?? copy.why ?? copy.solution}</h2>
-                    <p className="text-slate-500 text-base leading-relaxed">{copy.client}. {copy.about}</p>
+                    <p className="text-slate-900 text-base leading-relaxed">{copy.client}. {copy.about}</p>
                     <span className="mt-auto inline-flex items-center gap-2 pt-2 text-sm font-medium text-slate-900">
                       {t.cases.open}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">

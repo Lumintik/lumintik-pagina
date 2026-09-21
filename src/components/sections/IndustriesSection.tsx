@@ -31,14 +31,14 @@ export function IndustriesSection() {
     >
       <div className="px-5 md:px-12">
         <div className="mx-auto max-w-[1600px]">
-          <p className="text-xs md:text-sm font-medium text-slate-500">
+          <p className="text-xs md:text-sm font-medium text-slate-900">
             {copy.eyebrow}
           </p>
           <h2 className="mt-3 text-slate-900 text-4xl md:text-6xl font-semibold leading-[1.05]">
             {copy.title}{" "}
-            <span className="italic text-slate-500">{copy.titleAccent}</span>
+            <span className="italic text-slate-900">{copy.titleAccent}</span>
           </h2>
-          <p className="mt-5 text-slate-500 text-base md:text-xl leading-relaxed max-w-[56ch]">
+          <p className="mt-5 text-slate-900 text-base md:text-xl leading-relaxed max-w-[56ch]">
             {copy.intro}
           </p>
         </div>

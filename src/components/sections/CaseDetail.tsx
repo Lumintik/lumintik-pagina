@@ -14,6 +14,7 @@ import {
   CaseCertification,
   CaseCover,
   CaseFrame,
+  coverPair,
   CaseLinks,
   ToolList,
   useCaseTitle,
@@ -36,7 +37,10 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
   const copy = study.copy[locale];
   const title = useCaseTitle(study);
   const nextTitle = t.cases.caseTitle.replace("{client}", next.copy[locale].client);
-  const gallery = study.images.slice(1);
+  // The cover already shows the desktop and the phone screens; the gallery
+  // picks up from there.
+  const { desktop, mobile } = coverPair(study);
+  const gallery = study.images.filter((i) => i !== desktop && i !== mobile);
 
   return (
     <div className="relative flex flex-col items-center bg-white min-h-screen">
@@ -45,7 +49,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
       <main className="relative w-full flex flex-col items-center">
         {/* Dark opening, echoing the home page's hero gradient. */}
         <header
-          className="relative w-full flex justify-center px-5 pt-32 pb-16 md:px-12 md:pt-44 md:pb-24"
+          className="relative w-full flex justify-center px-5 pt-24 pb-10 md:px-12 md:pt-28 md:pb-14"
           style={{
             background:
               "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)",
@@ -54,7 +58,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
           <div className="mx-auto max-w-[1600px] w-full">
             <Link
               href={`${home}#work`}
-              className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm transition-colors duration-300"
+              className="inline-flex items-center gap-2 text-white hover:text-white/70 text-sm transition-colors duration-300"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -63,24 +67,24 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               {t.cases.back}
             </Link>
 
-            <p className="mt-10 text-xs font-medium text-slate-400">
+            <p className="mt-6 text-xs font-medium text-white">
               {copy.topic}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               {title}
             </h1>
-            <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">
+            <p className="mt-6 text-white text-lg md:text-2xl leading-relaxed max-w-[60ch]">
               {copy.about}
             </p>
 
-            <dl className="mt-10 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
+            <dl className="mt-8 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
               {[
                 { label: t.cases.client, value: copy.client },
                 { label: t.cases.country, value: t.cases.countries[study.country] },
                 { label: t.cases.sector, value: copy.sector },
               ].map((item) => (
                 <div key={item.label}>
-                  <dt className="text-xs font-medium text-slate-400">
+                  <dt className="text-xs font-medium text-white">
                     {item.label}
                   </dt>
                   <dd className="mt-2 text-white text-lg font-semibold">{item.value}</dd>
@@ -88,7 +92,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               ))}
             </dl>
 
-            <div className="mt-10 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
                 href={`${home}#contact`}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 text-sm font-medium hover:bg-slate-200 transition-colors duration-300"
@@ -117,17 +121,17 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
 
             {study.metrics?.length ? (
               <section className="mt-16 md:mt-24">
-                <h2 className="text-xs font-medium text-slate-400">{t.cases.metrics}</h2>
+                <h2 className="text-xs font-medium text-slate-900">{t.cases.metrics}</h2>
                 <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
                   {study.metrics.map((m) => (
                     <div key={m.label[locale]}>
                       <dd className="text-slate-900 text-4xl md:text-5xl font-semibold tracking-tight">{m.value}</dd>
-                      <dt className="mt-3 text-slate-500 text-sm md:text-base max-w-[22ch]">{m.label[locale]}</dt>
+                      <dt className="mt-3 text-slate-900 text-sm md:text-base max-w-[22ch]">{m.label[locale]}</dt>
                     </div>
                   ))}
                 </dl>
                 {study.metricsSource ? (
-                  <p className="mt-8 text-xs text-slate-400">{study.metricsSource[locale]}</p>
+                  <p className="mt-8 text-xs text-slate-900">{study.metricsSource[locale]}</p>
                 ) : null}
               </section>
             ) : null}
@@ -135,7 +139,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             {(TOURS[study.slug] ?? []).map((tour) => (
               <section key={tour.id} className="mt-16 md:mt-24">
                 <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{tour.title[locale]}</h2>
-                <p className="mt-3 mb-8 text-slate-500 text-base md:text-lg max-w-[60ch]">{tour.intro[locale]}</p>
+                <p className="mt-3 mb-8 text-slate-900 text-base md:text-lg max-w-[60ch]">{tour.intro[locale]}</p>
                 {/* Kept under the capture's own width so the zoom stays sharp. */}
                 {/* Capped by the viewport height so a whole stop fits on screen. */}
                 <ProductTour tour={tour} className={tour.device === "browser" ? "max-w-[min(1180px,calc(66vh*1.875))]" : "max-w-[1000px]"} />
@@ -144,13 +148,13 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
 
             {study.fieldwork ? (
               <section className="mt-16 md:mt-24">
-                <h2 className="text-xs font-medium text-slate-400">{t.cases.fieldwork}</h2>
+                <h2 className="text-xs font-medium text-slate-900">{t.cases.fieldwork}</h2>
                 <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-10">
                   <div className="md:col-span-5">
                     <p className="text-slate-900 text-2xl md:text-3xl font-semibold leading-snug">
                       {study.fieldwork.title[locale]}
                     </p>
-                    <p className="mt-4 text-slate-500 text-lg leading-relaxed">{study.fieldwork.body[locale]}</p>
+                    <p className="mt-4 text-slate-900 text-lg leading-relaxed">{study.fieldwork.body[locale]}</p>
                   </div>
                   {/* Photographs, not screens: no device frame, and never cropped. */}
                   <ul className="md:col-span-7 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
@@ -179,7 +183,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
 
             {study.tools?.length === 0 ? null : (
               <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-                <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+                <h2 className="md:col-span-4 text-xs font-medium text-slate-900">
                   {t.cases.tools}
                 </h2>
                 <div className="md:col-span-8">
@@ -191,7 +195,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
             {/* The gallery label sits on top and the frames take the whole width. */}
             {gallery.length ? (
               <section className="mt-16 md:mt-24">
-                <h2 className="text-xs font-medium text-slate-400">{t.cases.gallery}</h2>
+                <h2 className="text-xs font-medium text-slate-900">{t.cases.gallery}</h2>
                 {/* Phone captures sit three or four across; wider ones take half
                     the row, so the grid never leaves a hole beside them. */}
                 <ul
@@ -215,12 +219,12 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               <p className="text-slate-900 text-2xl md:text-4xl font-semibold leading-[1.25] max-w-[30ch]">
                 {t.cases.ctaTitle}
               </p>
-              <p className="mt-4 text-slate-500 text-lg max-w-[50ch]">{t.cases.ctaBody}</p>
+              <p className="mt-4 text-slate-900 text-lg max-w-[50ch]">{t.cases.ctaBody}</p>
             </section>
 
             <section className="mt-20 md:mt-28">
               <Link href={href(locale, paths.caseStudy(next.slug))} className="group inline-flex flex-col gap-2">
-                <span className="text-xs font-medium text-slate-400">
+                <span className="text-xs font-medium text-slate-900">
                   {t.cases.next}
                 </span>
                 <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-slate-500">

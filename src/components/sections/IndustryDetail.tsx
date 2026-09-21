@@ -37,13 +37,13 @@ export function IndustryDetail({ id }: { id: string }) {
           ) : null}
           <span className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/60" />
           <div className="relative mx-auto max-w-[1600px] w-full">
-            <Link href={href(locale, paths.industries)} className="inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white">
+            <Link href={href(locale, paths.industries)} className="inline-flex items-center gap-2 text-sm text-white transition-colors hover:text-white/70">
               <Arrow className="rotate-180" />
               {chrome.back}
             </Link>
-            <p className="mt-8 text-xs md:text-sm font-medium text-white/70">{copy.category}</p>
+            <p className="mt-8 text-xs md:text-sm font-medium text-white">{copy.category}</p>
             <h1 className="mt-3 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] max-w-[20ch]">{copy.title}</h1>
-            <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">{copy.body[0]}</p>
+            <p className="mt-6 text-white text-lg md:text-2xl leading-relaxed max-w-[60ch]">{copy.body[0]}</p>
           </div>
         </header>
 
@@ -57,7 +57,7 @@ export function IndustryDetail({ id }: { id: string }) {
                   <li key={d.title} className="rounded-3xl bg-slate-50 p-6 md:p-8">
                     <span className="flex size-8 items-center justify-center rounded-full border border-slate-900/30 text-sm font-medium text-slate-900">{i + 1}</span>
                     <h3 className="mt-5 text-slate-900 text-xl font-semibold leading-snug">{d.title}</h3>
-                    <p className="mt-3 text-slate-600 text-base leading-relaxed">{d.desc}</p>
+                    <p className="mt-3 text-slate-900 text-base leading-relaxed">{d.desc}</p>
                   </li>
                 ))}
               </ol>
@@ -68,10 +68,10 @@ export function IndustryDetail({ id }: { id: string }) {
               <h2 className="md:col-span-4 text-slate-900 text-3xl md:text-4xl font-semibold">{chrome.whatWeBuilt}</h2>
               <div className="md:col-span-8 flex flex-col gap-5">
                 {copy.body.map((paragraph, i) => (
-                  <p key={i} className="text-slate-600 text-lg md:text-xl leading-relaxed">{paragraph}</p>
+                  <p key={i} className="text-slate-900 text-lg md:text-xl leading-relaxed">{paragraph}</p>
                 ))}
                 <div className="mt-4">
-                  <p className="text-xs font-medium text-slate-500">{chrome.stack}</p>
+                  <p className="text-xs font-medium text-slate-900">{chrome.stack}</p>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {industry.stack.map((tool) => (
                       <li key={tool} className="rounded-full border border-slate-200 px-3.5 py-1.5 text-sm text-slate-700">{tool}</li>
@@ -110,7 +110,7 @@ export function IndustryDetail({ id }: { id: string }) {
                   ) : null}
                   <span className="flex-1">
                     <span className="block text-2xl md:text-3xl font-semibold leading-snug">{copy.title}</span>
-                    <span className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-white/80">
+                    <span className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-white">
                       {t.industries.seeCase}
                       <Arrow className="transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
@@ -126,10 +126,10 @@ export function IndustryDetail({ id }: { id: string }) {
                 {others.map((other) => (
                   <li key={other.id}>
                     <Link href={href(locale, paths.industry(other.id))} className="group flex h-full flex-col justify-between rounded-2xl border border-slate-200 p-6 transition-colors hover:bg-slate-50">
-                      <span className="text-xs font-medium text-slate-500">{t.industries.items[other.id].category}</span>
+                      <span className="text-xs font-medium text-slate-900">{t.industries.items[other.id].category}</span>
                       <span className="mt-6 flex items-center justify-between gap-3 text-slate-900 text-lg font-semibold leading-snug">
                         {t.industries.items[other.id].title}
-                        <Arrow className="shrink-0 text-slate-400 transition-transform duration-300 group-hover:translate-x-1" />
+                        <Arrow className="shrink-0 text-slate-900 transition-transform duration-300 group-hover:translate-x-1" />
                       </span>
                     </Link>
                   </li>
@@ -141,7 +141,7 @@ export function IndustryDetail({ id }: { id: string }) {
             <section className="rounded-3xl bg-slate-50 p-8 md:p-12 grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-6">
               <div>
                 <h2 className="text-slate-900 text-2xl md:text-3xl font-semibold">{chrome.ctaTitle}</h2>
-                <p className="mt-3 text-slate-600 text-base md:text-lg leading-relaxed max-w-[60ch]">{chrome.ctaBody}</p>
+                <p className="mt-3 text-slate-900 text-base md:text-lg leading-relaxed max-w-[60ch]">{chrome.ctaBody}</p>
               </div>
               <Link href={href(locale, paths.contact)} className="inline-flex w-fit items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-slate-700">
                 {chrome.ctaButton}

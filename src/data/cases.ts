@@ -105,9 +105,9 @@ export const CASES: CaseStudy[] = [
     tools: ["gcp", "aws", "nextjs", "nestjs", "posthog", "distanceMatrix", "redis", "postgresql"],
     images: [
       {
-        src: "/projects/samsung/home-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/samsung/home-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: {
           ES: "Página de inicio de la tienda Samsung de Imagiq en escritorio",
           EN: "Home page of Imagiq's Samsung store on desktop",
@@ -123,16 +123,16 @@ export const CASES: CaseStudy[] = [
         },
       },
       {
-        src: "/projects/samsung/pdp-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/samsung/pdp-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: {
           ES: "Página de producto de la tienda Samsung de Imagiq",
           EN: "Product page of Imagiq's Samsung store",
         },
       },
       {
-        src: "/projects/samsung/cart-mobile.png",
+        src: "/projects/samsung/cart-mobile.webp",
         width: 1179,
         height: 1980,
         alt: {
@@ -199,9 +199,9 @@ export const CASES: CaseStudy[] = [
     },
     images: [
       {
-        src: "/projects/ezmig/home.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/ezmig/home.webp",
+        width: 2000,
+        height: 1250,
         alt: {
           ES: "Página de inicio de EZMig con el formulario I 130 en pantalla",
           EN: "EZMig home page showing the I 130 form",
@@ -238,9 +238,9 @@ export const CASES: CaseStudy[] = [
     tools: [],
     images: [
       {
-        src: "/projects/claro/home.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/claro/home.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Sitio de Claro Colombia", EN: "Claro Colombia website" },
       },
     ],
@@ -369,25 +369,25 @@ export const CASES: CaseStudy[] = [
     tools: ["nextjs", "aws", "vanta"],
     images: [
       {
-        src: "/projects/ezdocu/home-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/ezdocu/home-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: {
           ES: "Página de inicio de EZDocuAI en escritorio",
           EN: "EZDocuAI home page on desktop",
         },
       },
       {
-        src: "/projects/ezdocu/how-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/ezdocu/how-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: {
           ES: "Sección de EZDocuAI que explica cómo funciona el servicio",
           EN: "EZDocuAI section explaining how the service works",
         },
       },
       {
-        src: "/projects/ezdocu/editor-mobile.png",
+        src: "/projects/ezdocu/editor-mobile.webp",
         width: 780,
         height: 1688,
         alt: {
@@ -455,16 +455,16 @@ export const CASES: CaseStudy[] = [
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
     images: [
       {
-        src: "/projects/reco/plataforma-desktop.png",
-        width: 2400,
-        height: 1500,
+        src: "/projects/reco/plataforma-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: {
           ES: "Plataforma RECO, el ecosistema de comercio exterior de Griver",
           EN: "The RECO platform, Griver's foreign trade ecosystem",
         },
       },
       {
-        src: "/projects/reco/plataforma-mobile.png",
+        src: "/projects/reco/plataforma-mobile.webp",
         width: 1170,
         height: 2532,
         alt: {
@@ -615,7 +615,7 @@ export const MORE_PROJECTS: MoreProject[] = [
   {
     key: "piebald",
     name: "Piebald Capital",
-    image: { src: "/projects/piebald/loaded.png", width: 1600, height: 1100 },
+    image: { src: "/projects/piebald/loaded.webp", width: 1600, height: 1100 },
     href: "https://www.piebaldcapital.com/",
     desc: {
       ES: "Gestora de créditos hipotecarios en Miami.",
@@ -630,7 +630,7 @@ export const MORE_PROJECTS: MoreProject[] = [
         alt: { ES: "Portada del sitio de Piebald Capital", EN: "Piebald Capital site hero" },
       },
       {
-        src: "/projects/piebald/secondary.png",
+        src: "/projects/piebald/secondary.webp",
         width: 1280,
         height: 720,
         alt: { ES: "Sección interior del sitio de Piebald Capital", EN: "Inner section of the Piebald Capital site" },
@@ -640,7 +640,7 @@ export const MORE_PROJECTS: MoreProject[] = [
   {
     key: "minnesota",
     name: "Minnesota",
-    image: { src: "/projects/minnesota/hero-desktop.png", width: 2880, height: 1800 },
+    image: { src: "/projects/minnesota/hero-desktop.webp", width: 2880, height: 1800 },
     href: "https://www.minnesotaent.net/",
     desc: {
       ES: "Estudio de grabación en Miami.",
@@ -649,31 +649,31 @@ export const MORE_PROJECTS: MoreProject[] = [
     video: "/videos/proyectos/minnesota.mp4",
     gallery: [
       {
-        src: "/projects/minnesota/hero-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/minnesota/hero-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Portada de Minnesota en escritorio", EN: "Minnesota home page on desktop" },
       },
       {
-        src: "/projects/minnesota/films-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/minnesota/films-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Catálogo de películas de Minnesota", EN: "Minnesota films catalogue" },
       },
       {
-        src: "/projects/minnesota/records-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/minnesota/records-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Sección de música de Minnesota", EN: "Minnesota records section" },
       },
       {
-        src: "/projects/minnesota/management-desktop.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/minnesota/management-desktop.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Sección de management de Minnesota", EN: "Minnesota management section" },
       },
       {
-        src: "/projects/minnesota/hero-mobile.png",
+        src: "/projects/minnesota/hero-mobile.webp",
         width: 780,
         height: 1688,
         alt: { ES: "Portada de Minnesota en celular", EN: "Minnesota home page on a phone" },
@@ -683,7 +683,7 @@ export const MORE_PROJECTS: MoreProject[] = [
   {
     key: "lenspr",
     name: "LensPR",
-    image: { src: "/projects/lenspr/home.png", width: 2880, height: 1800 },
+    image: { src: "/projects/lenspr/home.webp", width: 2880, height: 1800 },
     href: "https://www.lenspr.com/es",
     desc: {
       ES: "La agencia de relaciones públicas más grande de Latam.",
@@ -692,9 +692,9 @@ export const MORE_PROJECTS: MoreProject[] = [
     video: "/videos/proyectos/lenspr.mp4",
     gallery: [
       {
-        src: "/projects/lenspr/home.png",
-        width: 2880,
-        height: 1800,
+        src: "/projects/lenspr/home.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Página de inicio de LensPR", EN: "LensPR home page" },
       },
     ],
@@ -702,7 +702,7 @@ export const MORE_PROJECTS: MoreProject[] = [
   {
     key: "fridoom",
     name: "Fridoom",
-    image: { src: "/projects/fridoom/home.png", width: 2560, height: 1600 },
+    image: { src: "/projects/fridoom/home.webp", width: 2560, height: 1600 },
     href: "https://fridoom.com/",
     desc: {
       ES: "Educación financiera con más de 200.000 seguidores.",
@@ -711,9 +711,9 @@ export const MORE_PROJECTS: MoreProject[] = [
     video: "/videos/proyectos/fridoom.mp4",
     gallery: [
       {
-        src: "/projects/fridoom/home.png",
-        width: 2560,
-        height: 1600,
+        src: "/projects/fridoom/home.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Página de inicio de Fridoom", EN: "Fridoom home page" },
       },
     ],
@@ -721,7 +721,7 @@ export const MORE_PROJECTS: MoreProject[] = [
   {
     key: "accesify",
     name: "Accesify",
-    image: { src: "/projects/accesify/home.png", width: 2560, height: 1600 },
+    image: { src: "/projects/accesify/home.webp", width: 2560, height: 1600 },
     href: "https://www.accesify.com/",
     desc: {
       ES: "Tienda en línea de accesorios para celulares: fundas para iPhone y Samsung, protectores de pantalla y más.",
@@ -730,9 +730,9 @@ export const MORE_PROJECTS: MoreProject[] = [
     video: "/videos/proyectos/accesify.mp4",
     gallery: [
       {
-        src: "/projects/accesify/home.png",
-        width: 2560,
-        height: 1600,
+        src: "/projects/accesify/home.webp",
+        width: 2000,
+        height: 1250,
         alt: { ES: "Tienda en línea de Accesify", EN: "Accesify online store" },
       },
     ],
@@ -740,7 +740,7 @@ export const MORE_PROJECTS: MoreProject[] = [
   {
     key: "relatos",
     name: "Relatos por Venezuela",
-    image: { src: "/projects/relatos/home.png", width: 1920, height: 1200 },
+    image: { src: "/projects/relatos/home.webp", width: 1920, height: 1200 },
     href: "https://www.relatosporvenezuela.org/",
     desc: {
       ES: "Cortometrajes convertidos en ayuda humanitaria: dona desde US$5, accede a la colección y financia la asistencia tras el terremoto.",
@@ -749,13 +749,13 @@ export const MORE_PROJECTS: MoreProject[] = [
     video: "/videos/proyectos/relatos.mp4",
     gallery: [
       {
-        src: "/projects/relatos/home.png",
+        src: "/projects/relatos/home.webp",
         width: 1920,
         height: 1200,
         alt: { ES: "Página de inicio de Relatos por Venezuela", EN: "Relatos por Venezuela home page" },
       },
       {
-        src: "/projects/relatos/home-mobile.png",
+        src: "/projects/relatos/home-mobile.webp",
         width: 780,
         height: 1688,
         alt: { ES: "Relatos por Venezuela en celular", EN: "Relatos por Venezuela on a phone" },

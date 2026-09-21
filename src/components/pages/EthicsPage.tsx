@@ -23,7 +23,7 @@ export function EthicsPage() {
               <h2 className="text-slate-900 text-2xl md:text-3xl font-semibold">{block.title}</h2>
               <ol className="mt-6 flex flex-col gap-4">
                 {block.items.map((item, i) => (
-                  <li key={i} className="flex gap-4 text-slate-600 text-base md:text-lg leading-relaxed">
+                  <li key={i} className="flex gap-4 text-slate-900 text-base md:text-lg leading-relaxed">
                     <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border border-slate-900/30 text-sm font-medium text-slate-900">{i + 1}</span>
                     {item}
                   </li>
@@ -43,7 +43,7 @@ export function EthicsPage() {
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </Link>
-          <p className="text-slate-500 text-sm">{copy.channel}</p>
+          <p className="text-slate-900 text-sm">{copy.channel}</p>
         </div>
       </div>
     </PageShell>

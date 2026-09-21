@@ -43,7 +43,7 @@ export function ServiceDetail({
           <div className="mx-auto max-w-[1600px] w-full">
             <Link
               href={`${home}#services`}
-              className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm transition-colors duration-300"
+              className="inline-flex items-center gap-2 text-white hover:text-white/70 text-sm transition-colors duration-300"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -52,13 +52,13 @@ export function ServiceDetail({
               {t.detail.back}
             </Link>
 
-            <p className="mt-10 text-xs font-medium text-slate-400">
+            <p className="mt-10 text-xs font-medium text-white">
               {t.services.eyebrow}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               {title}
             </h1>
-            <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">
+            <p className="mt-6 text-white text-lg md:text-2xl leading-relaxed max-w-[60ch]">
               {description}
             </p>
 
@@ -93,7 +93,7 @@ export function ServiceDetail({
 
             {/* Overview */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-900">
                 {t.detail.overview}
               </h2>
               <p className="md:col-span-8 text-slate-700 text-xl md:text-2xl leading-relaxed">
@@ -103,14 +103,14 @@ export function ServiceDetail({
 
             {/* Capabilities */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-900">
                 {t.detail.capabilities}
               </h2>
               <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
                 {content.capabilities.map((c) => (
                   <div key={c.title} className="rounded-2xl bg-slate-50 p-5">
                     <h3 className="text-slate-900 text-lg font-semibold">{c.title}</h3>
-                    <p className="mt-2 text-slate-500 text-base leading-relaxed">{c.desc}</p>
+                    <p className="mt-2 text-slate-900 text-base leading-relaxed">{c.desc}</p>
                   </div>
                 ))}
               </div>
@@ -118,18 +118,18 @@ export function ServiceDetail({
 
             {/* Process */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-900">
                 {t.detail.process}
               </h2>
               <ol className="md:col-span-8 flex flex-col gap-8">
                 {content.process.map((step, i) => (
                   <li key={step.title} className="flex gap-5">
-                    <span className="shrink-0 w-9 h-9 rounded-full border border-slate-900/30 text-slate-500 text-sm font-medium flex items-center justify-center">
+                    <span className="shrink-0 w-9 h-9 rounded-full border border-slate-900/30 text-slate-900 text-sm font-medium flex items-center justify-center">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div>
                       <h3 className="text-slate-900 text-xl font-semibold">{step.title}</h3>
-                      <p className="mt-2 text-slate-500 text-base md:text-lg leading-relaxed">
+                      <p className="mt-2 text-slate-900 text-base md:text-lg leading-relaxed">
                         {step.desc}
                       </p>
                     </div>
@@ -140,13 +140,13 @@ export function ServiceDetail({
 
             {/* Deliverables */}
             <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+              <h2 className="md:col-span-4 text-xs font-medium text-slate-900">
                 {t.detail.deliverables}
               </h2>
               <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
                 {content.deliverables.map((d) => (
                   <li key={d} className="flex items-start gap-3 text-slate-700 text-base md:text-lg">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-1 shrink-0 text-slate-500">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-1 shrink-0 text-slate-900">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     {d}
@@ -165,7 +165,7 @@ export function ServiceDetail({
             {next && (
               <section className="mt-20 md:mt-28">
                 <Link href={next.href} className="group inline-flex flex-col gap-2">
-                  <span className="text-xs font-medium text-slate-400">
+                  <span className="text-xs font-medium text-slate-900">
                     {t.detail.next}
                   </span>
                   <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-slate-500">

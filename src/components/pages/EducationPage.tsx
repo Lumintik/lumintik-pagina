@@ -18,7 +18,7 @@ export function EducationPage() {
           {copy.formats.map((f) => (
             <li key={f.title} className="rounded-3xl bg-slate-950 p-6 md:p-8 text-white">
               <h3 className="text-2xl font-semibold">{f.title}</h3>
-              <p className="mt-3 text-slate-300 text-base leading-relaxed">{f.desc}</p>
+              <p className="mt-3 text-slate-900 text-base leading-relaxed">{f.desc}</p>
             </li>
           ))}
         </ul>
@@ -26,7 +26,7 @@ export function EducationPage() {
         <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-6 rounded-3xl bg-slate-50 p-6 md:p-10">
           <div>
             <h2 className="text-slate-900 text-2xl md:text-3xl font-semibold">{copy.datesTitle}</h2>
-            <p className="mt-2 text-slate-500 text-base md:text-lg">{copy.dates}</p>
+            <p className="mt-2 text-slate-900 text-base md:text-lg">{copy.dates}</p>
           </div>
           <Link
             href={href(locale, paths.contact)}

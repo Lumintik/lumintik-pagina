@@ -106,7 +106,7 @@ export function Carousel({ items, initialScroll = 0, labels }: CarouselProps) {
           <button
             type="button"
             aria-label={labels.previous}
-            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 disabled:opacity-40"
+            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200 disabled:opacity-40"
             onClick={() => scrollBy(-320)}
             disabled={!canScrollLeft}
           >
@@ -115,7 +115,7 @@ export function Carousel({ items, initialScroll = 0, labels }: CarouselProps) {
           <button
             type="button"
             aria-label={labels.next}
-            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 disabled:opacity-40"
+            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200 disabled:opacity-40"
             onClick={() => scrollBy(320)}
             disabled={!canScrollRight}
           >
@@ -197,7 +197,7 @@ export function Card({ card, index, closeLabel, className, href }: { card: Carou
               >
                 <Cross />
               </button>
-              <p className="text-base font-medium text-slate-500">{card.category}</p>
+              <p className="text-base font-medium text-slate-900">{card.category}</p>
               <p className="mt-3 text-2xl font-semibold leading-tight text-slate-900 md:text-5xl">{card.title}</p>
               <div className="py-8 md:py-10">{card.content}</div>
             </motion.div>

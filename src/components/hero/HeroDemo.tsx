@@ -489,7 +489,7 @@ export function HeroDemo({
           <div className="p-2.5">
             <div className="h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300" />
             <p className="mt-2 text-[11px] font-semibold leading-tight">{frame.shop.product}</p>
-            <p className="text-[11px] text-slate-500">{frame.shop.price}</p>
+            <p className="text-[11px] text-white">{frame.shop.price}</p>
             <div
               className={cn(
                 "mt-2 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-[11px] font-medium text-white transition-colors duration-300",
@@ -575,7 +575,7 @@ export function HeroDemo({
               return (
                 <div key={label} className="flex items-center gap-2">
                   <div className="flex-1">
-                    <p className="text-[9px] text-slate-500">{label}</p>
+                    <p className="text-[9px] text-white">{label}</p>
                     <div className="mt-0.5 h-2 w-full rounded-sm bg-slate-100 overflow-hidden">
                       <div className="h-full rounded-sm bg-blue-400 transition-[width] duration-500 ease-out" style={{ width: done ? `${70 + ((i * 13) % 30)}%` : "0%" }} />
                     </div>
@@ -644,7 +644,7 @@ export function HeroDemo({
           <div className="mt-2 grid grid-cols-3 gap-1.5">
             {frame.analytics.kpis.map((k, i) => (
               <div key={k.label} className="rounded-md bg-white/5 px-2 py-1.5" style={{ animation: `hero-pop 300ms ${i * 120}ms cubic-bezier(.22,1,.36,1) backwards` }}>
-                <p className="text-[9px] text-white/60">{k.label}</p>
+                <p className="text-[9px] text-white">{k.label}</p>
                 <p className="text-sm font-semibold leading-tight">{k.value}</p>
               </div>
             ))}
@@ -670,9 +670,9 @@ export function HeroDemo({
           </div>
           <ol className="mt-2 flex flex-col gap-1">
             {frame.analytics.steps.slice(0, frame.analytics.shown).map((st, i) => (
-              <li key={st} className="flex items-center gap-1.5 text-[10px] text-white/80" style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}>
+              <li key={st} className="flex items-center gap-1.5 text-[10px] text-white" style={{ animation: "hero-pop 300ms cubic-bezier(.22,1,.36,1) backwards" }}>
                 <span className="size-1.5 rounded-full bg-blue-300" />
-                <span className="text-white/40 tabular-nums">{`0${i + 1}`}</span>
+                <span className="text-white tabular-nums">{`0${i + 1}`}</span>
                 {st}
               </li>
             ))}
@@ -721,7 +721,7 @@ export function HeroDemo({
           {(frame.stats ?? []).map((s, i) => (
             <div key={i}>
               <p className="text-3xl md:text-4xl font-semibold leading-none tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">{typeof s.big === "string" ? s.big : s.big[locale]}</p>
-              <p className="mt-1.5 text-sm text-white/75">{s.small[locale]}</p>
+              <p className="mt-1.5 text-sm text-white">{s.small[locale]}</p>
             </div>
           ))}
         </div>

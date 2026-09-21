@@ -41,7 +41,7 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
           <div className="mx-auto max-w-[1600px] w-full">
             <Link
               href={`${home}#work`}
-              className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm transition-colors duration-300"
+              className="inline-flex items-center gap-2 text-white hover:text-white/70 text-sm transition-colors duration-300"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <line x1="19" y1="12" x2="5" y2="12" />
@@ -50,13 +50,13 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
               {t.moreProjects.back}
             </Link>
 
-            <p className="mt-10 text-xs font-medium text-slate-400">
+            <p className="mt-10 text-xs font-medium text-white">
               {t.moreProjects.eyebrow}
             </p>
             <h1 className="mt-4 text-white text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05]">
               {project.name}
             </h1>
-            <p className="mt-6 text-white/70 text-lg md:text-2xl leading-relaxed max-w-[60ch]">
+            <p className="mt-6 text-white text-lg md:text-2xl leading-relaxed max-w-[60ch]">
               {project.desc[locale]}
             </p>
 
@@ -107,7 +107,7 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
 
             {rest.length ? (
               <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-                <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+                <h2 className="md:col-span-4 text-xs font-medium text-slate-900">
                   {t.moreProjects.gallery}
                 </h2>
                 <ul className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
@@ -122,7 +122,7 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
 
             <section className="mt-20 md:mt-28">
               <Link href={href(locale, paths.project(next.key))} className="group inline-flex flex-col gap-2">
-                <span className="text-xs font-medium text-slate-400">
+                <span className="text-xs font-medium text-slate-900">
                   {t.moreProjects.next}
                 </span>
                 <span className="inline-flex items-center gap-3 text-slate-900 text-3xl md:text-5xl font-semibold transition-colors duration-300 group-hover:text-slate-500">

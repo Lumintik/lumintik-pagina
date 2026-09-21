@@ -66,7 +66,7 @@ export function ContactSection() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-3">
             {t.contactForm.title}
           </h2>
-          <p className="text-sm md:text-base text-slate-300 font-light">
+          <p className="text-sm md:text-base text-white font-light">
             {t.contactForm.subtitle}
           </p>
         </div>
@@ -84,7 +84,7 @@ export function ContactSection() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 w-full">
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="text-xs font-semibold uppercase text-slate-300">
+              <label htmlFor="name" className="text-xs font-semibold uppercase text-white">
                 {t.contactForm.name}
               </label>
               <input
@@ -97,7 +97,7 @@ export function ContactSection() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="service" className="text-xs font-semibold uppercase text-slate-300">
+              <label htmlFor="service" className="text-xs font-semibold uppercase text-white">
                 {t.contactForm.service}
               </label>
               <select
@@ -108,7 +108,7 @@ export function ContactSection() {
                 defaultValue=""
                 required
               >
-                <option value="" disabled className="bg-[#171717] text-slate-400">
+                <option value="" disabled className="bg-[#171717] text-white">
                   {t.contactForm.serviceSelect}
                 </option>
                 {servicesMap.map((svc) => (
@@ -120,7 +120,7 @@ export function ContactSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="text-xs font-semibold uppercase text-slate-300">
+              <label htmlFor="email" className="text-xs font-semibold uppercase text-white">
                 {t.contactForm.email}
               </label>
               <input
@@ -133,14 +133,14 @@ export function ContactSection() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="phone" className="text-xs font-semibold uppercase text-slate-300">
+              <label htmlFor="phone" className="text-xs font-semibold uppercase text-white">
                 {t.contactForm.phone}
               </label>
               <div className="flex items-center">
                 <select
                   id="countryCode"
                   name="countryCode"
-                  className="border-b border-slate-700 h-[49px] bg-transparent text-slate-300 pr-2 mr-2 focus:outline-none focus:border-white transition-colors cursor-pointer text-sm"
+                  className="border-b border-slate-700 h-[49px] bg-transparent text-white pr-2 mr-2 focus:outline-none focus:border-white transition-colors cursor-pointer text-sm"
                   defaultValue="+57"
                   aria-label="Country code"
                 >
@@ -161,7 +161,7 @@ export function ContactSection() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="company" className="text-xs font-semibold uppercase text-slate-300">
+              <label htmlFor="company" className="text-xs font-semibold uppercase text-white">
                 {t.contactForm.company}
               </label>
               <input
@@ -172,7 +172,7 @@ export function ContactSection() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="role" className="text-xs font-semibold uppercase text-slate-300">
+              <label htmlFor="role" className="text-xs font-semibold uppercase text-white">
                 {t.contactForm.role}
               </label>
               <input
@@ -185,7 +185,7 @@ export function ContactSection() {
           </div>
 
           <div className="flex flex-col gap-2 w-full mt-2">
-            <label htmlFor="message" className="text-xs font-semibold uppercase text-slate-300">
+            <label htmlFor="message" className="text-xs font-semibold uppercase text-white">
               {t.contactForm.message}
             </label>
             <textarea
@@ -197,7 +197,7 @@ export function ContactSection() {
           </div>
 
           <div className="flex flex-col gap-2 w-full mt-2">
-            <label htmlFor="file" className="text-xs font-semibold uppercase text-slate-300">
+            <label htmlFor="file" className="text-xs font-semibold uppercase text-white">
               {t.contactForm.attachment}
             </label>
             <input
@@ -205,7 +205,7 @@ export function ContactSection() {
               name="file"
               type="file"
               accept=".pdf,image/*,.doc,.docx"
-              className="w-full px-1 py-2 text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition-colors cursor-pointer"
+              className="w-full px-1 py-2 text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition-colors cursor-pointer"
             />
           </div>
 
@@ -215,10 +215,10 @@ export function ContactSection() {
               id="terms"
               name="terms"
               aria-invalid={invalid("terms")}
-              className="mt-1 min-w-[20px] min-h-[20px] rounded border-slate-600 bg-transparent text-slate-500 cursor-pointer"
+              className="mt-1 min-w-[20px] min-h-[20px] rounded border-slate-600 bg-transparent text-white cursor-pointer"
               required
             />
-            <label htmlFor="terms" className="text-sm text-slate-300 leading-tight cursor-pointer">
+            <label htmlFor="terms" className="text-sm text-white leading-tight cursor-pointer">
               {t.contactForm.terms}
             </label>
           </div>
@@ -232,7 +232,7 @@ export function ContactSection() {
                 ? "text-emerald-400"
                 : state.status === "error"
                   ? "text-red-400"
-                  : "text-slate-400"
+                  : "text-white"
             }`}
           >
             {statusMessage}
@@ -241,7 +241,7 @@ export function ContactSection() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full md:w-auto md:self-center px-16 py-3.5 mt-2 bg-white hover:bg-slate-200 disabled:opacity-60 disabled:cursor-not-allowed text-slate-900 text-sm font-semibold rounded-full shadow-lg shadow-black/40 hover:-translate-y-0.5 transition-all duration-300"
+            className="w-full md:w-auto md:self-center px-16 py-3.5 mt-2 bg-white hover:bg-slate-200 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-full shadow-lg shadow-black/40 hover:-translate-y-0.5 transition-all duration-300"
           >
             {pending ? t.contactForm.sending : t.contactForm.submit}
           </button>

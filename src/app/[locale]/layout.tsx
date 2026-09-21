@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Manrope } from "next/font/google";
 import "../globals.css";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
+import { WebVitals } from "@/components/providers/WebVitals";
 import { PostHogProvider } from "@/components/providers/PostHogProvider";
 import { Splash } from "@/components/effects/Splash";
 import { messages } from "@/i18n/messages";
@@ -159,15 +160,6 @@ export default async function LocaleLayout({
   return (
     <html lang={LOCALE_TAGS[locale]} className={manrope.variable}>
       <head>
-        <link rel="preconnect" href="https://prod.spline.design" crossOrigin="" />
-        <link rel="dns-prefetch" href="https://prod.spline.design" />
-        <link rel="preconnect" href="https://unpkg.com" crossOrigin="" />
-        <link
-          rel="preload"
-          as="fetch"
-          href="https://prod.spline.design/Hic65A1wo9S7zyNu/scene.splinecode?v=7"
-          crossOrigin="anonymous"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -185,6 +177,7 @@ export default async function LocaleLayout({
       <body className="bg-white text-slate-900 antialiased font-sans">
         <LocaleProvider locale={locale}>
           <PostHogProvider locale={locale} />
+          <WebVitals />
           <Splash />
           {children}
         </LocaleProvider>
