@@ -4,13 +4,29 @@ import { cn } from "@/lib/cn";
 /*
  * Device frames drawn in CSS: a phone, a laptop and a macOS window. They wrap
  * real screenshots on the case pages, the product tours and the blog covers.
- * No images: gradients and shadows only, so they stay sharp at any size.
+ *
+ * Every radius and thickness is in `cqw` (percent of the frame's own width),
+ * so the corners stay circular and the bezel stays even at any size. A plain
+ * percentage radius draws an ellipse, which is what made the first phone look
+ * like a drawing of a phone instead of a phone.
  */
 
+// Proportions of an iPhone 16 Pro, as percentages of the device width:
+// band 1, bezel 2.5, screen corner radius 13.7% of the screen's own width,
+// island 31% of the screen wide and 29% of its own width tall.
+const BAND = 1;
+const BEZEL = 2.5;
+const SCREEN_W = 100 - 2 * (BAND + BEZEL);
+const SCREEN_R = SCREEN_W * 0.137;
+const BEZEL_R = SCREEN_R + BEZEL;
+const BAND_R = BEZEL_R + BAND;
+const ISLAND_W = SCREEN_W * 0.31;
+const ISLAND_H = ISLAND_W * 0.29;
+
 /**
- * An iPhone with a titanium band, black bezel and the island at the top.
- * Give it a width or a height: the other side follows from the screen's
- * aspect ratio, and the screen keeps exactly that ratio, so the capture
+ * An iPhone: titanium band, black bezel, the island and the side buttons.
+ * Give it a width or a height; the other side follows from the screen's
+ * aspect ratio, and the screen keeps that ratio exactly, so the capture
  * inside is never cropped.
  */
 export function IphoneFrame({
@@ -24,35 +40,60 @@ export function IphoneFrame({
   aspect?: string;
 }) {
   const [w, h] = aspect.split("/").map((n) => Number(n.trim()));
-  // Band and bezel add 3% of the width on every side, so the outer box is a
-  // little wider and taller than the screen; this keeps the screen exact.
-  const outer = `${w * 1.06} / ${h + 0.06 * w}`;
+  // The device is 100 wide; the screen is SCREEN_W wide and as tall as its own
+  // ratio demands, plus band and bezel above and below.
+  const outer = `100 / ${(SCREEN_W * h) / w + 2 * (BAND + BEZEL)}`;
+  const button =
+    "absolute w-[0.9cqw] rounded-[0.3cqw] bg-[linear-gradient(180deg,#d7d7dc,#8e8e96_35%,#6c6c74_65%,#c2c2c9)]";
+
   return (
-    <div className={cn("relative", className)} style={{ aspectRatio: outer }}>
-      {/* Side buttons sit on the band, so they go behind it */}
-      <span aria-hidden className="absolute -left-[3px] top-[19%] h-[5%] w-[3px] rounded-l-[2px] bg-gradient-to-b from-[#c9c9cf] via-[#7d7d84] to-[#b8b8be]" />
-      <span aria-hidden className="absolute -left-[3px] top-[27%] h-[8%] w-[3px] rounded-l-[2px] bg-gradient-to-b from-[#c9c9cf] via-[#7d7d84] to-[#b8b8be]" />
-      <span aria-hidden className="absolute -left-[3px] top-[37%] h-[8%] w-[3px] rounded-l-[2px] bg-gradient-to-b from-[#c9c9cf] via-[#7d7d84] to-[#b8b8be]" />
-      <span aria-hidden className="absolute -right-[3px] top-[30%] h-[12%] w-[3px] rounded-r-[2px] bg-gradient-to-b from-[#c9c9cf] via-[#7d7d84] to-[#b8b8be]" />
+    <div className={cn("relative [container-type:inline-size]", className)} style={{ aspectRatio: outer }}>
+      {/* Side buttons, mostly behind the band so only their edge shows */}
+      <span aria-hidden className={cn(button, "-left-[0.5cqw] top-[16%] h-[4.4%]")} />
+      <span aria-hidden className={cn(button, "-left-[0.5cqw] top-[24%] h-[7.6%]")} />
+      <span aria-hidden className={cn(button, "-left-[0.5cqw] top-[33.5%] h-[7.6%]")} />
+      <span aria-hidden className={cn(button, "-right-[0.5cqw] top-[27%] h-[11%]")} />
 
       {/* Titanium band */}
       <div
-        className="absolute inset-0 rounded-[15.5%/7.2%] p-[0.9%] shadow-[0_60px_120px_-40px_rgba(15,23,42,0.55),0_20px_40px_-20px_rgba(15,23,42,0.35)]"
-        style={{ background: "linear-gradient(155deg, #f1f1f4 0%, #b9b9c0 22%, #6f6f76 48%, #a7a7ad 72%, #e6e6ea 100%)" }}
+        className="absolute inset-0 shadow-[0_50px_110px_-45px_rgba(15,23,42,0.55),0_14px_30px_-18px_rgba(15,23,42,0.35)]"
+        style={{
+          borderRadius: `${BAND_R}cqw`,
+          padding: `${BAND}cqw`,
+          background:
+            "linear-gradient(152deg, #fafafc 0%, #c3c3ca 14%, #83838c 33%, #5f5f68 50%, #9a9aa3 68%, #dcdce1 86%, #f4f4f7 100%)",
+        }}
       >
-        {/* Black bezel */}
-        <div className="relative h-full w-full rounded-[15%/7%] bg-[#050506] p-[2.1%] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+        {/* Black bezel around the screen */}
+        <div
+          className="relative h-full w-full bg-[#050506]"
+          style={{ borderRadius: `${BEZEL_R}cqw`, padding: `${BEZEL}cqw` }}
+        >
           {/* Screen: exactly the capture's aspect ratio */}
-          <div className="relative h-full w-full overflow-hidden rounded-[12.5%/5.8%] bg-black">
+          <div className="relative h-full w-full overflow-hidden bg-black" style={{ borderRadius: `${SCREEN_R}cqw` }}>
             {children}
             {/* Dynamic Island */}
-            <span aria-hidden className="pointer-events-none absolute left-1/2 top-[1.6%] h-[3.2%] w-[31%] -translate-x-1/2 rounded-full bg-[#050506] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]" />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 -translate-x-1/2 bg-black"
+              style={{
+                top: `${BEZEL * 0.95}cqw`,
+                width: `${ISLAND_W}cqw`,
+                height: `${ISLAND_H}cqw`,
+                borderRadius: `${ISLAND_H / 2}cqw`,
+              }}
+            />
           </div>
-          {/* Glass reflection */}
+          {/* The line where the bezel meets the band, and the sheen on the glass */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-[15%/7%]"
-            style={{ background: "linear-gradient(115deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 28%, rgba(255,255,255,0) 45%)" }}
+            className="pointer-events-none absolute inset-0"
+            style={{
+              borderRadius: `${BEZEL_R}cqw`,
+              boxShadow: "inset 0 0 0 0.12cqw rgba(255,255,255,0.10)",
+              background:
+                "linear-gradient(118deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.05) 22%, rgba(255,255,255,0) 40%)",
+            }}
           />
         </div>
       </div>
@@ -60,7 +101,7 @@ export function IphoneFrame({
   );
 }
 
-/** A MacBook Pro in space black: aluminum lid around a black bezel, the notch, and the base with its lip. */
+/** A MacBook Pro in space black: aluminum lid, black bezel, notch and base. */
 export function MacbookFrame({
   children,
   className,
@@ -71,34 +112,34 @@ export function MacbookFrame({
   aspect?: string;
 }) {
   return (
-    <div className={cn("relative w-full", className)}>
+    <div className={cn("relative w-full [container-type:inline-size]", className)}>
       {/* Lid: space black aluminum around the glass */}
       <div
-        className="relative mx-[6%] rounded-t-[1.4vw] rounded-b-[0.5vw] p-[0.45%] shadow-[0_50px_100px_-40px_rgba(15,23,42,0.65)]"
+        className="relative mx-[6cqw] rounded-t-[1.1cqw] rounded-b-[0.4cqw] p-[0.35cqw] shadow-[0_50px_100px_-40px_rgba(15,23,42,0.65)]"
         style={{ background: "linear-gradient(160deg, #4a4a4f 0%, #2b2b2f 30%, #1d1d21 60%, #3a3a3f 100%)" }}
       >
-        <div className="relative rounded-t-[1.2vw] rounded-b-[0.4vw] bg-[#050506] p-[0.9%] pt-[1.1%]">
-          <div className="relative w-full overflow-hidden rounded-[0.45vw] bg-black" style={{ aspectRatio: aspect }}>
+        <div className="relative rounded-t-[0.95cqw] rounded-b-[0.3cqw] bg-[#050506] p-[0.8cqw] pt-[1cqw]">
+          <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: aspect }}>
             {children}
           </div>
           {/* Notch with the camera */}
-          <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 flex h-[2.6%] w-[11%] -translate-x-1/2 items-center justify-center rounded-b-[0.45vw] bg-[#050506]">
-            <span className="block size-[5px] rounded-full bg-[#17171c] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
+          <span aria-hidden className="pointer-events-none absolute left-1/2 top-0 flex h-[0.95cqw] w-[10cqw] -translate-x-1/2 items-center justify-center rounded-b-[0.35cqw] bg-[#050506]">
+            <span className="block size-[0.3cqw] rounded-full bg-[#17171c] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
           </span>
           {/* Reflection on the glass */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-t-[1.2vw] rounded-b-[0.4vw]"
+            className="pointer-events-none absolute inset-0 rounded-t-[0.95cqw] rounded-b-[0.3cqw]"
             style={{ background: "linear-gradient(110deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 30%, rgba(255,255,255,0) 50%)" }}
           />
         </div>
       </div>
       {/* Base: the wider body the lid sits on */}
       <div
-        className="relative h-[1.5vw] min-h-[11px] w-full rounded-b-[1.1vw] shadow-[0_30px_60px_-30px_rgba(15,23,42,0.6)]"
+        className="relative h-[1.5cqw] min-h-[10px] w-full rounded-b-[1.1cqw] shadow-[0_30px_60px_-30px_rgba(15,23,42,0.6)]"
         style={{ background: "linear-gradient(180deg, #56565b 0%, #34343a 40%, #202024 100%)" }}
       >
-        <span aria-hidden className="absolute left-1/2 top-0 h-[42%] w-[13%] -translate-x-1/2 rounded-b-[0.5vw] bg-gradient-to-b from-[#232327] to-[#3d3d42]" />
+        <span aria-hidden className="absolute left-1/2 top-0 h-[42%] w-[13%] -translate-x-1/2 rounded-b-[0.5cqw] bg-gradient-to-b from-[#232327] to-[#3d3d42]" />
         <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-white/25" />
       </div>
     </div>
