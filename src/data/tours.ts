@@ -899,6 +899,20 @@ export const TOURS: Record<string, Tour[]> = {
           click: [10, 14],
         },
         {
+          id: "jugadores",
+          image: "/projects/futtem/tour/jugadores.jpg",
+          label: {
+            ES: "Dos equipos, una lista de espera",
+            EN: "Two teams, one waiting list",
+          },
+          caption: {
+            ES: "Los convocados se reparten en Equipo A y Equipo B, con los cupos que faltan, los que están por confirmar y la lista de espera.",
+            EN: "The players called up are split into Team A and Team B, with the spots still open, the ones yet to confirm and the waiting list.",
+          },
+          focus: { at: [50, 30], zoom: 1.08 },
+          click: [10, 14],
+        },
+        {
           id: "partidas",
           image: "/projects/futtem/tour/partidas.jpg",
           label: {
@@ -948,6 +962,20 @@ export const TOURS: Record<string, Tour[]> = {
             zoom: 1.08,
           },
           click: [31.6, 9.2],
+        },
+        {
+          id: "ajustes",
+          image: "/projects/futtem/tour/ajustes.jpg",
+          label: {
+            ES: "El club se administra desde el teléfono",
+            EN: "The club is run from the phone",
+          },
+          caption: {
+            ES: "Nombre, escudo, descripción, reglas y jugadores del club, en tres pestañas.",
+            EN: "Name, crest, description, rules and players of the club, in three tabs.",
+          },
+          focus: { at: [50, 45], zoom: 1.05 },
+          click: [10, 17],
         },
         {
           id: "crear-partida",
