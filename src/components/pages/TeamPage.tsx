@@ -12,7 +12,7 @@ type Person = {
   links?: { label: string; href: string }[];
 };
 
-/** Names, roles and public profiles as the team supplied them. Bios are still to come. */
+/** Names, roles and public profiles as the team supplied them; the bios live in messages. */
 const PEOPLE: Person[] = [
   { name: "David Espejo", role: "ceo", initials: "DE" },
   {
@@ -46,6 +46,7 @@ export function TeamPage() {
               </div>
               <h2 className="mt-5 text-slate-900 text-2xl font-semibold">{p.name}</h2>
               <p className="mt-1 text-slate-500 text-lg">{t.pages.team.roles[p.role]}</p>
+              <p className="mt-4 text-slate-600 text-base leading-relaxed max-w-[42ch]">{t.pages.team.bios[p.role]}</p>
               {p.links?.length ? (
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {p.links.map((link) => (

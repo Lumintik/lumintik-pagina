@@ -53,7 +53,7 @@ export type Messages = {
   pages: {
     services: { title: string; titleAccent: string; intro: string };
     projects: { title: string; titleAccent: string; intro: string };
-    team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string> };
+    team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string>; bios: Record<"ceo" | "coo", string> };
     blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string };
     contact: { title: string; titleAccent: string; intro: string };
     industries: { title: string; titleAccent: string; intro: string };
@@ -313,6 +313,10 @@ const en: Messages = {
       titleAccent: "behind it.",
       intro: "A small team that designs and builds in the same room.",
       roles: { ceo: "Chief Executive Officer", coo: "Chief Operating Officer" },
+      bios: {
+        ceo: "Founder of Lumintik. He sets the strategy and the technical direction of every project and still writes code every week: infrastructure, applied AI and product. In 2024 the team won the Orion camp and travelled to Cape Canaveral to program a module of a space station component.",
+        coo: "He runs the operation: delivery, finances and the team. Every change that reaches production in the studio's products goes through his review first.",
+      },
     },
     blog: {
       title: "What we learn",
@@ -356,7 +360,7 @@ const en: Messages = {
         "We confirm receipt, look into it and reply with what was done.",
       ],
       cta: "Send a report",
-      channel: "[pending: dedicated ethics line email]",
+      channel: "etica@lumintik.com",
     },
     news: {
       title: "What is",
@@ -376,7 +380,7 @@ const en: Messages = {
         { title: "Technical mentoring", desc: "Recurring sessions with a tech lead or founding team: architecture reviews, roadmap and hiring decisions." },
       ],
       datesTitle: "Upcoming dates",
-      dates: "[pending: first published dates]",
+      dates: "The first open sessions will be announced here and on LinkedIn. Until then, workshops and mentoring are scheduled on request: write to us with the topic and the dates that work for your team.",
       cta: "Request a session",
     },
     governance: {
@@ -783,6 +787,10 @@ const es: Messages = {
       titleAccent: "detrás.",
       intro: "Un equipo pequeño que diseña y construye en la misma sala.",
       roles: { ceo: "Director ejecutivo", coo: "Director de operaciones" },
+      bios: {
+        ceo: "Fundador de Lumintik. Define la estrategia y la dirección técnica de cada proyecto y sigue escribiendo código cada semana: infraestructura, IA aplicada y producto. En 2024 el equipo ganó el campamento Orion y viajó a Cabo Cañaveral a programar un módulo de un componente de la estación espacial.",
+        coo: "Lleva la operación: entrega, finanzas y el equipo. Cada cambio que llega a producción en los productos del estudio pasa primero por su revisión.",
+      },
     },
     blog: {
       title: "Lo que aprendemos",
@@ -826,7 +834,7 @@ const es: Messages = {
         "Confirmamos el recibo, investigamos y te respondemos con lo que se hizo.",
       ],
       cta: "Enviar un reporte",
-      channel: "[dato pendiente: correo de la línea ética]",
+      channel: "etica@lumintik.com",
     },
     news: {
       title: "Lo que hay",
@@ -846,7 +854,7 @@ const es: Messages = {
         { title: "Mentoría técnica", desc: "Sesiones recurrentes con un líder técnico o un equipo fundador: revisiones de arquitectura, hoja de ruta y decisiones de contratación." },
       ],
       datesTitle: "Próximas fechas",
-      dates: "[dato pendiente: primeras fechas publicadas]",
+      dates: "Las primeras sesiones abiertas se anuncian aquí y en LinkedIn. Mientras tanto, los talleres y la mentoría se programan a pedido: escríbenos con el tema y las fechas que le sirvan a tu equipo.",
       cta: "Solicitar una sesión",
     },
     governance: {
