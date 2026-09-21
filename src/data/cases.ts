@@ -47,6 +47,19 @@ export type CaseFieldwork = {
   images: CaseImage[];
 };
 
+/**
+ * How the thing actually works, step by step. Written from the code, never
+ * from memory: it is what makes a case read as engineering and not as a
+ * brochure.
+ */
+export type CaseHowItWorks = {
+  title: Record<Locale, string>;
+  intro: Record<Locale, string>;
+  steps: { title: Record<Locale, string>; body: Record<Locale, string> }[];
+  /** One line under the steps, for what the reader should take away. */
+  note?: Record<Locale, string>;
+};
+
 export type CaseMetric = {
   value: string;
   label: Record<Locale, string>;
@@ -87,6 +100,7 @@ export type CaseStudy = {
   metrics?: CaseMetric[];
   metricsSource?: CaseMetricsSource;
   fieldwork?: CaseFieldwork;
+  howItWorks?: CaseHowItWorks;
   /** First image is the cover. An empty list shows a pending placeholder. */
   images: CaseImage[];
   /** Thumbnail for the work grid when the case has no photos of its own. */
@@ -109,7 +123,89 @@ export const CASES: CaseStudy[] = [
     ],
     metricsSource: { ES: "Leído en la tienda y el panel de administración en producción, septiembre de 2026.", EN: "Read from the live store and admin panel, September 2026." },
     tools: ["gcp", "aws", "nextjs", "nestjs", "posthog", "distanceMatrix", "redis", "postgresql"],
+    howItWorks: {
+      title: {
+        ES: "Cómo se decide desde qué tienda sale tu pedido",
+        EN: "How the store your order ships from is decided",
+      },
+      intro: {
+        ES: "Entre el clic en comprar y el correo con la guía pasan unos segundos. Esto es lo que ocurre en ellos.",
+        EN: "A few seconds pass between the buy click and the email with the tracking number. This is what happens in them.",
+      },
+      steps: [
+        {
+          title: { ES: "Se expande cada referencia", EN: "Each reference is expanded" },
+          body: {
+            ES: "Un mismo teléfono vive en el ERP con varios códigos según el lote. El pedido se traduce primero a todos los códigos equivalentes, para que una tienda no quede descartada por tener el mismo producto con otro número.",
+            EN: "The same phone lives in the ERP under several codes depending on the batch. The order is first translated into every equivalent code, so a store is never ruled out for holding the same product under a different number.",
+          },
+        },
+        {
+          title: { ES: "Se pregunta el inventario en vivo", EN: "Live inventory is asked for" },
+          body: {
+            ES: "Una sola consulta al inventario de las 37 tiendas, sin caché. Solo siguen las tiendas que cubren el pedido completo, línea por línea y en la cantidad pedida.",
+            EN: "A single query against the inventory of all 37 stores, no cache. Only the stores that cover the whole order, line by line and in the quantity ordered, go on.",
+          },
+        },
+        {
+          title: { ES: "Se mide la distancia real, no la del mapa", EN: "The real distance is measured, not the one on the map" },
+          body: {
+            ES: "De las tiendas que quedan se mide la distancia de conducción hasta la dirección del cliente, no la línea recta. Cada par tienda-dirección se guarda: una distancia física no cambia, así que la segunda vez la respuesta ya está.",
+            EN: "For the stores that are left, the driving distance to the customer's address is measured, not the straight line. Every store-address pair is kept: a physical distance does not change, so the second time the answer is already there.",
+          },
+        },
+        {
+          title: { ES: "Gana la más cercana", EN: "The nearest one wins" },
+          body: {
+            ES: "El pedido se asigna a la tienda con menos kilómetros por recorrer. Algunas categorías salen siempre del centro de distribución, y esa regla se aplica antes de medir nada.",
+            EN: "The order goes to the store with the fewest kilometres to cover. Some categories always ship from the distribution centre, and that rule is applied before anything is measured.",
+          },
+        },
+        {
+          title: { ES: "Si nadie lo tiene todo, se reparte", EN: "If nobody has it all, it is split" },
+          body: {
+            ES: "Cuando ninguna tienda cubre el carrito completo, el pedido se reparte entre la menor cantidad de tiendas posible, empezando por el producto más escaso. El cliente recibe varias guías en lugar de un pedido cancelado.",
+            EN: "When no store covers the whole cart, the order is split across as few stores as possible, starting with the scarcest product. The customer gets several tracking numbers instead of a cancelled order.",
+          },
+        },
+        {
+          title: { ES: "Se vuelve a mirar antes de despachar", EN: "It is checked again before dispatch" },
+          body: {
+            ES: "Justo antes de generar la guía se vuelve a leer el inventario de la tienda elegida. Si la unidad ya se vendió en el mostrador, el pedido se detiene en vez de salir con un dato viejo.",
+            EN: "Right before the label is created the chosen store's inventory is read again. If the unit has already been sold over the counter, the order stops instead of shipping on stale data.",
+          },
+        },
+        {
+          title: { ES: "Guía, rótulo y recogida", EN: "Label, sticker and pickup" },
+          body: {
+            ES: "Con la tienda ya definida se genera la guía y el rótulo con la transportadora y se agenda la recogida en esa tienda, todo en la misma operación que confirma el pago.",
+            EN: "With the store settled, the carrier's tracking number and label are generated and the pickup at that store is scheduled, all in the same operation that confirms the payment.",
+          },
+        },
+      ],
+      note: {
+        ES: "El mismo cálculo decide si el cliente puede recoger en tienda: se le ofrece cuando hay una tienda con todo en su ciudad o a menos de quince kilómetros.",
+        EN: "The same calculation decides whether the customer can pick up in store: it is offered when there is a store with everything in their city or within fifteen kilometres.",
+      },
+    },
     images: [
+      {
+        src: "/projects/imagiq/tour/operacion/panel.jpg",
+        video: "/projects/video/imagiq-desktop.mp4",
+        width: 1512,
+        height: 806,
+        alt: {
+          ES: "El panel de Imagiq: ventas, órdenes, zonas de cobertura, campañas por canal y transmisiones en vivo",
+          EN: "Imagiq's panel: sales, orders, coverage zones, campaigns by channel and live streams",
+        },
+      },
+      {
+        src: "/projects/mobile/imagiq.webp",
+        video: "/projects/video/imagiq-mobile.mp4",
+        width: 604,
+        height: 1308,
+        alt: { ES: "La tienda de Imagiq en un iPhone", EN: "The Imagiq store on an iPhone" },
+      },
       {
         src: "/projects/samsung/home-desktop.webp",
         width: 2000,
@@ -136,12 +232,6 @@ export const CASES: CaseStudy[] = [
           ES: "Página de producto de la tienda Samsung de Imagiq",
           EN: "Product page of Imagiq's Samsung store",
         },
-      },
-      {
-        src: "/projects/mobile/imagiq.webp",
-        width: 603,
-        height: 1311,
-        alt: { ES: "La tienda de Imagiq en un iPhone", EN: "The Imagiq store on an iPhone" },
       },
     ],
     copy: {
@@ -202,9 +292,20 @@ export const CASES: CaseStudy[] = [
     },
     images: [
       {
+        src: "/projects/ezmig/panel.webp",
+        video: "/projects/video/ezmig-desktop.mp4",
+        width: 1512,
+        height: 806,
+        alt: {
+          ES: "El formulario N-400 guiado de EZMig, pregunta por pregunta, con los datos del cliente ya puestos",
+          EN: "EZMig's guided N-400 form, question by question, with the client's data already filled in",
+        },
+      },
+      {
         src: "/projects/mobile/ezmig.webp",
-        width: 603,
-        height: 1311,
+        video: "/projects/video/ezmig-mobile.mp4",
+        width: 604,
+        height: 1308,
         alt: { ES: "EZMig en un iPhone", EN: "EZMig on an iPhone" },
       },
       {
@@ -309,9 +410,20 @@ export const CASES: CaseStudy[] = [
     tools: ["aws", "nestjs", "flutter", "postgresql", "socketio", "firebase", "opentelemetry", "posthog"],
     images: [
       {
+        src: "/projects/futtem/admin.webp",
+        video: "/projects/video/futtem-admin.mp4",
+        width: 1512,
+        height: 806,
+        alt: {
+          ES: "El panel de administración de FUTTEM: partidos, clubes, cohortes y uso de la aplicación",
+          EN: "FUTTEM's admin panel: matches, clubs, cohorts and app usage",
+        },
+      },
+      {
         src: "/projects/futtem/tour/inicio.jpg",
-        width: 603,
-        height: 1311,
+        video: "/projects/video/futtem-app.mp4",
+        width: 604,
+        height: 1312,
         alt: {
           ES: "App de FUTTEM en Android y iPhone, en el ambiente de pruebas",
           EN: "FUTTEM app on Android and iPhone, in the staging environment",
@@ -388,6 +500,16 @@ export const CASES: CaseStudy[] = [
     tools: ["nextjs", "aws", "vanta"],
     images: [
       {
+        src: "/projects/ezdocu/panel.webp",
+        video: "/projects/video/ezdocu-desktop.mp4",
+        width: 1512,
+        height: 806,
+        alt: {
+          ES: "El panel de EZDocuAI: las órdenes, el recorrido de un documento y los certificados de exactitud",
+          EN: "EZDocuAI's panel: the orders, one document's journey and the certificates of accuracy",
+        },
+      },
+      {
         src: "/projects/ezdocu/home-desktop.webp",
         width: 2000,
         height: 1250,
@@ -407,8 +529,9 @@ export const CASES: CaseStudy[] = [
       },
       {
         src: "/projects/mobile/ezdocu.webp",
-        width: 603,
-        height: 1311,
+        video: "/projects/video/ezdocu-mobile.mp4",
+        width: 604,
+        height: 1308,
         alt: { ES: "EZDocuAI en un iPhone", EN: "EZDocuAI on an iPhone" },
       },
     ],
@@ -627,6 +750,12 @@ export const MORE_PROJECTS: MoreProject[] = [
         height: 1800,
         alt: { ES: "Página de inicio de Attosound", EN: "Attosound home page" },
       },
+      {
+        src: "/projects/atto/mobile.webp",
+        width: 604,
+        height: 1308,
+        alt: { ES: "Attosound en un iPhone", EN: "Attosound on an iPhone" },
+      },
     ],
   },
   {
@@ -714,6 +843,12 @@ export const MORE_PROJECTS: MoreProject[] = [
         height: 1250,
         alt: { ES: "Página de inicio de LensPR", EN: "LensPR home page" },
       },
+      {
+        src: "/projects/lenspr/mobile.webp",
+        width: 604,
+        height: 1308,
+        alt: { ES: "El sitio de LensPR en un iPhone", EN: "The LensPR site on an iPhone" },
+      },
     ],
   },
   {
@@ -740,6 +875,12 @@ export const MORE_PROJECTS: MoreProject[] = [
         height: 1210,
         alt: { ES: "Fridoom en un iPad", EN: "Fridoom on an iPad" },
       },
+      {
+        src: "/projects/fridoom/mobile.webp",
+        width: 604,
+        height: 1308,
+        alt: { ES: "Fridoom en un iPhone", EN: "Fridoom on an iPhone" },
+      },
     ],
   },
   {
@@ -758,6 +899,12 @@ export const MORE_PROJECTS: MoreProject[] = [
         width: 2000,
         height: 1250,
         alt: { ES: "Tienda en línea de Accesify", EN: "Accesify online store" },
+      },
+      {
+        src: "/projects/accesify/mobile.webp",
+        width: 604,
+        height: 1308,
+        alt: { ES: "La tienda de Accesify en un iPhone", EN: "The Accesify store on an iPhone" },
       },
     ],
   },

@@ -15,6 +15,8 @@ import {
   CaseCover,
   CaseFrame,
   coverPair,
+  isLaptop,
+  laptopK,
   CaseLinks,
   ToolList,
   useCaseTitle,
@@ -39,8 +41,13 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
   const nextTitle = t.cases.caseTitle.replace("{client}", next.copy[locale].client);
   // The cover already shows the desktop and the phone screens; the gallery
   // picks up from there.
-  const { desktop, mobile } = coverPair(study);
-  const gallery = study.images.filter((i) => i !== desktop && i !== mobile);
+  const { desktop, mobile, watch } = coverPair(study);
+  const gallery = study.images.filter((i) => i !== desktop && i !== mobile && i !== watch);
+  // Every laptop in the gallery ends up the same height: the widest capture
+  // takes the whole cell and the rest give back the difference, so a row of
+  // MacBooks never looks like two different machines.
+  const laptops = gallery.filter(isLaptop);
+  const flattest = laptops.length ? Math.min(...laptops.map(laptopK)) : 0;
 
   return (
     <div className="relative flex flex-col items-center bg-white min-h-screen">
@@ -49,7 +56,7 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
       <main className="relative w-full flex flex-col items-center">
         {/* Dark opening, echoing the home page's hero gradient. */}
         <header
-          className="relative w-full flex justify-center px-5 pt-24 pb-10 md:px-12 md:pt-28 md:pb-14"
+          className="relative w-full flex justify-center px-5 pt-24 pb-20 md:px-12 md:pt-28 md:pb-28"
           style={{
             background:
               "linear-gradient(180deg, #000000 0%, #0a0a0a 100%)",
@@ -140,6 +147,39 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               </section>
             ) : null}
 
+            {study.howItWorks ? (
+              <section className="mt-16 md:mt-24">
+                <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold max-w-[24ch]">
+                  {study.howItWorks.title[locale]}
+                </h2>
+                <p className="mt-3 text-slate-900 text-base md:text-lg max-w-[60ch]">
+                  {study.howItWorks.intro[locale]}
+                </p>
+                {/* Numbered, because the order is the whole point. */}
+                <ol className="mt-10 grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2">
+                  {study.howItWorks.steps.map((step, i) => (
+                    <li key={step.title[locale]} className="flex gap-5">
+                      <span
+                        aria-hidden
+                        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white"
+                      >
+                        {i + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className="text-slate-900 text-lg font-semibold">{step.title[locale]}</h3>
+                        <p className="mt-2 text-slate-900 leading-relaxed">{step.body[locale]}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                {study.howItWorks.note ? (
+                  <p className="mt-10 text-slate-900 text-base md:text-lg max-w-[70ch]">
+                    {study.howItWorks.note[locale]}
+                  </p>
+                ) : null}
+              </section>
+            ) : null}
+
             {(TOURS[study.slug] ?? []).map((tour) => (
               <section key={tour.id} className="mt-16 md:mt-24">
                 <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{tour.title[locale]}</h2>
@@ -212,7 +252,11 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
                 >
                   {gallery.map((image) => (
                     <li key={image.src} className="min-w-0">
-                      <CaseFrame image={image} sizes="(min-width: 1024px) 320px, (min-width: 640px) 33vw, 45vw" />
+                      <CaseFrame
+                        image={image}
+                        width={isLaptop(image) ? `${(flattest / laptopK(image)) * 100}%` : undefined}
+                        sizes="(min-width: 1024px) 320px, (min-width: 640px) 33vw, 45vw"
+                      />
                     </li>
                   ))}
                 </ul>

@@ -115,17 +115,18 @@ export function MacbookFrame({
   style?: CSSProperties;
   aspect?: string;
 }) {
-  // The capture is shown the way a page looks in full screen on a MacBook Pro:
-  // the menu bar is hidden and the top safe area, where the notch lives, stays
-  // black. Drawing a menu bar meant inventing an interface, and an invented
-  // interface always reads as fake next to a real screenshot.
-  const SAFE_AREA = 1.6;
-  // The screen is as tall as the capture needs PLUS the safe area. Without
-  // that extra height the capture was letterboxed inside the screen and the
-  // black bars read as a thick bezel, which no Mac has.
+  // The capture fills the glass, the way a page looks in full screen on a
+  // MacBook Pro: no menu bar, no black band across the top. The only thing
+  // drawn over the page is the notch, which is what makes the screen read as
+  // a Mac at a glance. A black band there looked like a thick bezel, and no
+  // Mac has one.
+  //
+  // The notch keeps Apple's proportions: 168 of the 1512 points the 14 inch
+  // display is wide, 33 of the 982 it is tall.
   const [aw, ah] = aspect.split("/").map((n) => Number(n.trim()));
   const LID = 100 - 2 * 6 - 2 * 0.35 - 2 * 0.8; // screen width, in frame units
-  const screenAspect = `${aw} / ${ah + (aw * SAFE_AREA) / LID}`;
+  const NOTCH_W = LID * (168 / 1512);
+  const NOTCH_H = LID * (ah / aw) * (33 / 982);
   return (
     <div className={cn("relative w-full [container-type:inline-size]", className)} style={style}>
       {/* Lid: space black aluminum around the glass */}
@@ -134,24 +135,16 @@ export function MacbookFrame({
         style={{ background: "linear-gradient(160deg, #4a4a4f 0%, #2b2b2f 30%, #1d1d21 60%, #3a3a3f 100%)" }}
       >
         <div className="relative rounded-t-[0.95cqw] rounded-b-[0.3cqw] bg-[#050506] p-[0.8cqw]">
-          <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: screenAspect }}>
-            {/* The page, below the safe area the notch sits in */}
-            <div className="absolute inset-x-0 bottom-0" style={{ top: `${SAFE_AREA}cqw` }}>
-              {children}
-            </div>
+          <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: aspect }}>
+            <div className="absolute inset-0">{children}</div>
 
-            {/* The safe area: black across the top, with the notch in it */}
+            {/* The notch, over the page, with the camera in it */}
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 block bg-black"
-              style={{ height: `${SAFE_AREA}cqw` }}
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-0 flex w-[10.5cqw] -translate-x-1/2 items-center justify-center rounded-b-[0.55cqw] bg-black"
-              style={{ height: `${SAFE_AREA * 1.45}cqw` }}
+              className="pointer-events-none absolute left-1/2 top-0 flex -translate-x-1/2 items-center justify-center rounded-b-[0.5cqw] bg-black"
+              style={{ width: `${NOTCH_W}cqw`, height: `${NOTCH_H}cqw` }}
             >
-              <span className="mt-[0.2cqw] block size-[0.3cqw] rounded-full bg-[#1b1b21] shadow-[inset_0_0_0_0.05cqw_rgba(255,255,255,0.22)]" />
+              <span className="block size-[0.26cqw] rounded-full bg-[#15151a] shadow-[inset_0_0_0_0.04cqw_rgba(255,255,255,0.25)]" />
             </span>
           </div>
           {/* Reflection on the glass */}

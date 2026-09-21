@@ -97,17 +97,36 @@ export function CaseBlocks({ study, large }: { study: CaseStudy; large?: boolean
   );
 }
 
+/**
+ * How tall a laptop frame is, as a fraction of its own width: the glass, plus
+ * the lid's edge and the base. Used to give every laptop in a row the same
+ * height whatever its capture measures.
+ */
+export function laptopK(image: CaseImage) {
+  return 0.857 * (image.height / image.width) + 0.038;
+}
+
+/** Whether this capture ends up inside a MacBook. */
+export function isLaptop(image: CaseImage) {
+  if (image.framed || image.device === "watch" || image.device === "ipad" || image.device === "phone") return false;
+  const ratio = image.height / image.width;
+  return ratio <= 0.8;
+}
+
 /** Project image in the same frame the rest of the site uses for screenshots. */
 export function CaseFrame({
   image,
   priority,
   sizes,
   className,
+  width,
 }: {
   image: CaseImage;
   priority?: boolean;
   sizes: string;
   className?: string;
+  /** A share of the cell, so laptops of different captures end up level. */
+  width?: string;
 }) {
   const { locale } = useLocale();
   if (image.framed) {
@@ -167,9 +186,11 @@ export function CaseFrame({
     );
   }
   return (
-    <MacbookFrame className={className} aspect={aspect}>
-      <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />
-    </MacbookFrame>
+    <div className={cn("flex w-full justify-center", className)}>
+      <MacbookFrame style={width ? { width } : undefined} className="w-full" aspect={aspect}>
+        <Screen image={image} priority={priority} sizes={sizes} />
+      </MacbookFrame>
+    </div>
   );
 }
 
@@ -199,12 +220,16 @@ function Screen({ image, priority, sizes }: { image: CaseImage; priority?: boole
   return <Image src={image.src} alt={image.alt[locale]} fill priority={priority} sizes={sizes} className="object-contain" />;
 }
 
-/** The first landscape capture and the first phone one, if the case has them. */
-export function coverPair(study: CaseStudy): { desktop?: CaseImage; mobile?: CaseImage } {
+/**
+ * What the cover shows: the first landscape capture, the first phone one and
+ * the watch, when the case has them.
+ */
+export function coverPair(study: CaseStudy): { desktop?: CaseImage; mobile?: CaseImage; watch?: CaseImage } {
   const real = study.images.filter((i) => !i.src.startsWith("/badges/"));
   return {
-    desktop: real.find((i) => i.height / i.width <= 1),
-    mobile: real.find((i) => i.height / i.width > 1.4),
+    desktop: real.find((i) => i.device !== "watch" && i.height / i.width <= 1),
+    mobile: real.find((i) => i.device !== "watch" && i.height / i.width > 1.4),
+    watch: real.find((i) => i.device === "watch"),
   };
 }
 
@@ -224,7 +249,7 @@ export function CaseCover({
 }) {
   const t = useT();
   const { locale } = useLocale();
-  const { desktop, mobile } = coverPair(study);
+  const { desktop, mobile, watch } = coverPair(study);
   const cover = desktop ?? mobile ?? study.images[0];
   if (!cover) {
     return (
@@ -243,7 +268,6 @@ export function CaseCover({
     const phones = study.images
       .filter((i) => i.device !== "watch" && (i.device === "phone" || i.height / i.width > 1.4))
       .slice(0, 3);
-    const watch = study.images.find((i) => i.device === "watch");
     return (
       <div className="flex w-full items-end justify-center gap-4 py-6 md:gap-8 md:py-10">
         {watch ? (
@@ -275,17 +299,25 @@ export function CaseCover({
 
   // The two frames end up the same height, so they read as one machine and
   // one pocket rather than two loose pictures. A laptop is about
-  // 0.88 * ratio + 0.045 tall for its width, and a phone 0.93 * ratio + 0.07;
-  // that gives the share of the row each one needs.
-  const laptopK = 0.88 * (desktop.height / desktop.width) + 0.045;
+  // 0.857 * ratio + 0.038 tall for its width (the glass, plus the lid's own
+  // edge and the base), and a phone 0.93 * ratio + 0.07; that gives the share
+  // of the row each one needs.
+  const laptopK = 0.857 * (desktop.height / desktop.width) + 0.038;
   const phoneK = mobile ? 0.93 * (mobile.height / mobile.width) + 0.07 : 0;
-  const phoneShare = mobile ? (laptopK / phoneK) / (1 + laptopK / phoneK) : 0;
+  const pair = mobile ? (laptopK / phoneK) / (1 + laptopK / phoneK) : 0;
+  // A watch, when the app has one, sits at the end of the row at a little
+  // under half the phone's width, which is about how the two compare in the
+  // hand. Everything else shrinks to make room for it.
+  const WATCH_OF_PHONE = 0.44;
+  const k = watch && mobile ? 1 / (1 + WATCH_OF_PHONE * pair) : 1;
+  const phoneShare = pair * k;
+  const watchShare = watch && mobile ? WATCH_OF_PHONE * phoneShare : 0;
 
   return (
     <div className="flex w-full items-end justify-center gap-4 md:gap-8">
       <MacbookFrame
         className="min-w-0"
-        style={{ width: `${(1 - phoneShare) * 100}%` }}
+        style={{ width: `${(1 - phoneShare - watchShare) * 100}%` }}
         aspect={`${desktop.width} / ${desktop.height}`}
       >
         <Screen image={desktop} priority={priority} sizes={sizes} />
@@ -298,6 +330,15 @@ export function CaseCover({
         >
           <Screen image={mobile} priority={priority} sizes="240px" />
         </IphoneFrame>
+      ) : null}
+      {watch && mobile ? (
+        <WatchFrame
+          className="shrink-0"
+          style={{ width: `${watchShare * 100}%` }}
+          aspect={`${watch.width} / ${watch.height}`}
+        >
+          <Screen image={watch} priority={priority} sizes="140px" />
+        </WatchFrame>
       ) : null}
     </div>
   );

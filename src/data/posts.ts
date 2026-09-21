@@ -32,6 +32,103 @@ const LUMINTIK = { name: "Lumintik", avatar: "/lumintik-icon.png" };
  */
 export const POSTS: Post[] = [
   {
+    slug: "todas-tus-cuentas-en-una-sola-pantalla",
+    date: "2026-09-21",
+    author: LUMINTIK,
+    cover: {
+      src: "/projects/fridoom/home.webp",
+      width: 2000,
+      height: 1250,
+      alt: {
+        ES: "Página de inicio de Fridoom",
+        EN: "Fridoom home page",
+      },
+    },
+    tags: ["Finanzas personales", "Móvil", "Privacidad"],
+    copy: {
+      ES: {
+        title: "Todas tus cuentas en una sola pantalla: qué resuelve Fridoom",
+        excerpt: "El dinero de una persona vive repartido entre bancos, tarjetas, inversiones y una hoja de cálculo. Fridoom lo junta en un solo lugar, en el teléfono, sin vender tu atención.",
+        sections: [
+          {
+            heading: "El problema no es ahorrar, es no saber",
+            paragraphs: [
+              "Casi nadie tiene un solo banco. Hay una cuenta de nómina, otra de ahorros, dos tarjetas, un fondo de inversión, quizá algo de cripto y, casi siempre, una hoja de cálculo que se actualiza cuando uno se acuerda. Cada pieza sabe su parte y nadie sabe el total.",
+              "Ese es el punto de partida de Fridoom: organizar las finanzas personales en un solo lugar, desde cuentas bancarias hasta inversiones, para poder centralizar, organizar y monitorear el dinero sin abrir siete aplicaciones.",
+            ],
+          },
+          {
+            heading: "Empezar no cuesta",
+            paragraphs: [
+              "El plan gratuito permite registrar hasta tres productos, trae una plantilla base, da acceso a información en tiempo real y un perfil de usuario observador. Es suficiente para responder la primera pregunta de cualquiera: cuánto tengo y dónde está.",
+              "El plan Pro abre lo demás: productos ilimitados, plantillas propias, reportes y analíticas, programación de pagos y transacciones, bolsillos de gestión y un perfil transaccional. Se paga mensual y se ve el precio antes de registrarse, sin llamadas ni cotizaciones.",
+            ],
+          },
+          {
+            heading: "Aprender mientras se usa",
+            paragraphs: [
+              "Fridoom no es solo una hoja de cálculo bonita. Alrededor del producto hay una comunidad de educación financiera con más de 200.000 seguidores, y el perfil de usuario se puede compartir para invertir, compartir y aprender de otros. La aplicación es el lugar donde esa educación se vuelve una decisión concreta.",
+            ],
+          },
+          {
+            heading: "Una app de dinero que no vive de la publicidad",
+            paragraphs: [
+              "Una aplicación que ve tus cuentas tiene que ser explícita con lo que hace con esos datos. Fridoom usa una sola cookie propia para recordar tu elección y, solo si aceptas, una medición de visitas. Nada de publicidad. En el mismo pie de página están, con su propia sección, tus datos, el uso de inteligencia artificial y cómo eliminar la cuenta.",
+              "Es la clase de decisión que no se ve en una demo y se agradece a los seis meses.",
+            ],
+          },
+          {
+            heading: "En el teléfono, en la tableta y en el navegador",
+            paragraphs: [
+              "La aplicación se descarga en el teléfono, se ve completa en un iPad y el sitio funciona igual en el navegador. Quien revisa su presupuesto en el bus y quien lo revisa en la mesa del comedor ven lo mismo.",
+              "Datos leídos en el producto en producción en septiembre de 2026.",
+            ],
+          },
+        ],
+      },
+      EN: {
+        title: "Every account on one screen: what Fridoom solves",
+        excerpt: "A person's money lives spread across banks, cards, investments and a spreadsheet. Fridoom brings it together in one place, on the phone, without selling your attention.",
+        sections: [
+          {
+            heading: "The problem is not saving, it is not knowing",
+            paragraphs: [
+              "Almost nobody has a single bank. There is a payroll account, a savings one, two cards, an investment fund, maybe some crypto and, nearly always, a spreadsheet updated whenever you remember. Every piece knows its part and nobody knows the total.",
+              "That is where Fridoom starts: organizing personal finances in one place, from bank accounts to investments, so you can centralize, organize and monitor your money without opening seven apps.",
+            ],
+          },
+          {
+            heading: "Starting costs nothing",
+            paragraphs: [
+              "The free plan lets you register up to three products, comes with a base template, gives access to real time information and an observer profile. That is enough to answer anyone's first question: how much do I have and where is it.",
+              "The Pro plan opens the rest: unlimited products, custom templates, reports and analytics, scheduled payments and transactions, management pockets and a transactional profile. It is billed monthly and the price is on the page before you sign up, with no calls and no quotes.",
+            ],
+          },
+          {
+            heading: "Learning while using it",
+            paragraphs: [
+              "Fridoom is not just a pretty spreadsheet. Around the product there is a financial education community with more than 200,000 followers, and the user profile can be shared so you invest, share and learn from others. The app is where that education turns into a concrete decision.",
+            ],
+          },
+          {
+            heading: "A money app that does not live on advertising",
+            paragraphs: [
+              "An app that sees your accounts has to be explicit about what it does with that data. Fridoom uses a single first party cookie to remember your choice and, only if you accept, a visit measurement. No advertising. In the same footer, each with its own page: your data, the use of artificial intelligence and how to delete your account.",
+              "It is the kind of decision you do not see in a demo and thank six months later.",
+            ],
+          },
+          {
+            heading: "On the phone, on the tablet and in the browser",
+            paragraphs: [
+              "The app downloads to the phone, fills an iPad and the site works the same in the browser. Whoever checks their budget on the bus and whoever checks it at the dining table see the same thing.",
+              "Read from the live product in September 2026.",
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
     slug: "una-consola-para-ver-cada-documento",
     date: "2026-09-22",
     author: LUMINTIK,
