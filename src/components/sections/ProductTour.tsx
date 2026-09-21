@@ -173,6 +173,11 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
 
   return (
     <div ref={rootRef} className={cn("w-full", className)} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      {/* The browser with its rail, and the same surface on a phone beside it
+          when the tour has one: the rail stays exactly as wide as the screen
+          it belongs to. */}
+      <div className="flex w-full items-end gap-4 md:gap-6">
+      <div className="min-w-0 flex-1">
       {/* The rail: one stop per screen */}
       <ol className="grid gap-x-3 md:gap-x-4" style={{ gridTemplateColumns: `repeat(${tour.steps.length}, minmax(0, 1fr))` }}>
         {tour.steps.map((s, i) => {
@@ -195,7 +200,6 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
       </ol>
       <p className="md:hidden mt-3 text-sm font-medium text-slate-900">{step.label[locale]}</p>
 
-      {/* The browser */}
       <MacWindowFrame title={tour.url} className="mt-6">
         <div className="relative w-full overflow-hidden bg-slate-100" style={{ aspectRatio: `${tour.width} / ${tour.height}` }}>
           {screens}
@@ -211,6 +215,28 @@ export function ProductTour({ tour, className }: { tour: Tour; className?: strin
           </div>
         </div>
       </MacWindowFrame>
+      </div>
+      {tour.mobile ? (
+        <IphoneFrame className="hidden w-[130px] shrink-0 lg:block xl:w-[160px]" aspect={`${tour.mobile.width} / ${tour.mobile.height}`}>
+          {tour.mobile.video ? (
+            <video
+              className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+              poster={tour.mobile.src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={tour.mobile.alt[locale]}
+            >
+              <source src={tour.mobile.video} type="video/mp4" />
+            </video>
+          ) : (
+            <Image src={tour.mobile.src} alt={tour.mobile.alt[locale]} fill sizes="160px" className="object-contain" />
+          )}
+        </IphoneFrame>
+      ) : null}
+      </div>
 
       <style>{`
         @keyframes tour-rail { from { width: 0; } to { width: 100%; } }

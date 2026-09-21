@@ -25,6 +25,12 @@ export type Tour = {
   width: number;
   height: number;
   steps: TourStep[];
+  /**
+   * The same surface on a phone, shown next to the browser. Only for tours
+   * where the phone really is the same product the tour is walking through;
+   * a panel we never captured on a phone does not get one.
+   */
+  mobile?: { src: string; video?: string; width: number; height: number; alt: Record<Locale, string> };
 };
 
 /** Product tours, keyed by case slug. Every screen is from the live product: a fictional demo case where one exists, blurred figures and names otherwise. */
@@ -725,6 +731,16 @@ export const TOURS: Record<string, Tour[]> = {
       url: "imagiq.com",
       width: 1512,
       height: 806,
+      mobile: {
+        src: "/projects/mobile/imagiq.webp",
+        video: "/projects/video/imagiq-mobile.mp4",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "La misma tienda en un iPhone",
+          EN: "The same store on an iPhone",
+        },
+      },
       steps: [
         {
           id: "inicio",
