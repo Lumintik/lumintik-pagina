@@ -781,6 +781,12 @@ export const MORE_PROJECTS: MoreProject[] = [
         height: 720,
         alt: { ES: "Sección interior del sitio de Piebald Capital", EN: "Inner section of the Piebald Capital site" },
       },
+      {
+        src: "/projects/piebald/mobile.webp",
+        width: 604,
+        height: 1308,
+        alt: { ES: "El sitio de Piebald Capital en un iPhone", EN: "The Piebald Capital site on an iPhone" },
+      },
     ],
   },
   {

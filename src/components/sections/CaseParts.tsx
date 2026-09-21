@@ -297,17 +297,35 @@ export function CaseCover({
     );
   }
 
-  // The two frames end up the same height, so they read as one machine and
-  // one pocket rather than two loose pictures. A laptop is about
-  // 0.857 * ratio + 0.038 tall for its width (the glass, plus the lid's own
-  // edge and the base), and a phone 0.93 * ratio + 0.07; that gives the share
-  // of the row each one needs.
-  const laptopK = 0.857 * (desktop.height / desktop.width) + 0.038;
+  return <DevicePair desktop={desktop} mobile={mobile} watch={watch} priority={priority} sizes={sizes} />;
+}
+
+/**
+ * A laptop and a phone side by side, exactly the same height, with a watch at
+ * the end when there is one. Every project is responsive, and this says so
+ * without a word.
+ */
+export function DevicePair({
+  desktop,
+  mobile,
+  watch,
+  priority,
+  sizes,
+}: {
+  desktop: CaseImage;
+  mobile?: CaseImage;
+  watch?: CaseImage;
+  priority?: boolean;
+  sizes: string;
+}) {
+  // A laptop is about 0.857 * ratio + 0.038 tall for its width (the glass,
+  // plus the lid's own edge and the base) and a phone 0.93 * ratio + 0.07;
+  // that gives the share of the row each one needs to come out level.
+  const lK = laptopK(desktop);
   const phoneK = mobile ? 0.93 * (mobile.height / mobile.width) + 0.07 : 0;
-  const pair = mobile ? (laptopK / phoneK) / (1 + laptopK / phoneK) : 0;
-  // A watch, when the app has one, sits at the end of the row at a little
-  // under half the phone's width, which is about how the two compare in the
-  // hand. Everything else shrinks to make room for it.
+  const pair = mobile ? (lK / phoneK) / (1 + lK / phoneK) : 0;
+  // A watch sits at the end of the row at a little under half the phone's
+  // width, which is about how the two compare in the hand.
   const WATCH_OF_PHONE = 0.44;
   const k = watch && mobile ? 1 / (1 + WATCH_OF_PHONE * pair) : 1;
   const phoneShare = pair * k;

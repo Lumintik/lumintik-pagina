@@ -4,11 +4,11 @@ import Link from "next/link";
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { ContactSection } from "@/components/sections/ContactSection";
-import { ArrowRight, ArrowUpRight, CaseFrame } from "@/components/sections/CaseParts";
+import { ArrowRight, ArrowUpRight, CaseFrame, DevicePair } from "@/components/sections/CaseParts";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
 import { toSegment } from "@/lib/locale";
 import { href, paths } from "@/lib/routes";
-import type { MoreProject } from "@/data/cases";
+import type { CaseImage, MoreProject } from "@/data/cases";
 
 export type ProjectDetailProps = {
   project: MoreProject;
@@ -24,8 +24,23 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
   const t = useT();
   const { locale } = useLocale();
   const home = `/${toSegment(locale)}`;
-  const cover = project.gallery?.[0];
-  const rest = project.gallery?.slice(1) ?? [];
+  // The cover works like a case's: the site on a laptop, the phone capture
+  // beside it, both the same height. The recording of the site plays inside
+  // the laptop instead of floating in a bare box.
+  const shots = project.gallery ?? [];
+  const mobile = shots.find((i) => i.device !== "ipad" && i.device !== "watch" && i.height / i.width > 1.4);
+  const desktop: CaseImage = project.video
+    ? {
+        // The recording's own shape, and a frame of it as the poster, so the
+        // laptop's screen is never letterboxed while the video loads.
+        src: `/projects/${project.key}/cover.webp`,
+        video: project.video,
+        width: 1100,
+        height: 688,
+        alt: { ES: project.name, EN: project.name },
+      }
+    : { ...project.image, alt: { ES: project.name, EN: project.name } };
+  const rest = shots.filter((i) => i !== mobile && i.src !== project.image.src);
 
   return (
     <div className="relative flex flex-col items-center bg-white min-h-screen">
@@ -86,23 +101,7 @@ export function ProjectDetail({ project, next }: Readonly<ProjectDetailProps>) {
         <div className="relative z-[2] w-full bg-white flex flex-col items-center">
           <div className="mx-auto max-w-[1600px] w-full px-5 md:px-12">
             <div className="-mt-8 md:-mt-14">
-              {project.video ? (
-                <div className="relative w-full overflow-hidden rounded-md border border-slate-900/15 bg-slate-900 aspect-[16/10]">
-                  <video
-                    src={project.video}
-                    poster={project.image.src}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    aria-label={project.name}
-                    className="w-full h-full object-cover object-top"
-                  />
-                </div>
-              ) : cover ? (
-                <CaseFrame image={cover} priority sizes="(min-width: 1536px) 1440px, 100vw" />
-              ) : null}
+              <DevicePair desktop={desktop} mobile={mobile} priority sizes="(min-width: 1536px) 1440px, 100vw" />
             </div>
 
             {rest.length ? (
