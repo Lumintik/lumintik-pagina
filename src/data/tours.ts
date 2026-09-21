@@ -27,7 +27,7 @@ export type Tour = {
   steps: TourStep[];
 };
 
-/** Product tours, keyed by case slug. Every screen is from the live product, on a fictional demo case. */
+/** Product tours, keyed by case slug. Every screen is from the live product: a fictional demo case where one exists, blurred figures and names otherwise. */
 export const TOURS: Record<string, Tour[]> = {
   ezmig: [
     {
@@ -342,6 +342,81 @@ export const TOURS: Record<string, Tour[]> = {
           },
           focus: { at: [50, 78], zoom: 1.12 },
           click: [29, 84.9],
+        },
+      ],
+    },
+  ],
+  griver: [
+    {
+      id: "consola",
+      device: "browser",
+      title: {
+        ES: "La consola de operación",
+        EN: "The operations console",
+      },
+      intro: {
+        ES: "Pantallas reales de la consola en producción, con importes y nombres difuminados. Pasa el cursor para pausar, o elige una parada en el riel.",
+        EN: "Real screens from the console in production, with amounts and names blurred. Hover to pause, or pick a stop on the rail.",
+      },
+      url: "RECO OCR API",
+      width: 1512,
+      height: 806,
+      steps: [
+        {
+          id: "metricas",
+          image: "/projects/reco/tour/metricas.jpg",
+          label: {
+            ES: "Cada página, medida",
+            EN: "Every page, measured",
+          },
+          caption: {
+            ES: "Páginas por día, documentos digitales frente a escaneados, latencia y errores, por ambiente y por rango de fechas. La consola solo ve metadatos de negocio, nunca los documentos.",
+            EN: "Pages per day, digital versus scanned documents, latency and errors, by environment and date range. The console only sees business metadata, never the documents.",
+          },
+          focus: { at: [56, 60], zoom: 1.08 },
+          click: [4.8, 21.6],
+        },
+        {
+          id: "procesar",
+          image: "/projects/reco/tour/procesar.jpg",
+          label: {
+            ES: "El mismo camino que una agencia",
+            EN: "The same path an agency takes",
+          },
+          caption: {
+            ES: "Un lote de facturas o conocimientos de embarque entra por el mismo endpoint público que usan las agencias, con su propia credencial. El resultado llega agrupado por factura y los documentos no se guardan.",
+            EN: "A batch of invoices or bills of lading goes through the same public endpoint the agencies use, with their own credential. The result comes back grouped by invoice and the documents are not stored.",
+          },
+          focus: { at: [52, 40], zoom: 1.12 },
+          click: [5.9, 16.4],
+        },
+        {
+          id: "entrenamiento",
+          image: "/projects/reco/tour/entrenamiento.jpg",
+          label: {
+            ES: "Dónde se va el tiempo",
+            EN: "Where the time goes",
+          },
+          caption: {
+            ES: "El recorrido de cada documento partido en tramos: proceso automático, espera, revisión humana y total. Se ve de inmediato qué parte es de la máquina y cuál de las personas.",
+            EN: "Each document's journey split into stages: automatic processing, waiting, human review and total. It is clear at a glance which part belongs to the machine and which to people.",
+          },
+          focus: { at: [56, 34], zoom: 1.14 },
+          click: [4.8, 32],
+        },
+        {
+          id: "auditoria",
+          image: "/projects/reco/tour/auditoria.jpg",
+          label: {
+            ES: "Quién hizo qué",
+            EN: "Who did what",
+          },
+          caption: {
+            ES: "Un registro inmutable de cada acción administrativa, humana o de máquina: accesos, canjes de credencial, planes asignados. Exportable por evento, por día o por usuario.",
+            EN: "An immutable record of every administrative action, human or machine: logins, credential exchanges, assigned plans. Exportable by event, by day or by user.",
+          },
+          focus: { at: [56, 62], zoom: 1.1 },
+          click: [36, 17.3],
         },
       ],
     },
