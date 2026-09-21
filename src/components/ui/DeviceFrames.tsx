@@ -109,11 +109,17 @@ export function MacbookFrame({
   className,
   style,
   aspect = "16 / 10",
+  app = "Safari",
+  menuBar = true,
 }: {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
   aspect?: string;
+  /** The app name shown in bold on the menu bar. */
+  app?: string;
+  /** The macOS menu bar over the screen, with the notch in the middle. */
+  menuBar?: boolean;
 }) {
   return (
     <div className={cn("relative w-full [container-type:inline-size]", className)} style={style}>
@@ -124,11 +130,48 @@ export function MacbookFrame({
       >
         <div className="relative rounded-t-[0.95cqw] rounded-b-[0.3cqw] bg-[#050506] p-[0.8cqw]">
           <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: aspect }}>
-            {children}
+            <div className={cn("absolute inset-x-0 bottom-0", menuBar ? "top-[2.1cqw]" : "top-0")}>{children}</div>
+
+            {/* The macOS menu bar, with the notch cutting through the middle */}
+            {menuBar ? (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 flex h-[2.1cqw] items-center justify-between bg-black px-[1cqw] text-[0.95cqw] leading-none text-white/85"
+              >
+                <span className="flex items-center gap-[1cqw] whitespace-nowrap">
+                  {/* A plain mark for the menu, not a brand logo */}
+                  <span className="block size-[0.85cqw] rounded-full bg-white/80" />
+                  <span className="font-semibold">{app}</span>
+                  <span className="hidden opacity-70 min-[420px]:inline">Archivo</span>
+                  <span className="hidden opacity-70 min-[420px]:inline">Edición</span>
+                  <span className="hidden opacity-70 min-[560px]:inline">Visualización</span>
+                  <span className="hidden opacity-70 min-[560px]:inline">Historial</span>
+                  <span className="hidden opacity-70 min-[700px]:inline">Ventana</span>
+                  <span className="hidden opacity-70 min-[700px]:inline">Ayuda</span>
+                </span>
+                <span className="flex items-center gap-[0.9cqw] whitespace-nowrap">
+                  {/* Battery */}
+                  <span className="relative block h-[0.9cqw] w-[1.7cqw] rounded-[0.22cqw] border-[0.1cqw] border-white/70">
+                    <span className="absolute inset-[0.14cqw] rounded-[0.1cqw] bg-white/80" />
+                  </span>
+                  {/* Wi-Fi */}
+                  <svg viewBox="0 0 24 24" className="h-[1.1cqw] w-[1.1cqw] fill-white/80">
+                    <path d="M12 19.5a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2zm5.1-4.3-1.6-1.6a5 5 0 0 0-7 0l-1.6-1.6a7.2 7.2 0 0 1 10.2 0zM21 11.4l-1.6 1.6a10.5 10.5 0 0 0-14.8 0L3 11.4a12.8 12.8 0 0 1 18 0z" />
+                  </svg>
+                  {/* Control centre */}
+                  <span className="flex flex-col gap-[0.16cqw]">
+                    <span className="block h-[0.14cqw] w-[1.1cqw] rounded-full bg-white/70" />
+                    <span className="block h-[0.14cqw] w-[1.1cqw] rounded-full bg-white/70" />
+                  </span>
+                  <span className="opacity-80">9:41</span>
+                </span>
+              </div>
+            ) : null}
+
             {/* The notch cuts into the screen, the way a MacBook Pro does */}
             <span
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-0 flex h-[1.5cqw] w-[11cqw] -translate-x-1/2 items-center justify-center rounded-b-[0.5cqw] bg-black"
+              className="pointer-events-none absolute left-1/2 top-0 flex h-[2.1cqw] w-[11cqw] -translate-x-1/2 items-center justify-center rounded-b-[0.5cqw] bg-black"
             >
               <span className="block size-[0.32cqw] rounded-full bg-[#1b1b21] shadow-[inset_0_0_0_0.06cqw_rgba(255,255,255,0.18)]" />
             </span>
