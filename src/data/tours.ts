@@ -831,4 +831,142 @@ export const TOURS: Record<string, Tour[]> = {
       ],
     },
   ],
+  futtem: [
+    {
+      id: "app",
+      device: "phone",
+      title: {
+        ES: "La app, en el ambiente de pruebas",
+        EN: "The app, on the staging environment",
+      },
+      intro: {
+        ES: "Pantallas reales de la build de staging con una cuenta de prueba: el mismo ambiente que el equipo revisa antes de cada salida a producción. Pasa el cursor para pausar, o elige una parada en el riel.",
+        EN: "Real screens from the staging build with a test account: the environment the team checks before every production release. Hover to pause, or pick a stop on the rail.",
+      },
+      url: "FUTTEM · staging",
+      width: 603,
+      height: 1311,
+      steps: [
+        {
+          id: "inicio",
+          image: "/projects/futtem/tour/inicio.jpg",
+          label: {
+            ES: "Tus clubes",
+            EN: "Your clubs",
+          },
+          caption: {
+            ES: "Cada jugador entra a sus clubes, crea uno nuevo o busca otro. La etiqueta de staging marca en qué ambiente está corriendo la app.",
+            EN: "Every player opens their clubs, creates a new one or searches for another. The staging badge shows which environment the app is running on.",
+          },
+          focus: {
+            at: [50, 40],
+            zoom: 1.05,
+          },
+          click: [27.1, 29.9],
+        },
+        {
+          id: "club",
+          image: "/projects/futtem/tour/club.jpg",
+          label: {
+            ES: "El club y su plantilla",
+            EN: "The club and its squad",
+          },
+          caption: {
+            ES: "Escudo, director técnico, jugadores y las próximas partidas del club, con el botón para convocar una nueva.",
+            EN: "Crest, coach, players and the club's upcoming matches, with the button to call a new one.",
+          },
+          focus: {
+            at: [50, 50],
+            zoom: 1.05,
+          },
+          click: [78.9, 89.7],
+        },
+        {
+          id: "partida",
+          image: "/projects/futtem/tour/partida.jpg",
+          label: {
+            ES: "La partida, con todo lo que hace falta",
+            EN: "The match, with everything needed",
+          },
+          caption: {
+            ES: "Cancha y ubicación, fecha y hora, grupo de WhatsApp, cómo llegar, cuándo se lanza la convocatoria, cupos y costo por jugador.",
+            EN: "Pitch and location, date and time, WhatsApp group, directions, when the call up goes out, spots and cost per player.",
+          },
+          focus: {
+            at: [50, 55],
+            zoom: 1.05,
+          },
+          click: [10, 14],
+        },
+        {
+          id: "partidas",
+          image: "/projects/futtem/tour/partidas.jpg",
+          label: {
+            ES: "Partidas cerca, próximas e historial",
+            EN: "Matches nearby, upcoming and past",
+          },
+          caption: {
+            ES: "Con el perfil público activado la app muestra partidas cerca del jugador. Debajo, las próximas y las ya jugadas.",
+            EN: "With a public profile the app shows matches near the player. Below, the upcoming ones and those already played.",
+          },
+          focus: {
+            at: [50, 45],
+            zoom: 1.05,
+          },
+          click: [65.9, 94.3],
+        },
+        {
+          id: "entreno",
+          image: "/projects/futtem/tour/entreno.jpg",
+          label: {
+            ES: "Entrenamiento en video",
+            EN: "Training on video",
+          },
+          caption: {
+            ES: "Videos de entrenamiento, físico y promocionales, con los últimos vistos por el jugador.",
+            EN: "Training, fitness and promotional videos, with the ones the player watched last.",
+          },
+          focus: {
+            at: [50, 45],
+            zoom: 1.05,
+          },
+          click: [87.8, 94.3],
+        },
+        {
+          id: "notificaciones",
+          image: "/projects/futtem/tour/notificaciones.jpg",
+          label: {
+            ES: "Convocatorias que llegan al teléfono",
+            EN: "Call ups that reach the phone",
+          },
+          caption: {
+            ES: "Cada convocatoria avisa con hora y partida, y se confirma desde la app.",
+            EN: "Every call up arrives with time and match, and is confirmed from the app.",
+          },
+          focus: {
+            at: [50, 35],
+            zoom: 1.08,
+          },
+          click: [31.6, 9.2],
+        },
+        {
+          id: "crear-partida",
+          image: "/projects/futtem/tour/crear-partida.jpg",
+          label: {
+            ES: "Convocar en un minuto",
+            EN: "Call a match in a minute",
+          },
+          caption: {
+            ES: "Nombre, fecha, hora, ciudad, cancha, duración, tipo de juego y número de jugadores. La convocatoria sale a todo el club.",
+            EN: "Name, date, time, city, pitch, duration, game type and number of players. The call up goes out to the whole club.",
+          },
+          focus: {
+            at: [50, 45],
+            zoom: 1.05,
+          },
+          click: [50, 56.5],
+        },
+      ],
+    },
+  ],
 };
