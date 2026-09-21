@@ -47,6 +47,15 @@ export const TOURS: Record<string, Tour[]> = {
       url: "ezmig.ai/dashboard",
       width: 1512,
       height: 806,
+      mobile: {
+        src: "/projects/mobile/ezmig-panel.webp",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "El mismo portal en un teléfono",
+          EN: "The same portal on a phone",
+        },
+      },
       steps: [
         {
           id: "panel",
@@ -295,6 +304,15 @@ export const TOURS: Record<string, Tour[]> = {
       url: "ezdocu.ai/dashboard",
       width: 1512,
       height: 757,
+      mobile: {
+        src: "/projects/mobile/ezdocu-panel.webp",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "El mismo panel en un teléfono",
+          EN: "The same panel on a phone",
+        },
+      },
       steps: [
         {
           id: "panel",
@@ -367,6 +385,15 @@ export const TOURS: Record<string, Tour[]> = {
       url: "RECO OCR API",
       width: 1512,
       height: 806,
+      mobile: {
+        src: "/projects/mobile/reco-panel.webp",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "La misma consola en un teléfono",
+          EN: "The same console on a phone",
+        },
+      },
       steps: [
         {
           id: "metricas",
@@ -442,6 +469,15 @@ export const TOURS: Record<string, Tour[]> = {
       url: "admin.imagiq.com",
       width: 1512,
       height: 806,
+      mobile: {
+        src: "/projects/mobile/imagiq-panel.webp",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "El mismo panel en un teléfono",
+          EN: "The same panel on a phone",
+        },
+      },
       steps: [
         {
           id: "panel",
@@ -544,6 +580,15 @@ export const TOURS: Record<string, Tour[]> = {
       url: "admin.imagiq.com/marketing",
       width: 1512,
       height: 806,
+      mobile: {
+        src: "/projects/mobile/imagiq-campanas.webp",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "Las mismas campañas en un teléfono",
+          EN: "The same campaigns on a phone",
+        },
+      },
       steps: [
         {
           id: "campanas",
@@ -663,6 +708,15 @@ export const TOURS: Record<string, Tour[]> = {
       url: "admin.imagiq.com/pagina-web",
       width: 1512,
       height: 806,
+      mobile: {
+        src: "/projects/mobile/imagiq-sitio.webp",
+        width: 604,
+        height: 1308,
+        alt: {
+          ES: "La misma gestión del sitio en un teléfono",
+          EN: "The same site management on a phone",
+        },
+      },
       steps: [
         {
           id: "banners",

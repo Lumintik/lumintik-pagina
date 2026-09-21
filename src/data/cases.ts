@@ -190,13 +190,13 @@ export const CASES: CaseStudy[] = [
     },
     images: [
       {
-        src: "/projects/imagiq/tour/operacion/panel.jpg",
+        src: "/projects/imagiq/panel.webp",
         video: "/projects/video/imagiq-desktop.mp4",
         width: 1512,
         height: 806,
         alt: {
-          ES: "El panel de Imagiq: ventas, órdenes, zonas de cobertura, campañas por canal y transmisiones en vivo",
-          EN: "Imagiq's panel: sales, orders, coverage zones, campaigns by channel and live streams",
+          ES: "El panel de Imagiq: ventas, órdenes, zonas de cobertura, campañas por canal y banners de la tienda",
+          EN: "Imagiq's panel: sales, orders, coverage zones, campaigns by channel and store banners",
         },
       },
       {
