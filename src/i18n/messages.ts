@@ -686,8 +686,8 @@ const en: Messages = {
     stats: [
       { value: 100, suffix: "%", label: "Work completed in house" },
       { value: 2, suffix: "+", label: "Years crafting digital products" },
-      { value: 15, suffix: "+", label: "Happy clients across 3 continents" },
-      { value: 12, suffix: "+", label: "Industries shipped: fintech, AI, telecom, e-commerce" },
+      { value: 15, suffix: "", label: "Clients in Colombia, the United States and Mexico" },
+      { value: 9, suffix: "", label: "Industries shipped: trade, legal, telecom, retail and five more" },
     ],
   },
   footer: {
@@ -1168,10 +1168,10 @@ const es: Messages = {
       tail: " y trascienden las tendencias.",
     },
     stats: [
-      { value: 100, suffix: "%", label: "Trabajo realizado in-house" },
+      { value: 100, suffix: "%", label: "Trabajo hecho con equipo propio" },
       { value: 2, suffix: "+", label: "Años creando productos digitales" },
-      { value: 15, suffix: "+", label: "Clientes felices en 3 continentes" },
-      { value: 12, suffix: "+", label: "Industrias atendidas: fintech, IA, telco, e-commerce" },
+      { value: 15, suffix: "", label: "Clientes en Colombia, Estados Unidos y México" },
+      { value: 9, suffix: "", label: "Industrias atendidas: comercio exterior, legal, telco, retail y cinco más" },
     ],
   },
   footer: {
