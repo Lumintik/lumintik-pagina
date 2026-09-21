@@ -471,14 +471,14 @@ export const CASES: CaseStudy[] = [
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
     images: [
       {
-        src: "/projects/reco/plataforma-desktop.webp",
-        width: 2000,
-        height: 1250,
+        src: "/projects/reco/portal-entrenamiento.webp",
+        video: "/projects/video/reco-portal.mp4",
+        width: 1512,
+        height: 806,
         alt: {
-          ES: "Plataforma RECO, el ecosistema de comercio exterior de Griver",
-          EN: "The RECO platform, Griver's foreign trade ecosystem",
-        },
-      },
+          ES: "Portal de entrenamiento de RECO: al pasar el cursor por un campo, el documento se acerca a ese dato",
+          EN: "RECO's training portal: hovering a field brings the document up to that value",
+        },      },
       {
         src: "/projects/mobile/reco.webp",
         video: "/projects/video/reco-mobile.mp4",

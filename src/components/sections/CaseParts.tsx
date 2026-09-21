@@ -237,11 +237,20 @@ export function CaseCover({
     );
   }
 
-  // No desktop capture: the phones lead, up to three across.
+  // No desktop capture: the phones lead, up to three across, with the watch
+  // beside them when the app has one.
   if (!desktop) {
-    const phones = study.images.filter((i) => i.height / i.width > 1.4).slice(0, 3);
+    const phones = study.images
+      .filter((i) => i.device !== "watch" && (i.device === "phone" || i.height / i.width > 1.4))
+      .slice(0, 3);
+    const watch = study.images.find((i) => i.device === "watch");
     return (
-      <div className="flex w-full items-end justify-center gap-4 py-6 md:gap-10 md:py-10">
+      <div className="flex w-full items-end justify-center gap-4 py-6 md:gap-8 md:py-10">
+        {watch ? (
+          <WatchFrame className="w-[13%] min-w-[70px] max-w-[130px] shrink-0" aspect={`${watch.width} / ${watch.height}`}>
+            <Image src={watch.src} alt={watch.alt[locale]} fill priority={priority} sizes="130px" className="object-contain" />
+          </WatchFrame>
+        ) : null}
         {(phones.length ? phones : [cover]).map((img) =>
           img.framed ? (
             <Image

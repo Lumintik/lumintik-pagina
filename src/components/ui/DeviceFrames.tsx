@@ -120,6 +120,12 @@ export function MacbookFrame({
   // black. Drawing a menu bar meant inventing an interface, and an invented
   // interface always reads as fake next to a real screenshot.
   const SAFE_AREA = 1.6;
+  // The screen is as tall as the capture needs PLUS the safe area. Without
+  // that extra height the capture was letterboxed inside the screen and the
+  // black bars read as a thick bezel, which no Mac has.
+  const [aw, ah] = aspect.split("/").map((n) => Number(n.trim()));
+  const LID = 100 - 2 * 6 - 2 * 0.35 - 2 * 0.8; // screen width, in frame units
+  const screenAspect = `${aw} / ${ah + (aw * SAFE_AREA) / LID}`;
   return (
     <div className={cn("relative w-full [container-type:inline-size]", className)} style={style}>
       {/* Lid: space black aluminum around the glass */}
@@ -128,7 +134,7 @@ export function MacbookFrame({
         style={{ background: "linear-gradient(160deg, #4a4a4f 0%, #2b2b2f 30%, #1d1d21 60%, #3a3a3f 100%)" }}
       >
         <div className="relative rounded-t-[0.95cqw] rounded-b-[0.3cqw] bg-[#050506] p-[0.8cqw]">
-          <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: aspect }}>
+          <div className="relative w-full overflow-hidden rounded-[0.35cqw] bg-black" style={{ aspectRatio: screenAspect }}>
             {/* The page, below the safe area the notch sits in */}
             <div className="absolute inset-x-0 bottom-0" style={{ top: `${SAFE_AREA}cqw` }}>
               {children}
