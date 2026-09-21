@@ -34,6 +34,13 @@ export type CaseImage = {
  * only one, or by its own label when a case links to more than one site. */
 export type CaseLink = { label: string; href: string };
 
+export type CaseMetric = {
+  value: string;
+  label: Record<Locale, string>;
+};
+/** Where the figures of a case were read, shown once under the strip. */
+export type CaseMetricsSource = Record<Locale, string>;
+
 /** A store badge shown next to the case's links (App Store, Google Play). */
 export type CaseBadge = {
   src: string;
@@ -61,7 +68,11 @@ export type CaseStudy = {
   badges?: CaseBadge[];
   certification?: CaseCertification;
   /** Null when the tool list has not been confirmed. */
+  /** Empty means the section is left out on purpose; null means the team still owes the list. */
   tools: ToolId[] | null;
+  /** Figures measured on the live product or verifiable in the code, with where they come from. */
+  metrics?: CaseMetric[];
+  metricsSource?: CaseMetricsSource;
   /** First image is the cover. An empty list shows a pending placeholder. */
   images: CaseImage[];
   /** Thumbnail for the work grid when the case has no photos of its own. */
@@ -76,6 +87,13 @@ export const CASES: CaseStudy[] = [
     slug: "imagiq",
     country: "CO",
     links: [{ label: "Imagiq", href: "https://www.imagiq.com/" }],
+    metrics: [
+      { value: "37", label: { ES: "tiendas en 13 ciudades trabajando como un solo inventario", EN: "stores in 13 cities working as a single inventory" } },
+      { value: "587", label: { ES: "referencias en el catálogo", EN: "products in the catalog" } },
+      { value: "341.139", label: { ES: "correos enviados desde el panel de campañas", EN: "emails sent from the campaigns panel" } },
+      { value: "4", label: { ES: "canales de campaña: correo, WhatsApp, SMS y mensajes en el sitio", EN: "campaign channels: email, WhatsApp, SMS and on site messages" } },
+    ],
+    metricsSource: { ES: "Leído en la tienda y el panel de administración en producción, septiembre de 2026.", EN: "Read from the live store and admin panel, September 2026." },
     tools: ["gcp", "aws", "nextjs", "nestjs", "posthog", "distanceMatrix", "redis", "postgresql"],
     images: [
       {
@@ -146,6 +164,12 @@ export const CASES: CaseStudy[] = [
     slug: "ezmig",
     country: "US",
     links: [{ label: "EZMig", href: "https://www.ezmig.ai/" }],
+    metrics: [
+      { value: "19", label: { ES: "formularios de USCIS con flujo guiado", EN: "USCIS forms with a guided flow" } },
+      { value: "3", label: { ES: "idiomas: español, inglés y portugués", EN: "languages: Spanish, English and Portuguese" } },
+      { value: "3", label: { ES: "portales: abogado, cliente y administración", EN: "portals: attorney, client and admin" } },
+    ],
+    metricsSource: { ES: "Verificable en el producto en producción, septiembre de 2026.", EN: "Verifiable in the live product, September 2026." },
     tools: ["aws", "languageModels", "uscis", "posthog"],
     certification: {
       label: {
@@ -184,7 +208,8 @@ export const CASES: CaseStudy[] = [
         sector: "Servicios legales",
         problem: "Abogados de inmigración llenando a mano formularios largos de USCIS.",
         solution: "Un flujo guiado con IA que completa y valida los formularios en minutos.",
-        why: null,
+        why:
+          "Los 19 formularios de USCIS que más se usan (I-130, I-485, N-400 y más) se completan en un flujo guiado en español, inglés y portugués, con validación antes de generar el PDF oficial.",
       },
       EN: {
         topic: "Experience and conversion",
@@ -193,7 +218,8 @@ export const CASES: CaseStudy[] = [
         sector: "Legal services",
         problem: "Immigration attorneys filling out long USCIS forms by hand.",
         solution: "An AI guided flow that completes and validates the forms in minutes.",
-        why: null,
+        why:
+          "The 19 most used USCIS forms (I-130, I-485, N-400 and more) are completed in a guided flow in Spanish, English and Portuguese, with validation before the official PDF is generated.",
       },
     },
   },
@@ -201,18 +227,15 @@ export const CASES: CaseStudy[] = [
     slug: "claro",
     country: "CO",
     links: [{ label: "Claro", href: "https://www.claro.com.co/" }],
-    tools: null,
-    images: [],
-    cardImage: {
-      src: "/projects/claro/home.png",
-      width: 2880,
-      height: 1800,
-      alt: { ES: "Sitio de Claro Colombia", EN: "Claro Colombia website" },
-    },
-    imagesPending: {
-      ES: "Fotos del proyecto Mi Claro: mockup de la app sin fondo, foto del equipo y sala de trabajo.",
-      EN: "Mi Claro project photos: app mockup without background, team photo and workroom.",
-    },
+    tools: [],
+    images: [
+      {
+        src: "/projects/claro/home.png",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Sitio de Claro Colombia", EN: "Claro Colombia website" },
+      },
+    ],
     copy: {
       ES: {
         topic: "Telemetría",
@@ -223,7 +246,8 @@ export const CASES: CaseStudy[] = [
         solution:
           "Consultoría y telemetría: plan de eventos, embudos y tableros para análisis de datos.",
         headline: "Plan de eventos, embudos y tableros para decidir con datos.",
-        why: null,
+        why:
+          "Un plan de eventos único para toda la app, embudos por cada flujo y tableros listos para que el equipo priorice con datos en vez de intuiciones.",
       },
       EN: {
         topic: "Telemetry",
@@ -234,7 +258,8 @@ export const CASES: CaseStudy[] = [
         solution:
           "Consulting and telemetry: an event plan, funnels and dashboards for data analysis.",
         headline: "An event plan, funnels and dashboards to decide with data.",
-        why: null,
+        why:
+          "A single event plan for the whole app, funnels for every flow and dashboards ready for the team to prioritize with data instead of hunches.",
       },
     },
   },
@@ -242,6 +267,12 @@ export const CASES: CaseStudy[] = [
     slug: "futtem",
     country: "CO",
     links: [{ label: "FUTTEM", href: "https://www.futtem.com/" }],
+    metrics: [
+      { value: "3", label: { ES: "ambientes aislados: pruebas, QA y producción", EN: "isolated environments: testing, QA and production" } },
+      { value: "3", label: { ES: "plataformas: iOS, Android y Apple Watch", EN: "platforms: iOS, Android and Apple Watch" } },
+      { value: "1.2.2", label: { ES: "versión publicada en las tiendas", EN: "version published on the stores" } },
+    ],
+    metricsSource: { ES: "Verificable en el código y en las tiendas de aplicaciones, septiembre de 2026.", EN: "Verifiable in the code and on the app stores, September 2026." },
     badges: [
       {
         src: "/badges/appstore.png",
@@ -278,7 +309,8 @@ export const CASES: CaseStudy[] = [
         sector: "Deporte",
         problem: "Una app en producción con usuarios reales que no podía detenerse con cada cambio.",
         solution: "Tres ambientes separados, despliegues controlados y trazas de extremo a extremo.",
-        why: null,
+        why:
+          "La app está publicada en App Store y Google Play, con widget y Apple Watch, y cada cambio pasa por tres ambientes (pruebas, QA y producción) con trazas de extremo a extremo antes de llegar a los jugadores.",
       },
       EN: {
         topic: "Reliability",
@@ -287,7 +319,8 @@ export const CASES: CaseStudy[] = [
         sector: "Sports",
         problem: "An app in production with real users that could not stop every time something changed.",
         solution: "Three separate environments, controlled deployments and end to end tracing.",
-        why: null,
+        why:
+          "The app is live on the App Store and Google Play, with a widget and Apple Watch, and every change goes through three environments (testing, QA and production) with end to end traces before it reaches the players.",
       },
     },
   },
@@ -356,6 +389,13 @@ export const CASES: CaseStudy[] = [
     slug: "griver",
     country: "MX",
     links: [{ label: "Griver", href: "https://www.reco.com.mx/" }],
+    metrics: [
+      { value: "18 s", label: { ES: "de proceso automático por documento (mediana)", EN: "of automatic processing per document (median)" } },
+      { value: "11.546", label: { ES: "documentos procesados en una semana", EN: "documents processed in one week" } },
+      { value: "21.591", label: { ES: "páginas leídas en esa misma semana", EN: "pages read that same week" } },
+      { value: "74%", label: { ES: "de los documentos llegan escaneados, no digitales", EN: "of documents arrive scanned, not digital" } },
+    ],
+    metricsSource: { ES: "Consola de operación en producción, semana del 14 al 20 de septiembre de 2026.", EN: "Live operations console, week of September 14 to 20, 2026." },
     tools: ["awsGpu", "vllm", "qwen", "docker", "cloudflareTunnel"],
     images: [
       {

@@ -113,6 +113,23 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               <CaseBlocks study={study} large />
             </section>
 
+            {study.metrics?.length ? (
+              <section className="mt-16 md:mt-24">
+                <h2 className="text-xs font-medium text-slate-400">{t.cases.metrics}</h2>
+                <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+                  {study.metrics.map((m) => (
+                    <div key={m.label[locale]}>
+                      <dd className="text-slate-900 text-4xl md:text-5xl font-semibold tracking-tight">{m.value}</dd>
+                      <dt className="mt-3 text-slate-500 text-sm md:text-base max-w-[22ch]">{m.label[locale]}</dt>
+                    </div>
+                  ))}
+                </dl>
+                {study.metricsSource ? (
+                  <p className="mt-8 text-xs text-slate-400">{study.metricsSource[locale]}</p>
+                ) : null}
+              </section>
+            ) : null}
+
             {(TOURS[study.slug] ?? []).map((tour) => (
               <section key={tour.id} className="mt-16 md:mt-24">
                 <h2 className="text-slate-900 text-3xl md:text-4xl font-semibold">{tour.title[locale]}</h2>
@@ -128,14 +145,16 @@ export function CaseDetail({ study, next }: Readonly<CaseDetailProps>) {
               </section>
             ) : null}
 
-            <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
-              <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
-                {t.cases.tools}
-              </h2>
-              <div className="md:col-span-8">
-                <ToolList tools={study.tools} />
-              </div>
-            </section>
+            {study.tools?.length === 0 ? null : (
+              <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">
+                <h2 className="md:col-span-4 text-xs font-medium text-slate-400">
+                  {t.cases.tools}
+                </h2>
+                <div className="md:col-span-8">
+                  <ToolList tools={study.tools} />
+                </div>
+              </section>
+            )}
 
             {gallery.length ? (
               <section className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-6">

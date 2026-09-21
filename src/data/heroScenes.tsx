@@ -155,8 +155,8 @@ export const HERO_SCENES: Scene[] = [
       { t: "wait", dur: 500 },
       // EXAMPLE FIGURES from the brief, not measured results. Replace before publishing.
       { t: "flip", stats: [
-        { big: "50%", small: { ES: "ahorro en costos de nube", EN: "cloud cost savings" } },
-        { big: "80%", small: { ES: "menos tiempo de despliegue", EN: "less deployment time" } },
+        { big: "3", small: { ES: "ambientes aislados por proyecto", EN: "isolated environments per project" } },
+        { big: "0", small: { ES: "despliegues a mano", EN: "manual deployments" } },
       ], dur: 5400 },
     ],
   },
