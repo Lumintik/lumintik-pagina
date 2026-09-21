@@ -33,13 +33,16 @@ function routes(): ((locale: "ES" | "EN") => string)[] {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
+  // Posts carry their own date, so a crawler knows which ones changed; the
+  // blog index moves every time one is published.
+  const postDates = new Map(POSTS.map((p) => [paths.post(p.slug)("ES"), new Date(`${p.updated ?? p.date}T12:00:00Z`)]));
 
   return routes().flatMap((path) =>
     LOCALES.map((locale) => ({
       url: `${SITE_URL}/${toSegment(locale)}${path(locale)}`,
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: path(locale) === "" ? 1 : 0.8,
+      lastModified: postDates.get(path("ES")) ?? lastModified,
+      changeFrequency: path(locale) === paths.blog(locale) ? ("weekly" as const) : ("monthly" as const),
+      priority: path(locale) === "" ? 1 : postDates.has(path("ES")) ? 0.7 : 0.8,
       // Each entry advertises its translations, so crawlers pair them up.
       alternates: {
         languages: Object.fromEntries(

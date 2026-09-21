@@ -54,7 +54,7 @@ export type Messages = {
     services: { title: string; titleAccent: string; intro: string };
     projects: { title: string; titleAccent: string; intro: string };
     team: { title: string; titleAccent: string; intro: string; roles: Record<"ceo" | "coo", string>; bios: Record<"ceo" | "coo", string> };
-    blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string };
+    blog: { title: string; titleAccent: string; intro: string; read: string; back: string; more: string; empty: string; readingTime: string; updated: string; topics: string; relatedCase: string };
     contact: { title: string; titleAccent: string; intro: string };
     industries: { title: string; titleAccent: string; intro: string };
     cases: { title: string; titleAccent: string; intro: string };
@@ -326,6 +326,10 @@ const en: Messages = {
       back: "Back to the blog",
       more: "More posts",
       empty: "No posts yet.",
+      readingTime: "{n} min read",
+      updated: "Updated",
+      topics: "Topics",
+      relatedCase: "Read the case study",
     },
     contact: {
       title: "Let's talk about",
@@ -800,6 +804,10 @@ const es: Messages = {
       back: "Volver al blog",
       more: "Más entradas",
       empty: "Aún no hay entradas.",
+      readingTime: "{n} min de lectura",
+      updated: "Actualizado",
+      topics: "Temas",
+      relatedCase: "Leer el caso",
     },
     contact: {
       title: "Hablemos de",

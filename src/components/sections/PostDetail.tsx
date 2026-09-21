@@ -10,6 +10,15 @@ import { useLocale, useT } from "@/components/providers/LocaleProvider";
 import type { Post } from "@/data/posts";
 import { LOCALE_TAGS } from "@/lib/locale";
 import { href, paths } from "@/lib/routes";
+import { CASES } from "@/data/cases";
+
+/** Words per minute a reader gets through; the count rounds up to a full minute. */
+const WORDS_PER_MINUTE = 200;
+
+export function readingMinutes(sections: { heading: string; paragraphs: string[] }[]): number {
+  const words = sections.reduce((n, s) => n + s.heading.split(/\s+/).length + s.paragraphs.join(" ").split(/\s+/).length, 0);
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+}
 
 /** One post: the cover, the title, who wrote it and when, then the sections. */
 export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
@@ -19,6 +28,10 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
   const date = new Intl.DateTimeFormat(LOCALE_TAGS[locale], { day: "numeric", month: "long", year: "numeric" }).format(
     new Date(`${post.date}T12:00:00Z`),
   );
+  const fmt = new Intl.DateTimeFormat(LOCALE_TAGS[locale], { day: "numeric", month: "long", year: "numeric" });
+  const updated = post.updated ? fmt.format(new Date(`${post.updated}T12:00:00Z`)) : null;
+  const minutes = readingMinutes(copy.sections);
+  const related = post.relatedCase ? CASES.find((c) => c.slug === post.relatedCase) : undefined;
 
   return (
     <div className="relative flex flex-col items-center bg-white min-h-screen">
@@ -57,7 +70,23 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                 {post.author.name}
               </span>
               <time dateTime={post.date}>{date}</time>
+              <span aria-hidden>·</span>
+              <span>{t.pages.blog.readingTime.replace("{n}", String(minutes))}</span>
+              {updated ? (
+                <span className="hidden sm:inline">
+                  {t.pages.blog.updated} <time dateTime={post.updated}>{updated}</time>
+                </span>
+              ) : null}
             </div>
+            {post.tags?.length ? (
+              <ul className="mt-5 flex flex-wrap gap-2" aria-label={t.pages.blog.topics}>
+                {post.tags.map((tag) => (
+                  <li key={tag} className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
 
             <div className="mt-12 md:mt-16 flex flex-col gap-10 md:gap-14 max-w-[72ch]">
               {copy.sections.map((section) => (
@@ -72,6 +101,18 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                   </div>
                 </section>
               ))}
+              {related ? (
+                <Link
+                  href={href(locale, paths.caseStudy(related.slug))}
+                  className="group inline-flex items-center gap-3 self-start rounded-full border border-slate-900 px-6 py-3 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+                >
+                  {t.pages.blog.relatedCase}: {related.copy[locale].client}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </Link>
+              ) : null}
             </div>
           </div>
 
