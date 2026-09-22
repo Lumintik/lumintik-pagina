@@ -20,8 +20,14 @@ const SCREEN_W = 100 - 2 * (BAND + BEZEL);
 const SCREEN_R = SCREEN_W * 0.137;
 const BEZEL_R = SCREEN_R + BEZEL;
 const BAND_R = BEZEL_R + BAND;
-const ISLAND_W = SCREEN_W * 0.31;
-const ISLAND_H = ISLAND_W * 0.29;
+// Medidos sobre una captura del simulador (iPhone 17 Pro, 604 x 1314): la isla
+// ocupa el 31,1% del ancho de la pantalla, su alto es el 9,11% de ese ancho y
+// su borde superior está al 3,48%. Con esas medidas la isla que dibujamos cae
+// justo encima de la que ya trae una captura del simulador; con las anteriores
+// quedaba desplazada y se veían dos.
+const ISLAND_W = SCREEN_W * 0.311;
+const ISLAND_H = SCREEN_W * 0.0911;
+const ISLAND_TOP = SCREEN_W * 0.0348;
 
 /**
  * An iPhone: titanium band, black bezel, the island and the side buttons.
@@ -79,7 +85,7 @@ export function IphoneFrame({
               aria-hidden
               className="pointer-events-none absolute left-1/2 -translate-x-1/2 bg-black"
               style={{
-                top: `${BEZEL * 0.95}cqw`,
+                top: `${ISLAND_TOP}cqw`,
                 width: `${ISLAND_W}cqw`,
                 height: `${ISLAND_H}cqw`,
                 borderRadius: `${ISLAND_H / 2}cqw`,
