@@ -32,6 +32,16 @@ export function proxy(request: NextRequest) {
   );
   if (hasLocale) return;
 
+  // Un link de pago lleva su idioma en la palabra: /pagar es español, /pay
+  // inglés. Así el link que se comparte abre en el idioma en que se creó, sin
+  // importar el navegador de quien lo abre.
+  const pay = pathname.match(/^\/(pagar|pay)(\/.*)?$/);
+  if (pay) {
+    const url = request.nextUrl.clone();
+    url.pathname = pay[1] === "pay" ? `/en/pay${pay[2] ?? ""}` : `/es/pagar${pay[2] ?? ""}`;
+    return NextResponse.redirect(url);
+  }
+
   const stored = fromSegment(request.cookies.get(STORAGE_KEY)?.value ?? "");
   const locale = stored ?? detectLocaleFromHeader(request.headers.get("accept-language"));
 

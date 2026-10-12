@@ -18,6 +18,7 @@ export const SECTION_SEGMENTS = {
   education: { ES: "educacion", EN: "education" },
   governance: { ES: "gobierno-corporativo", EN: "corporate-governance" },
   contact: { ES: "contacto", EN: "contact" },
+  pay: { ES: "pagar", EN: "pay" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type Section = keyof typeof SECTION_SEGMENTS;
@@ -48,6 +49,7 @@ export const paths = {
   post: (slug: string): PagePath => (locale) =>
     `/${SECTION_SEGMENTS.blog[locale]}/${slug}`,
   contact: ((locale) => `/${SECTION_SEGMENTS.contact[locale]}`) as PagePath,
+  pay: (code: string): PagePath => (locale) => `/${SECTION_SEGMENTS.pay[locale]}/${code}`,
 };
 
 /** Full localized href, e.g. href("EN", paths.government) → "/en/government". */
