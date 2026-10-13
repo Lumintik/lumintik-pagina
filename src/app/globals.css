@@ -49,8 +49,9 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* Borde vivo del botón de pago: un destello blanco que recorre un aro de un
-   pixel. Va en CSS y no en JavaScript para que no cueste un cuadro por cuadro. */
+/* Borde vivo del botón de pago: un degradado de color que gira por un aro de
+   un pixel. Es la única pieza de color de la página, a pedido de David. Va en
+   CSS y no en JavaScript para que no cueste un cuadro por cuadro. */
 @property --pay-angle {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -66,16 +67,12 @@ body {
 .pay-ring {
   background: conic-gradient(
     from var(--pay-angle),
-    transparent 0deg,
-    transparent 150deg,
-    rgb(255 255 255 / 0.9) 175deg,
-    transparent 205deg,
-    transparent 290deg,
-    rgb(255 255 255 / 0.5) 330deg,
-    #ffffff 352deg,
-    transparent 360deg
+    rgb(255 100 150),
+    rgb(100 150 255),
+    rgb(255 200 100),
+    rgb(255 100 150)
   );
-  animation: pay-orbit 3.6s linear infinite;
+  animation: pay-orbit 4s linear infinite;
 }
 
 .pay-ring[data-still="true"] {
