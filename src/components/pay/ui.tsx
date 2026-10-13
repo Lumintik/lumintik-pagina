@@ -167,7 +167,11 @@ export function Seal({ tone }: { tone: "ok" | "fail" | "wait" }) {
   );
 }
 
-/** Botón principal: blanco lleno, texto negro. Uno por pantalla. */
+/**
+ * Botón principal: blanco lleno, texto negro. Uno por pantalla. Lo rodea un
+ * aro de un pixel por el que corren dos destellos blancos, con un halo suave
+ * detrás; se detiene mientras procesa o si está deshabilitado.
+ */
 export function PrimaryButton({
   children,
   busy,
@@ -181,21 +185,34 @@ export function PrimaryButton({
   type?: "submit" | "button";
   onClick?: () => void;
 }) {
+  const still = Boolean(disabled || busy);
   return (
-    <motion.button
-      type={type}
-      onClick={onClick}
-      disabled={disabled || busy}
-      whileTap={{ scale: 0.985 }}
-      className="group relative mt-8 flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-white text-base font-semibold text-black transition-opacity disabled:opacity-50"
-    >
-      <span className="relative z-10 flex items-center gap-3">
-        {busy ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" /> : null}
-        {children}
-      </span>
-      {/* Barrido de luz al pasar el cursor. */}
-      <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-black/10 opacity-0 transition-all duration-700 group-hover:left-full group-hover:opacity-100" />
-    </motion.button>
+    <div className={`relative mt-8 transition-opacity ${still ? "opacity-50" : ""}`}>
+      {/* Halo: el mismo aro, desenfocado. */}
+      <span
+        aria-hidden
+        data-still={still}
+        className="pay-ring pointer-events-none absolute -inset-px rounded-full opacity-60 blur-md"
+      />
+      <div data-still={still} className="pay-ring relative rounded-full p-px">
+        <div className="rounded-full bg-black p-[3px]">
+          <motion.button
+            type={type}
+            onClick={onClick}
+            disabled={still}
+            whileTap={{ scale: 0.985 }}
+            className="group relative flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-white text-base font-semibold text-black"
+          >
+            <span className="relative z-10 flex items-center gap-3">
+              {busy ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" /> : null}
+              {children}
+            </span>
+            {/* Barrido de luz al pasar el cursor. */}
+            <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-black/10 opacity-0 transition-all duration-700 group-hover:left-full group-hover:opacity-100" />
+          </motion.button>
+        </div>
+      </div>
+    </div>
   );
 }
 

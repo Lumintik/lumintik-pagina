@@ -48,3 +48,36 @@ body::-webkit-scrollbar,
 body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
+
+/* Borde vivo del botón de pago: un destello blanco que recorre un aro de un
+   pixel. Va en CSS y no en JavaScript para que no cueste un cuadro por cuadro. */
+@property --pay-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes pay-orbit {
+  to {
+    --pay-angle: 360deg;
+  }
+}
+
+.pay-ring {
+  background: conic-gradient(
+    from var(--pay-angle),
+    transparent 0deg,
+    transparent 150deg,
+    rgb(255 255 255 / 0.9) 175deg,
+    transparent 205deg,
+    transparent 290deg,
+    rgb(255 255 255 / 0.5) 330deg,
+    #ffffff 352deg,
+    transparent 360deg
+  );
+  animation: pay-orbit 3.6s linear infinite;
+}
+
+.pay-ring[data-still="true"] {
+  animation-play-state: paused;
+}
