@@ -159,6 +159,22 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
               ) : null}
               <dt className="font-semibold">{t.reference}</dt>
               <dd className="font-mono">{link.reference}</dd>
+              {link.invoice_filename ? (
+                <>
+                  <dt className="font-semibold">{t.invoice}</dt>
+                  <dd>
+                    <a
+                      href={`/${locale === "EN" ? "pay" : "pagar"}/${link.code}/factura`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline underline-offset-4 hover:no-underline"
+                    >
+                      {link.invoice_number ? `${link.invoice_number}, ` : ""}
+                      {t.download}
+                    </a>
+                  </dd>
+                </>
+              ) : null}
               {link.expires_at && link.status === "pendiente" ? (
                 <>
                   <dt className="font-semibold">{t.expires}</dt>

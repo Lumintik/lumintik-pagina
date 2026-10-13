@@ -94,6 +94,26 @@ export async function getLink(code: string): Promise<PublicLink | null> {
       paid_method: r.paid_method && r.paid_method !== "METHOD_UNSPECIFIED"
         ? (strip(String(r.paid_method), "METHOD_") as Method)
         : null,
+      invoice_filename: String(r.invoice_filename ?? ""),
+      invoice_number: String(r.invoice_number ?? ""),
+    };
+  } catch (error) {
+    if (error instanceof PagosError && error.status === 404) return null;
+    throw error;
+  }
+}
+
+/** La factura del cobro, para descargarla desde la página de pago. */
+export async function getInvoice(code: string): Promise<{ filename: string; contentType: string; data: Buffer } | null> {
+  try {
+    const raw = await request<{ filename?: string; content_type?: string; data?: string }>(
+      `/v1/pagos/publico/${encodeURIComponent(code)}/factura`,
+    );
+    if (!raw.data) return null;
+    return {
+      filename: raw.filename || "factura.pdf",
+      contentType: raw.content_type || "application/pdf",
+      data: Buffer.from(raw.data, "base64"),
     };
   } catch (error) {
     if (error instanceof PagosError && error.status === 404) return null;

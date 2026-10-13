@@ -64,6 +64,8 @@ export type PublicLink = {
   last_attempt: Attempt | null;
   paid_at: string | null;
   paid_method: Method | null;
+  invoice_filename: string;
+  invoice_number: string;
 };
 
 export type Option = { code: string; name: string };
