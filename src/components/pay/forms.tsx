@@ -6,6 +6,7 @@ import * as actions from "@/app/[locale]/pagar/[code]/actions";
 import type { Locale } from "@/lib/locale";
 import type { Attempt, Option, Payer, PublicLink } from "@/lib/pagos/types";
 import { formatMoney, type PayCopy } from "./copy";
+import { BrandTile, CASH_BRANDS } from "./brands";
 import { cardBrand, formatCardNumber, luhn, prepareTokenizer, tokenizeCard } from "./epayco";
 import { CopyRow, ErrorNote, Field, PrimaryButton, inputClass } from "./ui";
 
@@ -226,9 +227,9 @@ export function CardForm({ link, locale, t, onAttempt, onBusy }: Common) {
               aria-invalid={showErrors && !luhn(number) ? true : undefined}
               onChange={(e) => setNumber(formatCardNumber(e.target.value))}
             />
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold uppercase">
-              {brand === "other" ? "" : brand}
-            </span>
+            {brand === "other" ? null : (
+              <BrandTile id={brand} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+            )}
           </div>
         </Field>
         <div className="grid grid-cols-2 gap-4">
@@ -411,10 +412,12 @@ export function CashForm({ link, t, onAttempt, onBusy }: Common) {
             key={e.code}
             type="button"
             onClick={() => setEntity(e.code)}
-            className={`rounded-full px-5 py-2.5 text-sm font-semibold ring-1 transition ${
+            aria-pressed={entity === e.code}
+            className={`flex items-center gap-2.5 rounded-full py-2 pr-5 text-sm font-semibold ring-1 transition ${CASH_BRANDS[e.code] ? "pl-2" : "pl-5"} ${
               entity === e.code ? "bg-white text-black ring-white" : "ring-white/30 hover:ring-white"
             }`}
           >
+            {CASH_BRANDS[e.code] ? <BrandTile id={CASH_BRANDS[e.code]!} /> : null}
             {e.name}
           </button>
         ))}

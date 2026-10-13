@@ -19,11 +19,11 @@ const ES = {
   chooseMethod: "Elige cómo pagar",
   back: "Cambiar medio",
   methods: {
-    tarjeta: { name: "Tarjeta", hint: "Crédito o débito, Visa, Mastercard, Amex, Diners" },
+    tarjeta: { name: "Tarjeta", hint: "Crédito o débito" },
     pse: { name: "PSE", hint: "Débito desde tu cuenta, en la página de tu banco" },
     breb: { name: "BreB", hint: "Transferencia inmediata con llave, desde la app de tu banco" },
     transferencia: { name: "Transferencia", hint: "A nuestra cuenta bancaria" },
-    efectivo: { name: "Efectivo", hint: "Con un código en Efecty y otros puntos" },
+    efectivo: { name: "Efectivo", hint: "Con un código en un punto de pago" },
     daviplata: { name: "Daviplata", hint: "Con un código que llega a tu celular" },
   } satisfies Record<Method, { name: string; hint: string }>,
   payer: {
@@ -143,11 +143,11 @@ const EN: Copy = {
   chooseMethod: "Choose how to pay",
   back: "Change method",
   methods: {
-    tarjeta: { name: "Card", hint: "Credit or debit, Visa, Mastercard, Amex, Diners" },
+    tarjeta: { name: "Card", hint: "Credit or debit" },
     pse: { name: "PSE", hint: "Debit from your Colombian bank account" },
     breb: { name: "BreB", hint: "Instant transfer with a key, from your bank app" },
     transferencia: { name: "Bank transfer", hint: "To our bank account" },
-    efectivo: { name: "Cash", hint: "With a code at Efecty and other points" },
+    efectivo: { name: "Cash", hint: "With a code at a payment point" },
     daviplata: { name: "Daviplata", hint: "With a code sent to your phone" },
   },
   payer: {

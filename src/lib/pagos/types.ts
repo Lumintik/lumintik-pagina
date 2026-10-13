@@ -40,6 +40,8 @@ export type Attempt = {
   three_ds: string;
   message: string;
   created_at: string | null;
+  /** Franquicia usada si fue tarjeta: visa, mastercard, amex o diners. */
+  card_brand: string;
 };
 
 export type PublicLink = {

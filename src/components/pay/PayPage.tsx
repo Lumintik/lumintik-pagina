@@ -11,6 +11,7 @@ import type { Attempt, Method, PublicLink } from "@/lib/pagos/types";
 import { PAY_COPY, attemptTone, formatDate, formatMoney } from "./copy";
 import { cleanupThreeDs, runThreeDs } from "./epayco";
 import { CardForm, CashForm, DaviplataForm, PseForm, TransferPanel } from "./forms";
+import { BrandRow, BrandTile, METHOD_BRANDS, usedBrands } from "./brands";
 import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, Seal } from "./ui";
 
 type View =
@@ -246,7 +247,15 @@ function ActionPanel({
           {link.paid_method ? (
             <>
               <dt className="font-semibold">{t.status.method}</dt>
-              <dd>{t.methods[link.paid_method].name}</dd>
+              <dd className="flex flex-wrap items-center gap-3">
+                {t.methods[link.paid_method].name}
+                <BrandRow
+                  ids={usedBrands(
+                    link.paid_method,
+                    link.last_attempt?.method === link.paid_method ? link.last_attempt : null,
+                  )}
+                />
+              </dd>
             </>
           ) : null}
           {link.paid_at ? (
@@ -306,7 +315,10 @@ function ActionPanel({
     return (
       <div>
         <div className="mb-8 flex items-center justify-between">
-          <p className="text-2xl font-semibold">{t.methods[view.method].name}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-2xl font-semibold">{t.methods[view.method].name}</p>
+            <BrandRow ids={METHOD_BRANDS[view.method]} />
+          </div>
           {link.methods.length > 1 ? (
             <GhostButton onClick={() => setView({ kind: "choose" })}>{t.back}</GhostButton>
           ) : null}
@@ -349,6 +361,7 @@ function ActionPanel({
                   {t.methods[method].name}
                 </span>
                 <span className="mt-1 block text-sm">{t.methods[method].hint}</span>
+                <BrandRow ids={METHOD_BRANDS[method]} className="mt-3" />
               </span>
               <span className="text-2xl transition-transform duration-300 group-hover:translate-x-1" aria-hidden>
                 →
@@ -389,6 +402,7 @@ function SecureNote({ t, test }: { t: (typeof PAY_COPY)[Locale]; test: boolean }
       <span>
         {t.secure}
         {test ? ` ${t.testMode}` : ""}
+        <BrandTile id="epayco" size="md" className="mt-3 flex w-fit" />
       </span>
     </p>
   );

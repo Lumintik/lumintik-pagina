@@ -63,6 +63,7 @@ function normalizeAttempt(raw: Record<string, string> | null | undefined): Attem
     three_ds: raw.three_ds ?? "",
     message: raw.message ?? "",
     created_at: utc(raw.created_at),
+    card_brand: raw.card_brand ?? "",
   };
 }
 
