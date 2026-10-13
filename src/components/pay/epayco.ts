@@ -53,8 +53,23 @@ function script(src: string, integrity?: string): Promise<void> {
   return promise;
 }
 
+/**
+ * `epayco.min.js` guarda su sesión en `keyUserIndex`, pero la primera vez la
+ * crea con `setItem`, que devuelve `undefined`, y cifra con eso: el primer pago
+ * de cada navegador falla. Se crea antes para que nunca llegue vacía.
+ */
+function seedSession() {
+  try {
+    if (!localStorage.getItem("keyUserIndex")) localStorage.setItem("keyUserIndex", crypto.randomUUID());
+  } catch {
+    // Sin almacenamiento local el script de ePayco tampoco funciona; el error
+    // llega por su callback.
+  }
+}
+
 /** Precarga apenas el cliente elige tarjeta, para que pagar no espere. */
 export async function prepareTokenizer(publicKey: string) {
+  seedSession();
   await script(JQUERY, JQUERY_SRI);
   await script(TOKENIZER);
   window.ePayco?.setPublicKey(publicKey);
