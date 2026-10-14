@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { PayPage } from "@/components/pay/PayPage";
 import { PAY_COPY, formatMoney } from "@/components/pay/copy";
 import { fromSegment } from "@/lib/locale";
 import { getLink } from "@/lib/pagos/api";
+
+/** La página de pago va en Poppins, de punta a punta. */
+const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], display: "swap" });
 
 // Cada visita pregunta el estado real: un link pagado hace un minuto ya no se
 // puede volver a cobrar.
@@ -49,5 +53,9 @@ export default async function Page({ params }: PageProps<"/[locale]/pagar/[code]
   const link = await getLink(code);
   if (!link) notFound();
 
-  return <PayPage link={link} locale={locale} />;
+  return (
+    <div className={poppins.className}>
+      <PayPage link={link} locale={locale} />
+    </div>
+  );
 }

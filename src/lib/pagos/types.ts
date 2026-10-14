@@ -74,6 +74,8 @@ export type PublicLink = {
   withholding: string;
   /** Si el cobro trae foto de lo vendido o entregado. */
   has_image: boolean;
+  /** Nombre del certificado bancario de la cuenta para transferencias; vacío si no hay. */
+  transfer_certificate_filename: string;
 };
 
 export type Option = { code: string; name: string };

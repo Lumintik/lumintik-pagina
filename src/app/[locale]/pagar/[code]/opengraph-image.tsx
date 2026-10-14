@@ -57,16 +57,16 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
   const t = PAY_COPY[locale];
   const link = await getLink(code).catch(() => null);
 
-  const [light, medium, bold, mono, logo] = await Promise.all([
-    asset("src", "assets", "fonts", "manrope-300.woff"),
-    asset("src", "assets", "fonts", "manrope-500.woff"),
-    asset("src", "assets", "fonts", "manrope-700.woff"),
-    asset("src", "assets", "fonts", "jetbrains-mono-500.woff"),
+  const [light, medium, bold, logo] = await Promise.all([
+    asset("src", "assets", "fonts", "poppins-300.woff"),
+    asset("src", "assets", "fonts", "poppins-500.woff"),
+    asset("src", "assets", "fonts", "poppins-700.woff"),
     dataUri("lumintik-logo-white.png"),
   ]);
 
   const brands: BrandId[] = link
-    ? [...new Set(link.methods.flatMap((m) => METHOD_BRANDS[m]))].slice(0, 8)
+    ? // Seis logos caben enteros junto a los datos; más se saldrían del borde.
+      [...new Set(link.methods.flatMap((m) => METHOD_BRANDS[m]))].slice(0, 6)
     : [];
   const tiles = await Promise.all(brands.map((id) => dataUri(`brands/mail/${id}.png`)));
 
@@ -97,7 +97,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
             "radial-gradient(circle at 85% 0%, rgba(255,255,255,0.16) 0%, rgba(0,0,0,0) 45%), radial-gradient(circle, rgba(255,255,255,0.13) 1.2px, rgba(0,0,0,0) 1.6px)",
           backgroundSize: "100% 100%, 30px 30px",
           color: "#fff",
-          fontFamily: "Manrope",
+          fontFamily: "Poppins",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -112,8 +112,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
               border: "2px solid #fff",
               fontSize: 22,
               fontWeight: 700,
-              letterSpacing: 3,
-              textTransform: "uppercase",
+              textTransform: "none",
             }}
           >
             <div style={{ display: "flex", width: 10, height: 10, borderRadius: 999, background: "#fff" }} />
@@ -123,7 +122,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
 
         {link ? (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 24, fontWeight: 700, letterSpacing: 4, textTransform: "uppercase" }}>
+            <div style={{ display: "flex", fontSize: 24, fontWeight: 700, textTransform: "none" }}>
               {c.kicker}
             </div>
             {link.client_name ? (
@@ -135,7 +134,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
               {clip(link.concept, 64)}
             </div>
             <div style={{ display: "flex", alignItems: "flex-end", marginTop: 14 }}>
-              <div style={{ display: "flex", fontSize: 128, fontWeight: 300, lineHeight: 1, letterSpacing: -4 }}>
+              <div style={{ display: "flex", fontSize: 128, fontWeight: 300, lineHeight: 1 }}>
                 {amount}
               </div>
               <div style={{ display: "flex", fontSize: 40, fontWeight: 500, marginLeft: 18, marginBottom: 16 }}>
@@ -157,10 +156,10 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
             }}
           />
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 26 }}>
-            <div style={{ display: "flex", gap: 44 }}>
+            <div style={{ display: "flex", gap: 32 }}>
               {facts.map(([label, value]) => (
                 <div key={label} style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", fontSize: 18, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>
+                  <div style={{ display: "flex", fontSize: 18, fontWeight: 700, textTransform: "none" }}>
                     {label}
                   </div>
                   <div
@@ -168,7 +167,6 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
                       display: "flex",
                       marginTop: 6,
                       fontSize: 26,
-                      fontFamily: label === c.reference ? "Mono" : "Manrope",
                       fontWeight: 500,
                     }}
                   >
@@ -177,9 +175,9 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
               {tiles.map((src, i) => (
-                <img key={brands[i]} src={src} width={66} height={42} alt="" />
+                <img key={brands[i]} src={src} width={55} height={35} alt="" />
               ))}
             </div>
           </div>
@@ -189,10 +187,9 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
     {
       ...size,
       fonts: [
-        { name: "Manrope", data: light, weight: 300, style: "normal" },
-        { name: "Manrope", data: medium, weight: 500, style: "normal" },
-        { name: "Manrope", data: bold, weight: 700, style: "normal" },
-        { name: "Mono", data: mono, weight: 500, style: "normal" },
+        { name: "Poppins", data: light, weight: 300, style: "normal" },
+        { name: "Poppins", data: medium, weight: 500, style: "normal" },
+        { name: "Poppins", data: bold, weight: 700, style: "normal" },
       ],
     },
   );

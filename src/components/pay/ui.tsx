@@ -15,7 +15,7 @@ export const EASE = [0.16, 1, 0.3, 1] as const;
 export function AmountRoll({ text, delay = 0 }: { text: string; delay?: number }) {
   const reduce = useReducedMotion();
   return (
-    <span className="inline-flex overflow-hidden tabular-nums" aria-label={text}>
+    <span className="inline-flex overflow-hidden" aria-label={text}>
       {[...text].map((char, i) => {
         const digit = /\d/.test(char) ? Number(char) : null;
         if (digit === null || reduce) {
@@ -26,9 +26,12 @@ export function AmountRoll({ text, delay = 0 }: { text: string; delay?: number }
           );
         }
         return (
-          <span key={i} aria-hidden className="relative inline-block h-[1em] leading-none" style={{ width: "0.62em" }}>
+          // La cifra invisible da el ancho real de la fuente: sin ancho fijo,
+          // sin espacio de más entre números.
+          <span key={i} aria-hidden className="relative inline-block h-[1em] overflow-hidden leading-none">
+            <span className="invisible">{char}</span>
             <motion.span
-              className="absolute left-0 top-0 flex flex-col"
+              className="absolute left-0 top-0 flex w-full flex-col items-center"
               initial={{ y: "0em" }}
               animate={{ y: `${-digit}em` }}
               transition={{ duration: 1.4, delay: delay + i * 0.06, ease: EASE }}
@@ -116,7 +119,7 @@ export function Orbit({ steps, label }: { steps: string[]; label?: string }) {
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
-      <p className="mt-8 font-mono text-sm tabular-nums">
+      <p className="mt-8 text-sm tabular-nums">
         T+{String(Math.floor(seconds / 60)).padStart(2, "0")}:{String(seconds % 60).padStart(2, "0")}
       </p>
       <AnimatePresence mode="wait">
@@ -316,7 +319,7 @@ export function CopyRow({
     <div className="flex items-end justify-between gap-4 py-3">
       <div className="min-w-0">
         <p className="text-sm font-medium">{label}</p>
-        <p className={`mt-1 break-all ${mono ? "font-mono" : ""} ${big ? "text-2xl font-semibold" : "text-lg"}`}>{value}</p>
+        <p className={`mt-1 break-all ${mono ? "tabular-nums" : ""} ${big ? "text-2xl font-semibold" : "text-lg"}`}>{value}</p>
       </div>
       <button
         type="button"

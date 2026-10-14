@@ -6,7 +6,8 @@ import * as actions from "@/app/[locale]/pagar/[code]/actions";
 import type { Locale } from "@/lib/locale";
 import type { Attempt, Option, Payer, PublicLink } from "@/lib/pagos/types";
 import { formatMoney, type PayCopy } from "./copy";
-import { BrandTile, CASH_BRANDS } from "./brands";
+import { BrandTile, CASH_BRANDS, bankBrand } from "./brands";
+import { DocumentCard } from "./document-card";
 import { cardBrand, formatCardNumber, luhn, prepareTokenizer, tokenizeCard } from "./epayco";
 import { CopyRow, ErrorNote, Field, PayForm, PrimaryButton, inputClass } from "./ui";
 
@@ -219,7 +220,7 @@ export function CardForm({ link, locale, t, onAttempt, onBusy }: Common) {
         <Field label={t.card.number}>
           <div className="relative">
             <input
-              className={`${inputClass} pr-24 font-mono tracking-normal`}
+              className={`${inputClass} pr-24 tabular-nums`}
               inputMode="numeric"
               autoComplete="cc-number"
               placeholder="0000 0000 0000 0000"
@@ -235,7 +236,7 @@ export function CardForm({ link, locale, t, onAttempt, onBusy }: Common) {
         <div className="grid grid-cols-2 gap-4">
           <Field label={t.card.expiry}>
             <input
-              className={`${inputClass} font-mono`}
+              className={`${inputClass} tabular-nums`}
               inputMode="numeric"
               autoComplete="cc-exp"
               placeholder="MM/AA"
@@ -248,7 +249,7 @@ export function CardForm({ link, locale, t, onAttempt, onBusy }: Common) {
           </Field>
           <Field label={t.card.cvc}>
             <input
-              className={`${inputClass} font-mono`}
+              className={`${inputClass} tabular-nums`}
               inputMode="numeric"
               autoComplete="cc-csc"
               placeholder={brand === "amex" ? "0000" : "000"}
@@ -475,7 +476,7 @@ export function DaviplataForm({ link, t, onAttempt, onBusy }: Common) {
         <p className="text-base">{t.daviplata.note}</p>
         <Field label={t.daviplata.otp} className="mt-6">
           <input
-            className={`${inputClass} h-16 text-center font-mono text-3xl`}
+            className={`${inputClass} h-16 text-center tabular-nums text-3xl`}
             inputMode="numeric"
             autoComplete="one-time-code"
             autoFocus
@@ -545,7 +546,7 @@ export function TransferPanel({
           <ol className="mt-8 space-y-3">
             {t.breb.steps.map((step, i) => (
               <li key={step} className="flex gap-4 text-base">
-                <span className="font-mono text-sm tabular-nums">0{i + 1}</span>
+                <span className="text-sm tabular-nums">0{i + 1}</span>
                 <span>{step}</span>
               </li>
             ))}
@@ -556,6 +557,11 @@ export function TransferPanel({
 
       {method === "transferencia" && account ? (
         <div>
+          {bankBrand(account.bank) ? (
+            <div className="mb-4 flex items-center gap-4">
+              <BrandTile id={bankBrand(account.bank)!} size="wide" />
+            </div>
+          ) : null}
           <CopyRow label={t.transfer.bank} value={account.bank} {...c} />
           <CopyRow label={t.transfer.type} value={account.account_type} {...c} />
           <CopyRow label={t.transfer.number} value={account.account_number} mono big {...c} />
@@ -567,6 +573,18 @@ export function TransferPanel({
           <CopyRow label={t.breb.amount} value={rawAmount} mono {...c} />
           <CopyRow label={t.reference} value={link.reference} mono {...c} />
           <p className="mt-6 text-base">{t.transfer.note}</p>
+          {link.transfer_certificate_filename ? (
+            <div className="mt-8">
+              <DocumentCard
+                href={`/${link.locale === "en" ? "pay" : "pagar"}/${link.code}/certificado`}
+                thumbnail={`/${link.locale === "en" ? "pay" : "pagar"}/${link.code}/certificado/miniatura`}
+                title={t.certificateCard.title}
+                subtitle={account.bank ? `${account.bank}, ${account.account_type}` : link.transfer_certificate_filename}
+                action={t.certificateCard.action}
+                preview={t.certificateCard.preview}
+              />
+            </div>
+          ) : null}
         </div>
       ) : null}
 

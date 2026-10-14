@@ -26,6 +26,7 @@ const ES = {
   },
   secure: "Conexión cifrada. Los datos de tu tarjeta van directo a ePayco; Lumintik nunca los ve.",
   secureNoCard: "Conexión cifrada. El pago lo procesa ePayco; Lumintik nunca ve tus datos bancarios.",
+  secureDirect: "Pagas directo a la cuenta de Lumintik desde tu banco. En cuanto el dinero llega, te enviamos el comprobante con la factura.",
   testMode: "Modo de prueba: no se cobra dinero real.",
   chooseMethod: "Elige cómo pagar",
   back: "Cambiar medio",
@@ -33,6 +34,7 @@ const ES = {
   steps: ["Resumen", "Medio de pago", "Tus datos"],
   review: "Elegir cómo pagar",
   invoiceCard: { title: "Factura", action: "Descargar PDF", preview: "Vista previa de la factura" },
+  certificateCard: { title: "Certificado bancario", action: "Descargar PDF", preview: "Vista previa del certificado" },
   photo: "Lo que pagas",
   enterHint: "o presiona Enter",
   methods: {
@@ -168,6 +170,7 @@ const EN: Copy = {
   },
   secure: "Encrypted connection. Your card details go straight to ePayco; Lumintik never sees them.",
   secureNoCard: "Encrypted connection. ePayco processes the payment; Lumintik never sees your bank details.",
+  secureDirect: "You pay straight into Lumintik's account from your bank. As soon as the money arrives, we send you the receipt with the invoice.",
   testMode: "Test mode: no real money is charged.",
   chooseMethod: "Choose how to pay",
   back: "Change method",
@@ -175,6 +178,7 @@ const EN: Copy = {
   steps: ["Summary", "Payment method", "Your details"],
   review: "Choose how to pay",
   invoiceCard: { title: "Invoice", action: "Download PDF", preview: "Invoice preview" },
+  certificateCard: { title: "Bank certificate", action: "Download PDF", preview: "Certificate preview" },
   photo: "What you are paying for",
   enterHint: "or press Enter",
   methods: {

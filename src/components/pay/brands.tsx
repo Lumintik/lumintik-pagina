@@ -21,9 +21,10 @@ export type BrandId =
   | "gana"
   | "puntored"
   | "epayco"
-  | "global66";
+  | "global66"
+  | "davivienda";
 
-const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "black" | "own" }> = {
+const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "black" | "own" | "red" }> = {
   visa: { src: "/brands/visa.svg", name: "Visa", tile: "white" },
   mastercard: { src: "/brands/mastercard.svg", name: "Mastercard", tile: "white" },
   amex: { src: "/brands/amex.svg", name: "American Express", tile: "white" },
@@ -36,7 +37,16 @@ const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "blac
   puntored: { src: "/brands/puntored.svg", name: "Punto Red", tile: "white" },
   epayco: { src: "/brands/epayco.svg", name: "ePayco", tile: "white" },
   global66: { src: "/brands/global66.png", name: "Global66", tile: "own" },
+  // Davivienda publica su logo en negativo sobre su rojo; así va.
+  davivienda: { src: "/brands/davivienda.svg", name: "Davivienda", tile: "red" },
 };
+
+/** El logo del banco de una cuenta, si lo tenemos. */
+export function bankBrand(name: string): BrandId | null {
+  if (/davivienda/i.test(name)) return "davivienda";
+  if (/global ?66/i.test(name)) return "global66";
+  return null;
+}
 
 /** Las marcas de cada medio, en el orden en que se muestran. */
 export const METHOD_BRANDS: Record<Method, BrandId[]> = {
@@ -57,6 +67,7 @@ export const CASH_BRANDS: Record<string, BrandId | undefined> = {
 
 const SIZES = {
   sm: "h-7 w-11 rounded-md p-1",
+  wide: "h-9 w-32 rounded-lg px-2.5 py-1.5",
   md: "h-9 w-14 rounded-lg p-1.5",
   lg: "h-11 w-[4.5rem] rounded-lg p-2",
 };
@@ -64,7 +75,13 @@ const SIZES = {
 export function BrandTile({ id, size = "sm", className = "" }: { id: BrandId; size?: keyof typeof SIZES; className?: string }) {
   const brand = BRANDS[id];
   const tile =
-    brand.tile === "white" ? "bg-white" : brand.tile === "black" ? "bg-black ring-1 ring-white" : "overflow-hidden !p-0";
+    brand.tile === "white"
+      ? "bg-white"
+      : brand.tile === "black"
+        ? "bg-black ring-1 ring-white"
+        : brand.tile === "red"
+          ? "bg-[#ED1C27]"
+          : "overflow-hidden !p-0";
   return (
     <span className={`inline-flex shrink-0 items-center justify-center ${SIZES[size]} ${tile} ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element -- logos de marca, SVG estáticos */}

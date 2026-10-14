@@ -12,6 +12,7 @@ import { PAY_COPY, attemptTone, formatDate, formatMoney } from "./copy";
 import { cleanupThreeDs, runThreeDs } from "./epayco";
 import { CardForm, CashForm, DaviplataForm, PseForm, TransferPanel } from "./forms";
 import { BrandRow, BrandTile, METHOD_BRANDS, usedBrands } from "./brands";
+import { DocumentCard } from "./document-card";
 import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, SHEET_ACTION_ID, Seal } from "./ui";
 
 type View =
@@ -219,7 +220,7 @@ function PaySheet({ link, locale, t }: { link: PublicLink; locale: Locale; t: (t
           <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
             <div className="flex min-w-0 flex-1 items-end justify-between gap-4 sm:justify-start">
               <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em]">{t.sheet.total}</p>
+                <p className="text-sm font-semibold">{t.sheet.total}</p>
                 <p className="mt-1 flex items-baseline gap-2 tabular-nums">
                   <span className="text-3xl font-light tracking-tight">{formatMoney(link.amount, link.currency, locale)}</span>
                   <span className="text-sm font-semibold">{link.currency}</span>
@@ -273,7 +274,7 @@ function ActionPanel({
       <Outcome tone="ok" title={t.status.paid} body={t.status.paidBody}>
         <dl className="mt-10 grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 text-base">
           <dt className="font-semibold">{t.status.receipt}</dt>
-          <dd className="font-mono">{link.reference}</dd>
+          <dd className="tabular-nums">{link.reference}</dd>
           {link.paid_method ? (
             <>
               <dt className="font-semibold">{t.status.method}</dt>
@@ -360,7 +361,12 @@ function ActionPanel({
         {view.method === "breb" || view.method === "transferencia" ? (
           <TransferPanel {...common} method={view.method} />
         ) : null}
-        <SecureNote t={t} test={link.epayco_test} card={view.method === "tarjeta"} />
+        <SecureNote
+          t={t}
+          test={link.epayco_test}
+          card={view.method === "tarjeta"}
+          direct={view.method === "breb" || view.method === "transferencia"}
+        />
       </div>
     );
   }
@@ -424,7 +430,7 @@ function ChooseMethod({
                   on ? "bg-white/[0.08] ring-white" : "ring-transparent hover:bg-white/[0.05] focus-visible:ring-white"
                 }`}
               >
-                <span className="font-mono text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-xl font-semibold transition-transform duration-300 group-hover:translate-x-1">
                     {t.methods[method].name}
@@ -524,7 +530,7 @@ function SummaryStep({
               </>
             ) : null}
             <dt className="font-semibold">{t.reference}</dt>
-            <dd className="font-mono">{link.reference}</dd>
+            <dd className="tabular-nums">{link.reference}</dd>
             {link.invoice_number ? (
               <>
                 <dt className="font-semibold">{t.invoice}</dt>
@@ -559,33 +565,14 @@ function SummaryStep({
           ) : null}
           {link.invoice_filename ? (
             <Rise delay={2.05}>
-              <a
+              <DocumentCard
                 href={`${base}/factura`}
-                target="_blank"
-                rel="noreferrer"
-                className="group block rounded-2xl p-4 ring-1 ring-white transition hover:bg-white hover:text-black sm:p-5"
-              >
-                <div className="flex items-center gap-5">
-                  <div className="relative w-24 shrink-0 sm:w-28 [perspective:600px]">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- miniatura dinámica de la factura */}
-                    <img
-                      src={`${base}/factura/miniatura`}
-                      alt={t.invoiceCard.preview}
-                      className="block h-auto w-full rounded-md bg-white shadow-[0_20px_40px_rgba(255,255,255,0.12)] transition duration-500 [transform:rotateY(-12deg)_rotateZ(-2deg)] group-hover:[transform:rotateY(0deg)_rotateZ(0deg)_translateY(-4px)]"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-lg font-semibold">
-                      {t.invoiceCard.title} {link.invoice_number}
-                    </p>
-                    <p className="mt-1 truncate text-sm">{link.invoice_filename}</p>
-                    <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition group-hover:bg-black group-hover:text-white">
-                      <DownloadIcon />
-                      {t.invoiceCard.action}
-                    </span>
-                  </div>
-                </div>
-              </a>
+                thumbnail={`${base}/factura/miniatura`}
+                title={`${t.invoiceCard.title} ${link.invoice_number}`.trim()}
+                subtitle={link.invoice_filename}
+                action={t.invoiceCard.action}
+                preview={t.invoiceCard.preview}
+              />
             </Rise>
           ) : null}
         </div>
@@ -601,20 +588,12 @@ function SummaryStep({
   );
 }
 
-function DownloadIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
-      <path d="M12 4v11m0 0l-5-5m5 5l5-5M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 /** Indicador de pasos: 01 / 03 y tres barras que se llenan. */
 function Stepper({ step, labels }: { step: number; labels: string[] }) {
   return (
     <div className="flex flex-col gap-3">
       <p className="flex items-baseline gap-3 text-sm">
-        <span className="font-mono tabular-nums">
+        <span className="tabular-nums">
           {String(step).padStart(2, "0")} / {String(labels.length).padStart(2, "0")}
         </span>
         <span className="font-semibold">{labels[step - 1]}</span>
@@ -656,16 +635,27 @@ function Outcome({
   );
 }
 
-function SecureNote({ t, test, card }: { t: (typeof PAY_COPY)[Locale]; test: boolean; card: boolean }) {
+function SecureNote({
+  t,
+  test,
+  card,
+  direct = false,
+}: {
+  t: (typeof PAY_COPY)[Locale];
+  test: boolean;
+  card: boolean;
+  /** BreB y transferencia: el dinero va directo a la cuenta, sin ePayco. */
+  direct?: boolean;
+}) {
   return (
     <div className="mt-12 flex max-w-md items-start gap-3 text-sm leading-relaxed">
       <LockIcon />
       <div>
         <p>
-          {card ? t.secure : t.secureNoCard}
-          {test ? ` ${t.testMode}` : ""}
+          {direct ? t.secureDirect : card ? t.secure : t.secureNoCard}
+          {test && !direct ? ` ${t.testMode}` : ""}
         </p>
-        <BrandTile id="epayco" size="md" className="mt-3" />
+        {direct ? null : <BrandTile id="epayco" size="md" className="mt-3" />}
       </div>
     </div>
   );
