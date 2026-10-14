@@ -134,6 +134,9 @@ const ES = {
     reviewBody: "Avisaste el pago. Lo confirmamos apenas lo veamos en la cuenta y te escribimos.",
     pending: "Esperando confirmación",
     pendingBody: "El banco todavía no confirma. Esta página se actualiza sola.",
+    cardReview: "Pago en revisión",
+    cardReviewBody:
+      "ePayco está revisando este pago con tarjeta por seguridad. Te escribimos apenas quede aprobado; no hace falta pagar de nuevo.",
     rejected: "Pago no aprobado",
     rejectedBody: "No se completó el pago. Puedes intentar de nuevo o elegir otro medio.",
     retry: "Intentar de nuevo",
@@ -317,6 +320,9 @@ const EN: Copy = {
     reviewBody: "You reported the payment. We confirm it as soon as it shows in the account and email you.",
     pending: "Awaiting confirmation",
     pendingBody: "The bank has not confirmed yet. This page updates on its own.",
+    cardReview: "Payment under review",
+    cardReviewBody:
+      "ePayco is reviewing this card payment for security. We will email you as soon as it is approved; there is no need to pay again.",
     rejected: "Payment not approved",
     rejectedBody: "The payment did not go through. Try again or choose another method.",
     retry: "Try again",

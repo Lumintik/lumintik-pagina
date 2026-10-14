@@ -29,6 +29,9 @@ function initialView(link: PublicLink, t: (typeof PAY_COPY)[Locale]): View {
   if (!last) return { kind: "summary" };
   if (last.status === "en_revision") return { kind: "attempt", attempt: last };
   if (last.status === "pendiente" && last.method !== "tarjeta") return { kind: "attempt", attempt: last };
+  // Tarjeta retenida por el antifraude de ePayco: se muestra en revisión, para
+  // que nadie pague dos veces al volver a abrir el link.
+  if (last.status === "pendiente" && last.method === "tarjeta" && !last.three_ds) return { kind: "attempt", attempt: last };
   if (last.status === "rechazado" || last.status === "abandonado") {
     return { kind: "choose", error: friendly(last.message, t) || t.status.rejectedBody };
   }
@@ -352,6 +355,10 @@ function ActionPanel({
         </div>
       );
     }
+    // Una tarjeta sin 3D Secure que sigue pendiente quedó en la revisión
+    // antifraude de ePayco: puede tardar minutos u horas. La página sigue
+    // preguntando sola y cambia cuando se resuelva.
+    if (a.method === "tarjeta") return <Outcome tone="wait" title={t.status.cardReview} body={t.status.cardReviewBody} />;
     return <Orbit steps={t.sequence} label={`${t.status.pending}`} />;
   }
 
