@@ -97,6 +97,9 @@ export async function getLink(code: string): Promise<PublicLink | null> {
         : null,
       invoice_filename: String(r.invoice_filename ?? ""),
       invoice_number: String(r.invoice_number ?? ""),
+      subtotal: String(r.subtotal ?? ""),
+      tax: String(r.tax ?? ""),
+      withholding: String(r.withholding ?? ""),
     };
   } catch (error) {
     if (error instanceof PagosError && error.status === 404) return null;

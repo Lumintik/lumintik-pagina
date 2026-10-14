@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useId, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * Piezas visuales de la página de pago. Blanco sobre negro, sin grises: la
@@ -167,10 +168,43 @@ export function Seal({ tone }: { tone: "ok" | "fail" | "wait" }) {
   );
 }
 
+/** Donde vive el botón principal: la hoja fija de abajo. */
+export const SHEET_ACTION_ID = "pay-sheet-action";
+
+const FormIdContext = createContext<string | undefined>(undefined);
+
+const noSubscribe = () => () => undefined;
+
 /**
- * Botón principal: blanco lleno, texto negro. Uno por pantalla. Lo rodea un
- * aro de un pixel por el que corren dos destellos blancos, con un halo suave
- * detrás; se detiene mientras procesa o si está deshabilitado.
+ * Formulario de un medio de pago. Su botón de enviar no está adentro sino en
+ * la hoja fija de abajo; el atributo `form` los une sin importar dónde quede
+ * cada uno en la página.
+ */
+export function PayForm({
+  onSubmit,
+  className,
+  autoComplete,
+  children,
+}: {
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  className?: string;
+  autoComplete?: string;
+  children: React.ReactNode;
+}) {
+  const id = useId();
+  return (
+    <FormIdContext.Provider value={id}>
+      <form id={id} onSubmit={onSubmit} noValidate className={className} autoComplete={autoComplete}>
+        {children}
+      </form>
+    </FormIdContext.Provider>
+  );
+}
+
+/**
+ * Botón principal: blanco lleno, texto negro. Uno por pantalla, y siempre en
+ * la hoja fija de abajo. Lo rodea un aro de un pixel con el degradado de
+ * color girando y un halo suave; se detiene mientras procesa.
  */
 export function PrimaryButton({
   children,
@@ -185,9 +219,17 @@ export function PrimaryButton({
   type?: "submit" | "button";
   onClick?: () => void;
 }) {
+  const form = useContext(FormIdContext);
+  // En el servidor no hay hoja; en el navegador el botón se va a ella.
+  const slot = useSyncExternalStore(
+    noSubscribe,
+    () => document.getElementById(SHEET_ACTION_ID),
+    () => null,
+  );
+
   const still = Boolean(disabled || busy);
-  return (
-    <div className={`relative mt-8 transition-opacity ${still ? "opacity-50" : ""}`}>
+  const button = (
+    <div className={`relative w-full transition-opacity ${still ? "opacity-50" : ""}`}>
       {/* Halo: el mismo aro, desenfocado. */}
       <span
         aria-hidden
@@ -198,12 +240,13 @@ export function PrimaryButton({
         <div className="rounded-full bg-black p-[3px]">
           <motion.button
             type={type}
+            form={type === "submit" ? form : undefined}
             onClick={onClick}
             disabled={still}
             whileTap={{ scale: 0.985 }}
-            className="group relative flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-white text-base font-semibold text-black"
+            className="group relative flex h-14 w-full items-center justify-center overflow-hidden rounded-full bg-white px-6 text-base font-semibold text-black"
           >
-            <span className="relative z-10 flex items-center gap-3">
+            <span className="relative z-10 flex items-center gap-3 truncate">
               {busy ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" /> : null}
               {children}
             </span>
@@ -214,6 +257,9 @@ export function PrimaryButton({
       </div>
     </div>
   );
+
+  // Antes de montar (o sin hoja) se queda en su sitio, para no perder el botón.
+  return slot ? createPortal(button, slot) : <div className="mt-8">{button}</div>;
 }
 
 export function GhostButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
@@ -221,7 +267,7 @@ export function GhostButton({ children, onClick }: { children: React.ReactNode; 
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 text-sm font-medium text-white underline-offset-4 hover:underline"
+      className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-medium text-white underline-offset-4 hover:underline"
     >
       {children}
     </button>

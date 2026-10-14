@@ -8,7 +8,7 @@ import type { Attempt, Option, Payer, PublicLink } from "@/lib/pagos/types";
 import { formatMoney, type PayCopy } from "./copy";
 import { BrandTile, CASH_BRANDS } from "./brands";
 import { cardBrand, formatCardNumber, luhn, prepareTokenizer, tokenizeCard } from "./epayco";
-import { CopyRow, ErrorNote, Field, PrimaryButton, inputClass } from "./ui";
+import { CopyRow, ErrorNote, Field, PayForm, PrimaryButton, inputClass } from "./ui";
 
 type Common = {
   link: PublicLink;
@@ -214,7 +214,7 @@ export function CardForm({ link, locale, t, onAttempt, onBusy }: Common) {
   }
 
   return (
-    <form onSubmit={submit} noValidate className="ph-no-capture" autoComplete="on">
+    <PayForm onSubmit={submit} className="ph-no-capture" autoComplete="on">
       <div className="grid grid-cols-1 gap-4">
         <Field label={t.card.number}>
           <div className="relative">
@@ -284,7 +284,7 @@ export function CardForm({ link, locale, t, onAttempt, onBusy }: Common) {
       <PrimaryButton busy={busy}>
         {t.card.pay} {formatMoney(link.amount, link.currency, locale)}
       </PrimaryButton>
-    </form>
+    </PayForm>
   );
 }
 
@@ -335,7 +335,7 @@ export function PseForm({ link, t, onAttempt, onBusy }: Common) {
   }
 
   return (
-    <form onSubmit={submit} noValidate>
+    <PayForm onSubmit={submit}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_12rem]">
         <Field label={t.pse.bank}>
           <select
@@ -370,7 +370,7 @@ export function PseForm({ link, t, onAttempt, onBusy }: Common) {
       <p className="mt-6 text-sm">{t.pse.note}</p>
       <ErrorNote message={error} />
       <PrimaryButton busy={busy}>{t.pse.go}</PrimaryButton>
-    </form>
+    </PayForm>
   );
 }
 
@@ -404,7 +404,7 @@ export function CashForm({ link, t, onAttempt, onBusy }: Common) {
   }
 
   return (
-    <form onSubmit={submit} noValidate>
+    <PayForm onSubmit={submit}>
       <p className="text-sm font-medium">{t.cash.where}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {(entities ?? []).map((e) => (
@@ -426,7 +426,7 @@ export function CashForm({ link, t, onAttempt, onBusy }: Common) {
       <PayerFields payer={payer} setPayer={setPayer} t={t} link={link} showErrors={showErrors} />
       <ErrorNote message={error} />
       <PrimaryButton busy={busy}>{t.cash.go}</PrimaryButton>
-    </form>
+    </PayForm>
   );
 }
 
@@ -471,7 +471,7 @@ export function DaviplataForm({ link, t, onAttempt, onBusy }: Common) {
 
   if (attempt) {
     return (
-      <form onSubmit={confirm} noValidate>
+      <PayForm onSubmit={confirm}>
         <p className="text-base">{t.daviplata.note}</p>
         <Field label={t.daviplata.otp} className="mt-6">
           <input
@@ -487,16 +487,16 @@ export function DaviplataForm({ link, t, onAttempt, onBusy }: Common) {
         <PrimaryButton busy={busy} disabled={otp.length < 4}>
           {t.daviplata.confirm}
         </PrimaryButton>
-      </form>
+      </PayForm>
     );
   }
 
   return (
-    <form onSubmit={start} noValidate>
+    <PayForm onSubmit={start}>
       <PayerFields payer={payer} setPayer={setPayer} t={t} link={link} showErrors={showErrors} />
       <ErrorNote message={error} />
       <PrimaryButton busy={busy}>{t.daviplata.go}</PrimaryButton>
-    </form>
+    </PayForm>
   );
 }
 
@@ -571,7 +571,7 @@ export function TransferPanel({
       ) : null}
 
       {declaring ? (
-        <form onSubmit={declare} noValidate className="mt-10">
+        <PayForm onSubmit={declare} className="mt-10">
           <p className="text-lg font-semibold">{t.declare.heading}</p>
           <div className="mt-5 grid grid-cols-1 gap-4">
             <Field label={t.declare.name}>
@@ -588,7 +588,7 @@ export function TransferPanel({
           <PrimaryButton busy={busy}>
             {t.declare.send} {amount}
           </PrimaryButton>
-        </form>
+        </PayForm>
       ) : (
         <PrimaryButton type="button" onClick={() => setDeclaring(true)}>
           {method === "breb" ? t.breb.done : t.transfer.done}

@@ -68,6 +68,10 @@ export type PublicLink = {
   paid_method: Method | null;
   invoice_filename: string;
   invoice_number: string;
+  /** Desglose de la factura; vacíos si no se dio. */
+  subtotal: string;
+  tax: string;
+  withholding: string;
 };
 
 export type Option = { code: string; name: string };

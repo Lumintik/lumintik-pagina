@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { checkAttempt } from "@/app/[locale]/pagar/[code]/actions";
@@ -12,7 +12,7 @@ import { PAY_COPY, attemptTone, formatDate, formatMoney } from "./copy";
 import { cleanupThreeDs, runThreeDs } from "./epayco";
 import { CardForm, CashForm, DaviplataForm, PseForm, TransferPanel } from "./forms";
 import { BrandRow, BrandTile, METHOD_BRANDS, usedBrands } from "./brands";
-import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, Seal } from "./ui";
+import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, SHEET_ACTION_ID, Seal } from "./ui";
 
 type View =
   | { kind: "choose"; error?: string }
@@ -95,6 +95,16 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
     };
   }, [view, link.code, settled]);
 
+  // En el teléfono el formulario queda debajo del resumen: al elegir medio,
+  // la página baja hasta él.
+  const actionRef = useRef<HTMLElement>(null);
+  const viewKey = view.kind === "method" ? `method-${view.method}` : view.kind;
+  useEffect(() => {
+    if (viewKey === "choose" || viewKey === "busy" || !actionRef.current) return;
+    if (window.matchMedia("(min-width: 1024px)").matches) return;
+    actionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [viewKey]);
+
   const onAttempt = (attempt: Attempt) => settled(attempt);
   const busyFor = (method: Method) => (busy: boolean) =>
     setView(busy ? { kind: "busy", method } : { kind: "method", method });
@@ -128,7 +138,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 gap-16 px-4 pb-24 pt-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:gap-20 lg:pt-24">
+      <main className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 gap-16 px-4 pb-56 pt-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:gap-20 lg:pt-24">
         {/* Resumen */}
         <section aria-label={t.payTo} className="lg:sticky lg:top-24 lg:self-start">
           <Rise delay={1.5}>
@@ -190,7 +200,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
         </section>
 
         {/* Acción */}
-        <section aria-live="polite" className="min-w-0">
+        <section ref={actionRef} aria-live="polite" className="min-w-0 scroll-mt-6">
           <Rise delay={1.9}>
             <Panel id={panelKey(link, view)}>
               <ActionPanel
@@ -210,7 +220,82 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
           </div>
         </section>
       </main>
+
+      {link.status === "pendiente" ? <PaySheet link={link} locale={locale} t={t} /> : null}
     </div>
+  );
+}
+
+/**
+ * Hoja fija de abajo: el total con su desglose y el único botón de la
+ * pantalla. Siempre a la vista, en el teléfono y en el computador.
+ */
+function PaySheet({ link, locale, t }: { link: PublicLink; locale: Locale; t: (typeof PAY_COPY)[Locale] }) {
+  const [open, setOpen] = useState(false);
+  const money = (value: string) => `${formatMoney(value, link.currency, locale)} ${link.currency}`;
+  const rows: [string, string][] = link.subtotal
+    ? [
+        [t.sheet.subtotal, money(link.subtotal)],
+        [t.sheet.tax, money(link.tax || "0")],
+        ...(link.withholding && Number(link.withholding) > 0
+          ? ([[t.sheet.withholding, money(link.withholding)]] as [string, string][])
+          : []),
+      ]
+    : [];
+
+  return (
+    <motion.div
+      initial={{ y: "110%" }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.8, delay: 2.2, ease: EASE }}
+      className="fixed inset-x-0 bottom-0 z-30"
+    >
+      <div className="mx-auto max-w-6xl px-2 sm:px-4">
+        <div className="rounded-t-[28px] bg-black/85 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-30px_60px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:px-6">
+          <span aria-hidden className="mx-auto block h-1 w-10 rounded-full bg-white" />
+          <AnimatePresence initial={false}>
+            {open && rows.length ? (
+              <motion.dl
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: EASE }}
+                className="grid grid-cols-[1fr_auto] gap-x-6 gap-y-2 overflow-hidden pt-4 text-sm"
+              >
+                {rows.map(([label, value]) => (
+                  <div key={label} className="contents">
+                    <dt className="font-semibold">{label}</dt>
+                    <dd className="text-right tabular-nums">{value}</dd>
+                  </div>
+                ))}
+              </motion.dl>
+            ) : null}
+          </AnimatePresence>
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
+            <div className="flex min-w-0 flex-1 items-end justify-between gap-4 sm:justify-start">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em]">{t.sheet.total}</p>
+                <p className="mt-1 flex items-baseline gap-2 tabular-nums">
+                  <span className="text-3xl font-light tracking-tight">{formatMoney(link.amount, link.currency, locale)}</span>
+                  <span className="text-sm font-semibold">{link.currency}</span>
+                </p>
+              </div>
+              {rows.length ? (
+                <button
+                  type="button"
+                  onClick={() => setOpen((v) => !v)}
+                  aria-expanded={open}
+                  className="shrink-0 text-sm font-semibold underline underline-offset-4 hover:no-underline"
+                >
+                  {open ? t.sheet.hide : t.sheet.details}
+                </button>
+              ) : null}
+            </div>
+            <div id={SHEET_ACTION_ID} className="w-full sm:w-[24rem]" />
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -334,42 +419,84 @@ function ActionPanel({
     );
   }
 
+  return <ChooseMethod link={link} t={t} error={view.error} onContinue={(method) => setView({ kind: "method", method })} />;
+}
+
+/**
+ * Elegir medio es marcarlo; continuar es el botón de la hoja fija de abajo.
+ * Todo cobro muestra todos los medios disponibles.
+ */
+function ChooseMethod({
+  link,
+  t,
+  error,
+  onContinue,
+}: {
+  link: PublicLink;
+  t: (typeof PAY_COPY)[Locale];
+  error?: string;
+  onContinue: (method: Method) => void;
+}) {
+  const [picked, setPicked] = useState<Method | null>(null);
   return (
     <div>
       <p className="text-2xl font-semibold">{t.chooseMethod}</p>
-      {view.error ? (
+      {error ? (
         <p role="alert" className="mt-6 rounded-xl bg-white px-4 py-3 text-sm font-medium text-black">
-          {view.error}
+          {error}
         </p>
       ) : null}
-      <ul className="mt-6 space-y-1">
-        {link.methods.map((method, i) => (
-          <motion.li
-            key={method}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 * i, ease: EASE }}
-          >
-            <button
-              type="button"
-              onClick={() => setView({ kind: "method", method })}
-              className="group flex w-full items-center gap-5 rounded-2xl px-4 py-5 text-left transition hover:bg-white/[0.06] focus-visible:bg-white/[0.06] focus-visible:outline-none"
+      <ul className="mt-6 space-y-2" role="radiogroup" aria-label={t.chooseMethod}>
+        {link.methods.map((method, i) => {
+          const on = picked === method;
+          return (
+            <motion.li
+              key={method}
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.05 * i, ease: EASE }}
             >
-              <span className="font-mono text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-xl font-semibold transition-transform duration-300 group-hover:translate-x-1">
-                  {t.methods[method].name}
+              <button
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => setPicked(method)}
+                onDoubleClick={() => onContinue(method)}
+                className={`group flex w-full items-center gap-5 rounded-2xl px-4 py-5 text-left ring-1 transition focus-visible:outline-none ${
+                  on ? "bg-white/[0.08] ring-white" : "ring-transparent hover:bg-white/[0.05] focus-visible:ring-white"
+                }`}
+              >
+                <span className="font-mono text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-xl font-semibold transition-transform duration-300 group-hover:translate-x-1">
+                    {t.methods[method].name}
+                  </span>
+                  <span className="mt-1 block text-sm">{t.methods[method].hint}</span>
+                  <BrandRow ids={METHOD_BRANDS[method]} className="mt-3" />
                 </span>
-                <span className="mt-1 block text-sm">{t.methods[method].hint}</span>
-                <BrandRow ids={METHOD_BRANDS[method]} className="mt-3" />
-              </span>
-              <span className="text-2xl transition-transform duration-300 group-hover:translate-x-1" aria-hidden>
-                →
-              </span>
-            </button>
-          </motion.li>
-        ))}
+                <span
+                  aria-hidden
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ring-2 ring-white transition ${on ? "bg-white" : ""}`}
+                >
+                  <AnimatePresence>
+                    {on ? (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="h-2.5 w-2.5 rounded-full bg-black"
+                      />
+                    ) : null}
+                  </AnimatePresence>
+                </span>
+              </button>
+            </motion.li>
+          );
+        })}
       </ul>
+      <PrimaryButton type="button" disabled={!picked} onClick={() => picked && onContinue(picked)}>
+        {picked ? `${t.sheet.continueWith} ${t.methods[picked].name}` : t.sheet.pick}
+      </PrimaryButton>
     </div>
   );
 }
