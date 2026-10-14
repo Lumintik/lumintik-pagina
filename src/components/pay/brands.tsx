@@ -2,10 +2,10 @@
  * Logos oficiales de los medios de pago y de las marcas que la página nombra.
  * Regla de David: nunca un ícono genérico ni el nombre en texto en su lugar.
  *
- * Cada logo va en una ficha del mismo tamaño, con el logo entero adentro
- * (nunca recortado). La ficha es blanca porque la mayoría de logos oficiales
- * son oscuros; los que ya traen su fondo (BreB, Global66) van tal cual, y el
- * de Gana, que solo existe en blanco, va sobre negro.
+ * Cada logo va en un espacio del mismo tamaño, entero (nunca recortado) y sin
+ * ficha de fondo: va directo sobre el negro de la página. Los que son oscuros
+ * van en su versión en blanco; los que ya se ven sobre negro o traen su propio
+ * sello de color (Amex, BreB, Global66, PCI) van tal cual.
  */
 import type { Method } from "@/lib/pagos/types";
 
@@ -27,24 +27,24 @@ export type BrandId =
 
 const BRANDS: Record<
   BrandId,
-  { src: string; name: string; tile: "white" | "black" | "own" | "red"; wide?: boolean }
+  { src: string; name: string; tone: "white" | "own"; wide?: boolean }
 > = {
-  visa: { src: "/brands/visa.svg", name: "Visa", tile: "white" },
-  mastercard: { src: "/brands/mastercard.svg", name: "Mastercard", tile: "white" },
-  amex: { src: "/brands/amex.svg", name: "American Express", tile: "white" },
-  diners: { src: "/brands/diners.svg", name: "Diners Club", tile: "white" },
-  pse: { src: "/brands/pse.png", name: "PSE", tile: "white" },
-  breb: { src: "/brands/breb.png", name: "Bre-B", tile: "own" },
-  daviplata: { src: "/brands/daviplata.svg", name: "Daviplata", tile: "white" },
-  efecty: { src: "/brands/efecty.svg", name: "Efecty", tile: "white" },
-  gana: { src: "/brands/gana.svg", name: "Gana", tile: "black" },
-  puntored: { src: "/brands/puntored.svg", name: "Punto Red", tile: "white" },
-  epayco: { src: "/brands/epayco.svg", name: "ePayco", tile: "white" },
-  global66: { src: "/brands/global66.png", name: "Global66", tile: "own" },
-  // Davivienda publica su logo en negativo sobre su rojo; así va.
-  davivienda: { src: "/brands/davivienda.svg", name: "Davivienda", tile: "red", wide: true },
+  visa: { src: "/brands/visa.svg", name: "Visa", tone: "white" },
+  mastercard: { src: "/brands/mastercard.svg", name: "Mastercard", tone: "own" },
+  amex: { src: "/brands/amex.svg", name: "American Express", tone: "own" },
+  diners: { src: "/brands/diners.svg", name: "Diners Club", tone: "white" },
+  pse: { src: "/brands/pse.png", name: "PSE", tone: "own" },
+  breb: { src: "/brands/breb.png", name: "Bre-B", tone: "own" },
+  daviplata: { src: "/brands/daviplata.svg", name: "Daviplata", tone: "white" },
+  efecty: { src: "/brands/efecty.svg", name: "Efecty", tone: "white" },
+  gana: { src: "/brands/gana.svg", name: "Gana", tone: "own" },
+  puntored: { src: "/brands/puntored.svg", name: "Punto Red", tone: "white" },
+  epayco: { src: "/brands/epayco.svg", name: "ePayco", tone: "white" },
+  global66: { src: "/brands/global66.png", name: "Global66", tone: "own" },
+  // Davivienda publica su logo en negativo; va en blanco.
+  davivienda: { src: "/brands/davivienda.svg", name: "Davivienda", tone: "own", wide: true },
   // Sello PCI DSS que publica ePayco (evaluado por ControlCase).
-  pci: { src: "/brands/pci-dss.png", name: "PCI DSS, evaluado por ControlCase", tile: "own" },
+  pci: { src: "/brands/pci-dss.png", name: "PCI DSS, evaluado por ControlCase", tone: "own" },
 };
 
 /** El logo del banco de una cuenta, si lo tenemos. */
@@ -72,30 +72,27 @@ export const CASH_BRANDS: Record<string, BrandId | undefined> = {
 };
 
 /** Logos alargados (Davivienda es 10 a 1): misma altura, más ancho, nunca recortados. */
-const WIDE: Record<string, string> = { xs: "!w-24 px-1.5", sm: "!w-28 px-2", md: "!w-32 px-2.5", lg: "!w-40 px-3", wide: "" };
+const WIDE: Record<string, string> = { xs: "!w-24", sm: "!w-28", md: "!w-32", lg: "!w-40", wide: "" };
 
 const SIZES = {
-  xs: "h-6 w-9 rounded p-0.5",
-  sm: "h-7 w-11 rounded-md p-1",
-  wide: "h-9 w-32 rounded-lg px-2.5 py-1.5",
-  md: "h-9 w-14 rounded-lg p-1.5",
-  lg: "h-11 w-[4.5rem] rounded-lg p-2",
+  xs: "h-6 w-9 rounded",
+  sm: "h-7 w-11 rounded-md",
+  wide: "h-9 w-32 rounded-lg",
+  md: "h-9 w-14 rounded-lg",
+  lg: "h-11 w-[4.5rem] rounded-lg",
 };
 
 export function BrandTile({ id, size = "sm", className = "" }: { id: BrandId; size?: keyof typeof SIZES; className?: string }) {
   const brand = BRANDS[id];
-  const tile =
-    brand.tile === "white"
-      ? "bg-white"
-      : brand.tile === "black"
-        ? "bg-black ring-1 ring-white"
-        : brand.tile === "red"
-          ? "bg-[#ED1C27]"
-          : "overflow-hidden !p-0";
   return (
-    <span className={`inline-flex shrink-0 items-center justify-center ${SIZES[size]} ${brand.wide ? WIDE[size] : ""} ${tile} ${className}`}>
+    <span className={`inline-flex shrink-0 items-center justify-center overflow-hidden ${SIZES[size]} ${brand.wide ? WIDE[size] : ""} ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element -- logos de marca, SVG estáticos */}
-      <img src={brand.src} alt={brand.name} className="h-full w-full object-contain" decoding="async" />
+      <img
+        src={brand.src}
+        alt={brand.name}
+        className={`h-full w-full object-contain ${brand.tone === "white" ? "brightness-0 invert" : ""}`}
+        decoding="async"
+      />
     </span>
   );
 }

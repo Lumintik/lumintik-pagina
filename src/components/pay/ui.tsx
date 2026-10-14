@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { createContext, useContext, useEffect, useId, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 /**
@@ -207,7 +207,8 @@ export function PayForm({
 /**
  * Botón principal: blanco lleno, texto negro. Uno por pantalla, y siempre en
  * la hoja fija de abajo. Lo rodea un aro de un pixel con el degradado de
- * color girando y un halo suave; se detiene mientras procesa.
+ * color girando; se detiene mientras procesa. Sin halo desenfocado: en
+ * Safari de iPhone dejaba un recuadro de esquinas rectas detrás.
  */
 export function PrimaryButton({
   children,
@@ -233,12 +234,6 @@ export function PrimaryButton({
   const still = Boolean(disabled || busy);
   const button = (
     <div className={`relative w-full transition-opacity ${still ? "opacity-50" : ""}`}>
-      {/* Halo: el mismo aro, desenfocado. */}
-      <span
-        aria-hidden
-        data-still={still}
-        className="pay-ring pointer-events-none absolute -inset-px rounded-full opacity-60 blur-md"
-      />
       <div data-still={still} className="pay-ring relative rounded-full p-px">
         <div className="rounded-full bg-black p-[3px]">
           <motion.button
@@ -353,6 +348,7 @@ export function CopyRow({
 }
 
 export function ErrorNote({ message }: { message: string }) {
+  const noteRef = useRef<HTMLParagraphElement>(null);
   return (
     <AnimatePresence>
       {message ? (
@@ -361,6 +357,13 @@ export function ErrorNote({ message }: { message: string }) {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
+          // Suele aparecer al final de un paso largo, debajo de la hoja fija
+          // del botón: se trae al centro para que se lea sin buscarlo.
+          onAnimationComplete={(definition) => {
+            if (typeof definition === "object" && "height" in definition && definition.height === "auto")
+              noteRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+          }}
+          ref={noteRef}
           className="mt-6 rounded-xl bg-white px-4 py-3 text-sm font-medium text-black"
         >
           {message}

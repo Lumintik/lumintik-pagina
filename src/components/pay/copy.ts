@@ -182,6 +182,8 @@ const ES = {
     minimum: "Este medio no acepta un monto tan bajo. Elige otro, como BreB o transferencia.",
     cardWithReason: (reason: string) =>
       `No pudimos procesar la tarjeta: ${reason}. Revisa los datos o intenta con otra tarjeta.`,
+    cardRestricted:
+      "Tu banco tiene esta tarjeta restringida para pagos en línea. Habilítala en la app de tu banco o intenta con otra tarjeta.",
   },
   contact: "¿Dudas? Escríbenos a",
 };
@@ -363,6 +365,8 @@ const EN: Copy = {
     minimum: "This method does not accept such a small amount. Choose another one, like BreB or bank transfer.",
     cardWithReason: (reason: string) =>
       `We could not process the card: ${reason}. Check the details or try another card.`,
+    cardRestricted:
+      "Your bank has restricted this card for online payments. Enable it in your bank's app or try another card.",
   },
   contact: "Questions? Write to",
 };

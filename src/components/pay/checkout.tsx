@@ -307,7 +307,15 @@ export function Checkout({
       } catch (failure) {
         const detail = describeFailure(failure);
         void actions.reportClientError(link.code, "tokenizar tarjeta", detail || String(failure));
-        setError(detail ? t.errors.cardWithReason(detail) : t.errors.generic);
+        // ePayco antepone "Error general contacte con soporte." al motivo real.
+        const reason = detail.replace(/^error general,? contacte con soporte\.?\s*/i, "");
+        setError(
+          /restringid/i.test(reason)
+            ? t.errors.cardRestricted
+            : reason
+              ? t.errors.cardWithReason(reason)
+              : t.errors.generic,
+        );
         setProcessing(false);
       } finally {
         setBusy(false);
