@@ -297,6 +297,7 @@ export function Field({
 export function CopyRow({
   label,
   value,
+  display,
   copyLabel,
   copiedLabel,
   mono,
@@ -304,6 +305,8 @@ export function CopyRow({
 }: {
   label: string;
   value: string;
+  /** Cómo se muestra, si no es igual a lo que se copia (el monto con formato, por ejemplo). */
+  display?: string;
   copyLabel: string;
   copiedLabel: string;
   mono?: boolean;
@@ -315,7 +318,7 @@ export function CopyRow({
     <div className="flex items-end justify-between gap-4 py-3">
       <div className="min-w-0">
         <p className="text-sm font-medium">{label}</p>
-        <p className={`mt-1 break-all ${mono ? "tabular-nums" : ""} ${big ? "text-2xl font-semibold" : "text-lg"}`}>{value}</p>
+        <p className={`mt-1 break-all ${mono ? "tabular-nums" : ""} ${big ? "text-2xl font-semibold" : "text-lg"}`}>{display ?? value}</p>
       </div>
       <button
         type="button"

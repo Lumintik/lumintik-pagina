@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { checkAttempt } from "@/app/[locale]/pagar/[code]/actions";
+import { checkAttempt, refreshLink } from "@/app/[locale]/pagar/[code]/actions";
 import type { Locale } from "@/lib/locale";
 import type { Attempt, Method, PublicLink } from "@/lib/pagos/types";
 import { PAY_COPY, attemptTone, formatDate, formatMoney } from "./copy";
@@ -101,6 +101,30 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
       clearTimeout(timer);
     };
   }, [view, link.code, settled]);
+
+  // BreB: el aviso de Global66 puede llegar mientras el cliente sigue en las
+  // instrucciones, sin haber tocado "Ya pagué". Se pregunta por el cobro y, si
+  // ya quedó pagado, la página lo muestra sola.
+  const onBreb = view.kind === "method" && view.method === "breb" && link.status === "pendiente";
+  useEffect(() => {
+    if (!onBreb) return;
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = async () => {
+      const fresh = await refreshLink(link.code);
+      if (!alive) return;
+      if (fresh && fresh.status !== "pendiente") {
+        setLink(fresh);
+        return;
+      }
+      timer = setTimeout(tick, 5_000);
+    };
+    timer = setTimeout(tick, 5_000);
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [onBreb, link.code]);
 
   // Una pantalla a la vez, como un formulario de Typeform: al cambiar de paso
   // se vuelve arriba.
@@ -331,6 +355,11 @@ function ActionPanel({
   if (view.kind === "attempt") {
     const a = view.attempt;
     const tone = attemptTone(a.status);
+    // BreB se confirma solo con el aviso de Global66: se espera en vivo. La
+    // transferencia a Davivienda la confirma una persona y puede tardar más.
+    if (a.status === "en_revision" && a.method === "breb") {
+      return <Waiting attempt={a} t={t} locale={locale} lastCheck={lastCheck} />;
+    }
     if (a.status === "en_revision") return <Outcome tone="wait" title={t.status.review} body={t.status.reviewBody} />;
     if (tone === "fail") {
       return (
@@ -672,7 +701,7 @@ function Waiting({
   }, []);
 
   const w = t.waiting;
-  const kind = attempt.method === "tarjeta" ? w.card : w.bank;
+  const kind = attempt.method === "tarjeta" ? w.card : attempt.method === "breb" ? w.breb : w.bank;
   const started = attempt.created_at ? Math.min(Date.parse(attempt.created_at), mounted) : mounted;
   const elapsed = Math.max(0, now - started);
   const stage = WAIT_STAGES.filter((minutes) => elapsed >= minutes * 60_000).length;
@@ -696,7 +725,7 @@ function Waiting({
 
       <div className="mt-8 w-full rounded-2xl bg-white px-5 py-4 text-black">
         <p className="text-base font-semibold">{w.dontRetry}</p>
-        <p className="mt-1 text-sm leading-relaxed">{w.dontRetryBody}</p>
+        <p className="mt-1 text-sm leading-relaxed">{kind.dontRetryBody}</p>
       </div>
 
       <ol className="mt-10 grid gap-6">
@@ -726,7 +755,7 @@ function Waiting({
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.3 }}
         >
-          {w.stages[Math.min(stage, w.stages.length - 1)]}
+          {kind.stages[Math.min(stage, kind.stages.length - 1)]}
         </motion.p>
       </AnimatePresence>
 

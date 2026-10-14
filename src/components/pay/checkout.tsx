@@ -639,13 +639,9 @@ export function Checkout({
                 <CopyRow
                   label={t.breb.amount}
                   value={link.amount}
+                  display={`${amount} ${link.currency}`}
                   mono
-                  {...c}
-                />
-                <CopyRow
-                  label={t.reference}
-                  value={link.reference}
-                  mono
+                  big
                   {...c}
                 />
                 <ol className="mt-6 space-y-2">
@@ -712,6 +708,7 @@ export function Checkout({
                   <CopyRow
                     label={t.breb.amount}
                     value={link.amount}
+                    display={`${amount} ${link.currency}`}
                     mono
                     {...c}
                   />

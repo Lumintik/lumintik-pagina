@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 
 import * as api from "@/lib/pagos/api";
-import type { Attempt, Option, Payer, Result } from "@/lib/pagos/types";
+import type { Attempt, Option, Payer, PublicLink, Result } from "@/lib/pagos/types";
 
 /**
  * Acciones de la página de pago. Corren en el servidor de Vercel: el navegador
@@ -152,6 +152,15 @@ export async function declareTransfer(
     return { ok: true, data };
   } catch (error) {
     return fail(error, fallback);
+  }
+}
+
+/** El cobro como lo ve el público, para notar un pago que llegó por otro lado (BreB). */
+export async function refreshLink(code: string): Promise<PublicLink | null> {
+  try {
+    return await api.getLink(code);
+  } catch {
+    return null;
   }
 }
 
