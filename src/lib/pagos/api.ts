@@ -104,6 +104,9 @@ export async function getLink(code: string): Promise<PublicLink | null> {
       transfer_certificate_filename: String(r.transfer_certificate_filename ?? ""),
       concept_en: String(r.concept_en ?? ""),
       description_en: String(r.description_en ?? ""),
+      client_phone: String(r.client_phone ?? ""),
+      client_address: String(r.client_address ?? ""),
+      client_city: String(r.client_city ?? ""),
     };
   } catch (error) {
     if (error instanceof PagosError && error.status === 404) return null;

@@ -10,10 +10,10 @@ import type { Locale } from "@/lib/locale";
 import type { Attempt, Method, PublicLink } from "@/lib/pagos/types";
 import { PAY_COPY, attemptTone, formatDate, formatMoney } from "./copy";
 import { cleanupThreeDs, runThreeDs } from "./epayco";
-import { CardForm, CashForm, DaviplataForm, PseForm, TransferPanel } from "./forms";
+import { Checkout, totalSteps } from "./checkout";
 import { BrandRow, BrandTile, brandsForMethod, usedBrands } from "./brands";
 import { DocumentCard } from "./document-card";
-import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, SHEET_ACTION_ID, Seal } from "./ui";
+import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, SHEET_ACTION_ID, Seal, StepHeader } from "./ui";
 
 type View =
   | { kind: "summary" }
@@ -108,6 +108,17 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
   }, [viewKey]);
 
   const onAttempt = (attempt: Attempt) => settled(attempt);
+  // Paso actual dentro del pago (lo informa Checkout) para el indicador de arriba.
+  const [progress, setProgress] = useState({ step: 3, label: "" });
+  const onProgress = useCallback((step: number, label: string) => setProgress({ step, label }), []);
+  const activeMethod = view.kind === "method" || view.kind === "busy" ? view.method : null;
+  const stepNow =
+    view.kind === "summary"
+      ? { step: 1, label: t.flow.steps.summary }
+      : view.kind === "choose"
+        ? { step: 2, label: t.flow.steps.method }
+        : progress;
+
   const busyFor = (method: Method) => (busy: boolean) =>
     setView(busy ? { kind: "busy", method } : { kind: "method", method });
 
@@ -129,7 +140,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
         </Link>
         <div className="mx-auto w-full max-w-xs">
           {link.status === "pendiente" && view.kind !== "attempt" ? (
-            <Stepper step={view.kind === "summary" ? 1 : view.kind === "choose" ? 2 : 3} labels={t.steps} />
+            <Stepper step={stepNow.step} total={totalSteps(activeMethod)} label={stepNow.label} />
           ) : null}
         </div>
         <div className="flex items-center gap-3">
@@ -159,6 +170,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
               setView={setView}
               onAttempt={onAttempt}
               busyFor={busyFor}
+              onProgress={onProgress}
             />
           </Panel>
         </section>
@@ -262,6 +274,7 @@ function ActionPanel({
   setView,
   onAttempt,
   busyFor,
+  onProgress,
 }: {
   link: PublicLink;
   locale: Locale;
@@ -270,6 +283,7 @@ function ActionPanel({
   setView: (v: View) => void;
   onAttempt: (a: Attempt) => void;
   busyFor: (m: Method) => (busy: boolean) => void;
+  onProgress: (step: number, label: string) => void;
 }) {
   if (link.status === "pagado") {
     return (
@@ -348,21 +362,18 @@ function ActionPanel({
   }
 
   if (view.kind === "method") {
-    const common = { link, locale, t, onAttempt, onBusy: busyFor(view.method) };
     return (
       <div>
-        <GhostButton onClick={() => setView({ kind: "choose" })}>← {t.back}</GhostButton>
-        <div className="mb-8 mt-6 flex flex-wrap items-center gap-3">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{t.methods[view.method].name}</h2>
-          <BrandRow ids={brandsForMethod(view.method, link.transfer?.bank)} size="md" />
-        </div>
-        {view.method === "tarjeta" ? <CardForm {...common} /> : null}
-        {view.method === "pse" ? <PseForm {...common} /> : null}
-        {view.method === "efectivo" ? <CashForm {...common} /> : null}
-        {view.method === "daviplata" ? <DaviplataForm {...common} /> : null}
-        {view.method === "breb" || view.method === "transferencia" ? (
-          <TransferPanel {...common} method={view.method} />
-        ) : null}
+        <Checkout
+          link={link}
+          locale={locale}
+          t={t}
+          method={view.method}
+          onAttempt={onAttempt}
+          onBusy={busyFor(view.method)}
+          onChangeMethod={() => setView({ kind: "choose" })}
+          onProgress={onProgress}
+        />
         <SecureNote
           t={t}
           test={link.epayco_test}
@@ -405,14 +416,13 @@ function ChooseMethod({
   useEnter(() => picked && onContinue(picked));
   return (
     <div>
-      <GhostButton onClick={onBack}>← {t.previous}</GhostButton>
-      <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">{t.chooseMethod}</h2>
+      <StepHeader title={t.chooseMethod} backLabel={t.previous} onBack={onBack} />
       {error ? (
         <p role="alert" className="mt-6 rounded-xl bg-white px-4 py-3 text-sm font-medium text-black">
           {error}
         </p>
       ) : null}
-      <ul className="mt-5 space-y-1.5" role="radiogroup" aria-label={t.chooseMethod}>
+      <ul className="space-y-1.5" role="radiogroup" aria-label={t.chooseMethod}>
         {link.methods.map((method, i) => {
           const on = picked === method;
           return (
@@ -597,19 +607,19 @@ function SummaryStep({
   );
 }
 
-/** Indicador de pasos en el encabezado: nombre del paso centrado y tres barras. */
-function Stepper({ step, labels }: { step: number; labels: string[] }) {
+/** Indicador de pasos en el encabezado: el paso y su nombre centrados, y una barra por paso. */
+function Stepper({ step, total, label }: { step: number; total: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <p className="flex items-baseline gap-2 whitespace-nowrap text-xs sm:text-sm">
         <span className="tabular-nums">
-          {step}/{labels.length}
+          {step}/{total}
         </span>
-        <span className="font-semibold">{labels[step - 1]}</span>
+        <span className="font-semibold">{label}</span>
       </p>
-      <div className="grid w-full grid-cols-3 gap-1.5" aria-hidden>
-        {labels.map((label, i) => (
-          <span key={label} className="relative h-1 overflow-hidden rounded-full bg-white/20">
+      <div className="grid w-full gap-1" style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }} aria-hidden>
+        {Array.from({ length: total }, (_, i) => (
+          <span key={i} className="relative h-1 overflow-hidden rounded-full bg-white/20">
             <motion.span
               className="absolute inset-y-0 left-0 rounded-full bg-white"
               initial={false}

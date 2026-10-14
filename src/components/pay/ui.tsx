@@ -277,8 +277,9 @@ export function GhostButton({ children, onClick }: { children: React.ReactNode; 
   );
 }
 
+/** Campos con borde blanco de un pixel; al enfocar o con error, dos pixeles. */
 export const inputClass =
-  "h-12 w-full rounded-xl bg-white/[0.06] px-4 text-base text-white outline-none ring-1 ring-white/20 transition placeholder:text-white/40 focus:bg-white/[0.09] focus:ring-2 focus:ring-white aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-white";
+  "h-12 w-full rounded-xl bg-white/[0.06] px-4 text-base text-white outline-none ring-1 ring-white transition placeholder:text-white/40 focus:bg-white/[0.09] focus:ring-2 focus:ring-white aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-white";
 
 export function Field({
   label,
@@ -366,5 +367,49 @@ export function ErrorNote({ message }: { message: string }) {
         </motion.p>
       ) : null}
     </AnimatePresence>
+  );
+}
+
+/**
+ * Encabezado de cada paso: el botón de volver con borde a la izquierda y el
+ * título centrado en el mismo renglón. Un espacio igual a la derecha mantiene
+ * el título en el centro real.
+ */
+export function StepHeader({
+  title,
+  backLabel,
+  onBack,
+  children,
+}: {
+  title: string;
+  backLabel: string;
+  onBack?: () => void;
+  /** Lo que va bajo el título, centrado (logos del medio, por ejemplo). */
+  children?: React.ReactNode;
+}) {
+  const back = (
+    <button
+      type="button"
+      onClick={onBack}
+      className="inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-sm font-semibold ring-1 ring-white transition hover:bg-white hover:text-black"
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden>
+        <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <span className="hidden sm:inline">{backLabel}</span>
+    </button>
+  );
+  return (
+    <div className="mb-6">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
+        {onBack ? back : <span />}
+        <h2 className="text-balance text-center text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{title}</h2>
+        {/* Gemelo invisible del botón: deja el título en el centro exacto. */}
+        <span aria-hidden className="invisible">
+          {onBack ? back : null}
+        </span>
+      </div>
+      {children ? <div className="mt-3 flex justify-center">{children}</div> : null}
+    </div>
   );
 }

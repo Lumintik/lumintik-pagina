@@ -79,6 +79,10 @@ export type PublicLink = {
   /** Concepto y descripción en inglés; vacíos si no se dieron. */
   concept_en: string;
   description_en: string;
+  /** Del cliente, escritos al crear el cobro o leídos de la factura. */
+  client_phone: string;
+  client_address: string;
+  client_city: string;
 };
 
 export type Option = { code: string; name: string };
@@ -90,6 +94,8 @@ export type Payer = {
   phone: string;
   doc_type: string;
   doc_number: string;
+  /** Indicativo del celular, "+57" por defecto. */
+  phone_country?: string;
 };
 
 /** Lo que devuelve cada acción del servidor a la página. */
