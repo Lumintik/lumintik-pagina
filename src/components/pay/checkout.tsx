@@ -4,13 +4,34 @@ import { useEffect, useMemo, useState } from "react";
 
 import * as actions from "@/app/[locale]/pagar/[code]/actions";
 import type { Locale } from "@/lib/locale";
-import type { Attempt, Method, Option, Payer, PublicLink } from "@/lib/pagos/types";
+import type {
+  Attempt,
+  Method,
+  Option,
+  Payer,
+  PublicLink,
+} from "@/lib/pagos/types";
 import { BrandRow, BrandTile, CASH_BRANDS, brandsForMethod } from "./brands";
 import { formatMoney, type PayCopy } from "./copy";
 import { DocumentCard } from "./document-card";
-import { cardBrand, formatCardNumber, luhn, prepareTokenizer, tokenizeCard } from "./epayco";
+import {
+  cardBrand,
+  formatCardNumber,
+  luhn,
+  prepareTokenizer,
+  tokenizeCard,
+} from "./epayco";
 import { Select } from "./select";
-import { CopyRow, ErrorNote, Field, Panel, PayForm, PrimaryButton, StepHeader, inputClass } from "./ui";
+import {
+  CopyRow,
+  ErrorNote,
+  Field,
+  Panel,
+  PayForm,
+  PrimaryButton,
+  StepHeader,
+  inputClass,
+} from "./ui";
 
 /**
  * El pago, un paso a la vez, como un formulario de Typeform. Cada medio pide
@@ -37,6 +58,11 @@ const STEPS: Record<Method, StepId[]> = {
 export function totalSteps(method: Method | null): number {
   return 2 + (method ? STEPS[method].length : 3);
 }
+
+/** Códigos de PSE con logo oficial (los publica pse.com.co). */
+const BANK_LOGOS = new Set(["1001", "1002", "1006", "1007", "1009", "1012", "1013", "1019", "1023", "1032", "1040", "1047", "1051", "1052", "1059", "1060", "1061", "1062", "1063", "1065", "1066", "1069", "1070", "1071", "1097", "1121", "1283", "1286", "1289", "1292", "1303", "1370", "1507", "1551", "1558", "1637", "1801", "1802", "1803", "1804", "1808", "1809", "1811", "1812", "1814", "1815", "1816", "1819", "1824", "1831"]);
+/** Logos blancos: van sobre ficha negra. */
+const DARK_BANK_LOGOS = new Set(["1802"]);
 
 const DOC_TYPES_CO = ["CC", "CE", "NIT", "PPT", "PPN"];
 const DOC_TYPES_INTL = ["PPN", "DNI", "CE"];
@@ -73,7 +99,10 @@ function splitName(full: string): { name: string; last: string } {
   const parts = full.trim().split(/\s+/);
   if (parts.length < 2) return { name: full.trim(), last: "" };
   const half = Math.ceil(parts.length / 2);
-  return { name: parts.slice(0, half).join(" "), last: parts.slice(half).join(" ") };
+  return {
+    name: parts.slice(0, half).join(" "),
+    last: parts.slice(half).join(" "),
+  };
 }
 
 /** Quien paga, precargado con lo que el cobro ya sabe (y lo que trajo la factura). */
@@ -88,7 +117,9 @@ function initialPayer(link: PublicLink): Payer {
     phone_country: "+57",
     doc_type: link.client_doc_type || (link.currency === "USD" ? "PPN" : "CC"),
     // El NIT se guarda sin el dígito de verificación; ese se calcula aparte.
-    doc_number: company ? link.client_doc_number.replace(/\D/g, "").slice(0, 9) : link.client_doc_number,
+    doc_number: company
+      ? link.client_doc_number.replace(/\D/g, "").slice(0, 9)
+      : link.client_doc_number,
   };
 }
 
@@ -114,7 +145,16 @@ type Props = {
   onProgress: (step: number, label: string) => void;
 };
 
-export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeMethod, onProgress }: Props) {
+export function Checkout({
+  link,
+  locale,
+  t,
+  method,
+  onAttempt,
+  onBusy,
+  onChangeMethod,
+  onProgress,
+}: Props) {
   const steps = STEPS[method];
   const [index, setIndex] = useState(0);
   const step = steps[index]!;
@@ -125,10 +165,24 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
 
   // Estado de todo el pago: sobrevive al ir y volver entre pasos.
   const [payer, setPayer] = useState<Payer>(() => initialPayer(link));
-  const [card, setCard] = useState({ number: "", expiry: "", cvc: "", holder: "", installments: "1" });
-  const [pse, setPse] = useState({ bank: "", person: link.client_doc_type === "NIT" ? "1" : "0" });
+  const [card, setCard] = useState({
+    number: "",
+    expiry: "",
+    cvc: "",
+    holder: "",
+    installments: "1",
+  });
+  const [pse, setPse] = useState({
+    bank: "",
+    person: link.client_doc_type === "NIT" ? "1" : "0",
+  });
   const [cash, setCash] = useState("");
-  const [report, setReport] = useState({ name: link.client_name, email: link.client_email, note: "", proof: null as File | null });
+  const [report, setReport] = useState({
+    name: link.client_name,
+    email: link.client_email,
+    note: "",
+    proof: null as File | null,
+  });
   const [daviAttempt, setDaviAttempt] = useState<Attempt | null>(null);
   const [otp, setOtp] = useState("");
   const [showErrors, setShowErrors] = useState(false);
@@ -152,7 +206,8 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
   }, [index, method]);
 
   useEffect(() => {
-    if (method === "tarjeta") prepareTokenizer(link.epayco_public_key).catch(() => undefined);
+    if (method === "tarjeta")
+      prepareTokenizer(link.epayco_public_key).catch(() => undefined);
   }, [method, link.epayco_public_key]);
 
   const go = (target: StepId) => {
@@ -160,7 +215,8 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
     setShowErrors(false);
     setIndex(steps.indexOf(target));
   };
-  const back = () => (index === 0 ? onChangeMethod() : (setError(""), setIndex(index - 1)));
+  const back = () =>
+    index === 0 ? onChangeMethod() : (setError(""), setIndex(index - 1));
 
   // Tarjeta
   const brand = cardBrand(card.number);
@@ -208,7 +264,10 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
   }
 
   // Al ePayco va el celular sin indicativo y el NIT sin dígito de verificación.
-  const payerForApi = (): Payer => ({ ...payer, phone: payer.phone.replace(/\D/g, "") });
+  const payerForApi = (): Payer => ({
+    ...payer,
+    phone: payer.phone.replace(/\D/g, ""),
+  });
 
   async function pay(event: React.FormEvent) {
     event.preventDefault();
@@ -229,7 +288,11 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
         const result = await actions.payWithCard(
           link.code,
           link.locale,
-          { cardToken: token, payer: payerForApi(), installments: Number(card.installments) },
+          {
+            cardToken: token,
+            payer: payerForApi(),
+            installments: Number(card.installments),
+          },
           t.errors.generic,
         );
         if (result.ok) onAttempt(result.data);
@@ -241,8 +304,13 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
         const detail =
           typeof failure === "string"
             ? failure
-            : (failure as { description?: string; data?: { description?: string } })?.data?.description ??
-              (failure as { description?: string })?.description;
+            : ((
+                failure as {
+                  description?: string;
+                  data?: { description?: string };
+                }
+              )?.data?.description ??
+              (failure as { description?: string })?.description);
         setError(detail ? `${t.errors.card} ${detail}` : t.errors.generic);
         onBusy(false);
       } finally {
@@ -256,7 +324,11 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
       const result = await actions.startPse(
         link.code,
         link.locale,
-        { bankCode: pse.bank, personType: Number(pse.person), payer: payerForApi() },
+        {
+          bankCode: pse.bank,
+          personType: Number(pse.person),
+          payer: payerForApi(),
+        },
         t.errors.generic,
       );
       if (result.ok && result.data.redirect_url) {
@@ -272,7 +344,12 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
 
     if (method === "efectivo") {
       onBusy(true);
-      const result = await actions.startCash(link.code, link.locale, { entity, payer: payerForApi() }, t.errors.generic);
+      const result = await actions.startCash(
+        link.code,
+        link.locale,
+        { entity, payer: payerForApi() },
+        t.errors.generic,
+      );
       setBusy(false);
       if (result.ok) onAttempt(result.data);
       else {
@@ -283,7 +360,12 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
     }
 
     if (method === "daviplata") {
-      const result = await actions.startDaviplata(link.code, link.locale, { payer: payerForApi() }, t.errors.generic);
+      const result = await actions.startDaviplata(
+        link.code,
+        link.locale,
+        { payer: payerForApi() },
+        t.errors.generic,
+      );
       setBusy(false);
       if (!result.ok) setError(result.message);
       else if (result.data.status === "rechazado") onAttempt(result.data);
@@ -296,10 +378,17 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
 
     // BreB y transferencia: el aviso con su comprobante.
     let proof: { data: string; name: string } | undefined;
-    if (report.proof) proof = { data: await toBase64(report.proof), name: report.proof.name };
+    if (report.proof)
+      proof = { data: await toBase64(report.proof), name: report.proof.name };
     const result = await actions.declareTransfer(
       link.code,
-      { method: method as "breb" | "transferencia", name: report.name, email: report.email, note: report.note, proof },
+      {
+        method: method as "breb" | "transferencia",
+        name: report.name,
+        email: report.email,
+        note: report.note,
+        proof,
+      },
       t.errors.generic,
     );
     setBusy(false);
@@ -313,7 +402,11 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
     setError("");
     setBusy(true);
     onBusy(true);
-    const result = await actions.confirmDaviplata(link.code, { attemptId: daviAttempt.id, otp }, t.errors.generic);
+    const result = await actions.confirmDaviplata(
+      link.code,
+      { attemptId: daviAttempt.id, otp },
+      t.errors.generic,
+    );
     setBusy(false);
     if (result.ok) onAttempt(result.data);
     else {
@@ -344,7 +437,9 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
         backLabel={index === 0 ? t.back : t.previous}
         onBack={back}
       >
-        {step === "data" ? <BrandRow ids={brandsForMethod(method, account?.bank)} size="sm" /> : null}
+        {step === "data" ? (
+          <BrandRow ids={brandsForMethod(method, account?.bank)} size="sm" />
+        ) : null}
       </StepHeader>
 
       <Panel id={step}>
@@ -359,15 +454,27 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                     autoComplete="cc-number"
                     placeholder="0000 0000 0000 0000"
                     value={card.number}
-                    aria-invalid={showErrors && !luhn(card.number) ? true : undefined}
-                    onChange={(e) => setCard({ ...card, number: formatCardNumber(e.target.value) })}
+                    aria-invalid={
+                      showErrors && !luhn(card.number) ? true : undefined
+                    }
+                    onChange={(e) =>
+                      setCard({
+                        ...card,
+                        number: formatCardNumber(e.target.value),
+                      })
+                    }
                   />
                   {brand === "other" ? null : (
-                    <BrandTile id={brand} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+                    <BrandTile
+                      id={brand}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                    />
                   )}
                 </div>
               </Field>
-              <div className={`grid gap-3 ${link.currency === "COP" ? "grid-cols-[1fr_1fr_1.1fr]" : "grid-cols-2"}`}>
+              <div
+                className={`grid gap-3 ${link.currency === "COP" ? "grid-cols-[1fr_1fr_1.1fr]" : "grid-cols-2"}`}
+              >
                 <Field label={t.card.expiry}>
                   <input
                     className={`${inputClass} tabular-nums`}
@@ -375,10 +482,19 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                     autoComplete="cc-exp"
                     placeholder="MM/AA"
                     value={card.expiry}
-                    aria-invalid={showErrors && !/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expiry) ? true : undefined}
+                    aria-invalid={
+                      showErrors &&
+                      !/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expiry)
+                        ? true
+                        : undefined
+                    }
                     onChange={(e) => {
                       const d = e.target.value.replace(/\D/g, "").slice(0, 4);
-                      setCard({ ...card, expiry: d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d });
+                      setCard({
+                        ...card,
+                        expiry:
+                          d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d,
+                      });
                     }}
                   />
                 </Field>
@@ -389,15 +505,25 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                     autoComplete="cc-csc"
                     placeholder={brand === "amex" ? "0000" : "000"}
                     value={card.cvc}
-                    aria-invalid={showErrors && card.cvc.length < 3 ? true : undefined}
-                    onChange={(e) => setCard({ ...card, cvc: e.target.value.replace(/\D/g, "").slice(0, 4) })}
+                    aria-invalid={
+                      showErrors && card.cvc.length < 3 ? true : undefined
+                    }
+                    onChange={(e) =>
+                      setCard({
+                        ...card,
+                        cvc: e.target.value.replace(/\D/g, "").slice(0, 4),
+                      })
+                    }
                   />
                 </Field>
                 {link.currency === "COP" ? (
                   <Field label={t.card.installments}>
                     <Select
                       value={card.installments}
-                      options={[1, 2, 3, 6, 12, 24, 36].map((n) => ({ value: String(n), label: String(n) }))}
+                      options={[1, 2, 3, 6, 12, 24, 36].map((n) => ({
+                        value: String(n),
+                        label: String(n),
+                      }))}
                       placeholder="1"
                       title={t.card.installments}
                       onChange={(v) => setCard({ ...card, installments: v })}
@@ -411,8 +537,14 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                   className={inputClass}
                   autoComplete="cc-name"
                   value={card.holder}
-                  aria-invalid={showErrors && card.holder.trim().length < 3 ? true : undefined}
-                  onChange={(e) => setCard({ ...card, holder: e.target.value.toUpperCase() })}
+                  aria-invalid={
+                    showErrors && card.holder.trim().length < 3
+                      ? true
+                      : undefined
+                  }
+                  onChange={(e) =>
+                    setCard({ ...card, holder: e.target.value.toUpperCase() })
+                  }
                 />
               </Field>
             </div>
@@ -426,7 +558,14 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
             <Field label={t.pse.bank}>
               <Select
                 value={pse.bank}
-                options={(banks ?? []).map((b) => ({ value: b.code, label: b.name }))}
+                options={(banks ?? []).map((b) => ({
+                  value: b.code,
+                  label: b.name,
+                  image: BANK_LOGOS.has(b.code)
+                    ? `/brands/bancos/${b.code}.png`
+                    : undefined,
+                  imageDark: DARK_BANK_LOGOS.has(b.code),
+                }))}
                 placeholder={banks ? t.pse.chooseBank : "…"}
                 disabled={!banks}
                 invalid={showErrors && !pse.bank ? true : undefined}
@@ -456,7 +595,11 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
             <Field label={t.cash.where}>
               <Select
                 value={entity}
-                options={(entities ?? []).map((e) => ({ value: e.code, label: e.name, brand: CASH_BRANDS[e.code] }))}
+                options={(entities ?? []).map((e) => ({
+                  value: e.code,
+                  label: e.name,
+                  brand: CASH_BRANDS[e.code],
+                }))}
                 placeholder={entities ? t.flow.choose : "…"}
                 disabled={!entities}
                 invalid={showErrors && !entity ? true : undefined}
@@ -470,14 +613,35 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
           </PayForm>
         ) : null}
 
-        {step === "data" && (method === "breb" || method === "transferencia") ? (
+        {step === "data" &&
+        (method === "breb" || method === "transferencia") ? (
           <PayForm onSubmit={next}>
             {method === "breb" && link.breb ? (
               <div>
-                <CopyRow label={t.breb.key} value={link.breb.key} mono big {...c} />
-                <CopyRow label={t.breb.holder} value={link.breb.holder} {...c} />
-                <CopyRow label={t.breb.amount} value={link.amount} mono {...c} />
-                <CopyRow label={t.reference} value={link.reference} mono {...c} />
+                <CopyRow
+                  label={t.breb.key}
+                  value={link.breb.key}
+                  mono
+                  big
+                  {...c}
+                />
+                <CopyRow
+                  label={t.breb.holder}
+                  value={link.breb.holder}
+                  {...c}
+                />
+                <CopyRow
+                  label={t.breb.amount}
+                  value={link.amount}
+                  mono
+                  {...c}
+                />
+                <CopyRow
+                  label={t.reference}
+                  value={link.reference}
+                  mono
+                  {...c}
+                />
                 <ol className="mt-6 space-y-2">
                   {t.breb.steps.map((s, i) => (
                     <li key={s} className="flex gap-4 text-base">
@@ -491,19 +655,66 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
             ) : null}
             {method === "transferencia" && account ? (
               <div>
-                <CopyRow label={t.transfer.number} value={account.account_number} mono big {...c} />
+                <CopyRow
+                  label={t.transfer.number}
+                  value={account.account_number}
+                  mono
+                  big
+                  {...c}
+                />
                 <div className="grid grid-cols-2 gap-x-6">
-                  <CopyRow label={t.transfer.bank} value={account.bank} {...c} />
-                  <CopyRow label={t.transfer.type} value={account.account_type} {...c} />
+                  <CopyRow
+                    label={t.transfer.bank}
+                    value={account.bank}
+                    {...c}
+                  />
+                  <CopyRow
+                    label={t.transfer.type}
+                    value={account.account_type}
+                    {...c}
+                  />
                 </div>
-                <CopyRow label={t.transfer.holder} value={account.holder} {...c} />
-                <CopyRow label={t.transfer.holderId} value={account.holder_id} mono {...c} />
-                <CopyRow label={t.transfer.routing} value={account.routing} mono {...c} />
-                <CopyRow label={t.transfer.swift} value={account.swift} mono {...c} />
-                <CopyRow label={t.transfer.address} value={account.bank_address} {...c} />
+                <CopyRow
+                  label={t.transfer.holder}
+                  value={account.holder}
+                  {...c}
+                />
+                <CopyRow
+                  label={t.transfer.holderId}
+                  value={account.holder_id}
+                  mono
+                  {...c}
+                />
+                <CopyRow
+                  label={t.transfer.routing}
+                  value={account.routing}
+                  mono
+                  {...c}
+                />
+                <CopyRow
+                  label={t.transfer.swift}
+                  value={account.swift}
+                  mono
+                  {...c}
+                />
+                <CopyRow
+                  label={t.transfer.address}
+                  value={account.bank_address}
+                  {...c}
+                />
                 <div className="grid grid-cols-2 gap-x-6">
-                  <CopyRow label={t.breb.amount} value={link.amount} mono {...c} />
-                  <CopyRow label={t.reference} value={link.reference} mono {...c} />
+                  <CopyRow
+                    label={t.breb.amount}
+                    value={link.amount}
+                    mono
+                    {...c}
+                  />
+                  <CopyRow
+                    label={t.reference}
+                    value={link.reference}
+                    mono
+                    {...c}
+                  />
                 </div>
                 <p className="mt-4 text-base">{t.transfer.note}</p>
                 {link.transfer_certificate_filename ? (
@@ -512,7 +723,11 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                       href={`${base}/certificado`}
                       thumbnail={`${base}/certificado-miniatura`}
                       title={t.certificateCard.title}
-                      subtitle={account.bank ? `${account.bank}, ${account.account_type}` : link.transfer_certificate_filename}
+                      subtitle={
+                        account.bank
+                          ? `${account.bank}, ${account.account_type}`
+                          : link.transfer_certificate_filename
+                      }
                       action={t.certificateCard.action}
                       preview={t.certificateCard.preview}
                     />
@@ -520,13 +735,21 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                 ) : null}
               </div>
             ) : null}
-            <PrimaryButton>{method === "breb" ? t.breb.done : t.transfer.done} →</PrimaryButton>
+            <PrimaryButton>
+              {method === "breb" ? t.breb.done : t.transfer.done} →
+            </PrimaryButton>
           </PayForm>
         ) : null}
 
         {step === "payer" ? (
           <PayForm onSubmit={next}>
-            <PayerFields payer={payer} setPayer={setPayer} t={t} link={link} showErrors={showErrors} />
+            <PayerFields
+              payer={payer}
+              setPayer={setPayer}
+              t={t}
+              link={link}
+              showErrors={showErrors}
+            />
             <ErrorNote message={error} />
             <PrimaryButton>{t.flow.continue} →</PrimaryButton>
           </PayForm>
@@ -539,8 +762,14 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                 <input
                   className={inputClass}
                   value={report.name}
-                  aria-invalid={showErrors && report.name.trim().length < 2 ? true : undefined}
-                  onChange={(e) => setReport({ ...report, name: e.target.value })}
+                  aria-invalid={
+                    showErrors && report.name.trim().length < 2
+                      ? true
+                      : undefined
+                  }
+                  onChange={(e) =>
+                    setReport({ ...report, name: e.target.value })
+                  }
                 />
               </Field>
               <Field label={t.declare.email}>
@@ -548,28 +777,51 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                   className={inputClass}
                   type="email"
                   value={report.email}
-                  onChange={(e) => setReport({ ...report, email: e.target.value })}
+                  onChange={(e) =>
+                    setReport({ ...report, email: e.target.value })
+                  }
                 />
               </Field>
             </div>
             <Field label={t.declare.note} className="mt-4">
-              <input className={inputClass} value={report.note} onChange={(e) => setReport({ ...report, note: e.target.value })} />
+              <input
+                className={inputClass}
+                value={report.note}
+                onChange={(e) => setReport({ ...report, note: e.target.value })}
+              />
             </Field>
             <label className="mt-4 flex cursor-pointer items-center gap-4 rounded-2xl p-4 ring-1 ring-white transition hover:bg-white/[0.06]">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
-                  <path d="M12 16V4m0 0l-5 5m5-5l5 5M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  aria-hidden
+                >
+                  <path
+                    d="M12 16V4m0 0l-5 5m5-5l5 5M5 20h14"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold">{report.proof ? report.proof.name : t.declare.proof}</span>
-                <span className="block text-sm">{report.proof ? t.declare.proofChange : t.declare.proofHint}</span>
+                <span className="block truncate font-semibold">
+                  {report.proof ? report.proof.name : t.declare.proof}
+                </span>
+                <span className="block text-sm">
+                  {report.proof ? t.declare.proofChange : t.declare.proofHint}
+                </span>
               </span>
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/webp,application/pdf"
                 className="sr-only"
-                onChange={(e) => setReport({ ...report, proof: e.target.files?.[0] ?? null })}
+                onChange={(e) =>
+                  setReport({ ...report, proof: e.target.files?.[0] ?? null })
+                }
               />
             </label>
             <ErrorNote message={error} />
@@ -581,46 +833,82 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
           <PayForm onSubmit={pay}>
             <p className="text-base">{t.flow.confirmNote}</p>
             <div className="mt-6 flex flex-col gap-3">
-              <Summary title={t.flow.sections.method} edit={t.flow.edit} onEdit={onChangeMethod}>
+              <Summary
+                title={t.flow.sections.method}
+                edit={t.flow.edit}
+                onEdit={onChangeMethod}
+              >
                 <span className="flex flex-wrap items-center gap-3">
                   {t.methods[method].name}
                   <BrandRow
-                    ids={method === "tarjeta" && brand !== "other" ? [brand] : brandsForMethod(method, account?.bank)}
+                    ids={
+                      method === "tarjeta" && brand !== "other"
+                        ? [brand]
+                        : brandsForMethod(method, account?.bank)
+                    }
                     size="xs"
                   />
                 </span>
               </Summary>
 
               {method === "tarjeta" ? (
-                <Summary title={t.flow.sections.data} edit={t.flow.edit} onEdit={() => go("data")}>
+                <Summary
+                  title={t.flow.sections.data}
+                  edit={t.flow.edit}
+                  onEdit={() => go("data")}
+                >
                   <span className="flex items-center gap-3">
-                    {brand !== "other" ? <BrandTile id={brand} size="xs" /> : null}
-                    {t.flow.cardEnding(card.number.replace(/\D/g, "").slice(-4))}
+                    {brand !== "other" ? (
+                      <BrandTile id={brand} size="xs" />
+                    ) : null}
+                    {t.flow.cardEnding(
+                      card.number.replace(/\D/g, "").slice(-4),
+                    )}
                   </span>
                   <span className="block">
                     {card.holder}, {card.expiry}
-                    {link.currency === "COP" ? `, ${t.flow.installmentsShort(Number(card.installments))}` : ""}
+                    {link.currency === "COP"
+                      ? `, ${t.flow.installmentsShort(Number(card.installments))}`
+                      : ""}
                   </span>
                 </Summary>
               ) : null}
               {method === "pse" ? (
-                <Summary title={t.flow.sections.data} edit={t.flow.edit} onEdit={() => go("data")}>
+                <Summary
+                  title={t.flow.sections.data}
+                  edit={t.flow.edit}
+                  onEdit={() => go("data")}
+                >
                   <span className="block">{bankName}</span>
-                  <span className="block">{pse.person === "1" ? t.pse.juridica : t.pse.natural}</span>
+                  <span className="block">
+                    {pse.person === "1" ? t.pse.juridica : t.pse.natural}
+                  </span>
                 </Summary>
               ) : null}
               {method === "efectivo" ? (
-                <Summary title={t.flow.sections.data} edit={t.flow.edit} onEdit={() => go("data")}>
+                <Summary
+                  title={t.flow.sections.data}
+                  edit={t.flow.edit}
+                  onEdit={() => go("data")}
+                >
                   <span className="flex items-center gap-3">
-                    {CASH_BRANDS[entity] ? <BrandTile id={CASH_BRANDS[entity]!} size="xs" /> : null}
+                    {CASH_BRANDS[entity] ? (
+                      <BrandTile id={CASH_BRANDS[entity]!} size="xs" />
+                    ) : null}
                     {entityName}
                   </span>
                 </Summary>
               ) : null}
               {method === "breb" || method === "transferencia" ? (
-                <Summary title={t.flow.sections.data} edit={t.flow.edit} onEdit={() => go("data")}>
+                <Summary
+                  title={t.flow.sections.data}
+                  edit={t.flow.edit}
+                  onEdit={() => go("data")}
+                >
                   <span className="block">
-                    {method === "breb" ? link.breb?.key : `${account?.bank ?? ""} ${account?.account_number ?? ""}`}
+                    {method === "breb"
+                      ? link.breb?.key
+                      : `${account?.bank ?? ""} ${account?.account_number ?? ""}`}
                   </span>
                   <span className="block">
                     {t.reference} {link.reference}
@@ -629,13 +917,19 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
               ) : null}
 
               {steps.includes("payer") ? (
-                <Summary title={t.flow.sections.payer} edit={t.flow.edit} onEdit={() => go("payer")}>
+                <Summary
+                  title={t.flow.sections.payer}
+                  edit={t.flow.edit}
+                  onEdit={() => go("payer")}
+                >
                   <span className="block">
                     {[payer.name, payer.last_name].filter(Boolean).join(" ")}
                   </span>
                   <span className="block">
                     {payer.doc_type} {payer.doc_number}
-                    {payer.doc_type === "NIT" ? `-${nitCheckDigit(payer.doc_number)}` : ""}
+                    {payer.doc_type === "NIT"
+                      ? `-${nitCheckDigit(payer.doc_number)}`
+                      : ""}
                   </span>
                   <span className="block">{payer.email}</span>
                   <span className="block">
@@ -644,10 +938,20 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                 </Summary>
               ) : null}
               {steps.includes("report") ? (
-                <Summary title={t.flow.sections.report} edit={t.flow.edit} onEdit={() => go("report")}>
+                <Summary
+                  title={t.flow.sections.report}
+                  edit={t.flow.edit}
+                  onEdit={() => go("report")}
+                >
                   <span className="block">{report.name}</span>
-                  {report.email ? <span className="block">{report.email}</span> : null}
-                  <span className="block">{report.proof ? `${t.flow.proofAttached}: ${report.proof.name}` : t.flow.noProof}</span>
+                  {report.email ? (
+                    <span className="block">{report.email}</span>
+                  ) : null}
+                  <span className="block">
+                    {report.proof
+                      ? `${t.flow.proofAttached}: ${report.proof.name}`
+                      : t.flow.noProof}
+                  </span>
                 </Summary>
               ) : null}
             </div>
@@ -666,7 +970,9 @@ export function Checkout({ link, locale, t, method, onAttempt, onBusy, onChangeM
                 autoComplete="one-time-code"
                 autoFocus
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 8))}
+                onChange={(e) =>
+                  setOtp(e.target.value.replace(/\D/g, "").slice(0, 8))
+                }
               />
             </Field>
             <ErrorNote message={error} />
@@ -720,7 +1026,10 @@ function Segmented({
   onChange: (v: string) => void;
 }) {
   return (
-    <div role="radiogroup" className="grid auto-cols-fr grid-flow-col gap-1 rounded-xl p-1 ring-1 ring-white">
+    <div
+      role="radiogroup"
+      className="grid auto-cols-fr grid-flow-col gap-1 rounded-xl p-1 ring-1 ring-white"
+    >
       {options.map((o) => (
         <button
           key={o.value}
@@ -759,14 +1068,24 @@ function PayerFields({
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      <div className={`grid gap-3 ${company ? "grid-cols-[6.5rem_1fr_4.5rem]" : "grid-cols-[6.5rem_1fr]"}`}>
+      <div
+        className={`grid gap-3 ${company ? "grid-cols-[6.5rem_1fr_4.5rem]" : "grid-cols-[6.5rem_1fr]"}`}
+      >
         <Field label={t.payer.docType}>
           <Select
             value={payer.doc_type}
             options={types.map((type) => ({ value: type, label: type }))}
             placeholder="CC"
             title={t.payer.docType}
-            onChange={(v) => set({ doc_type: v, doc_number: v === "NIT" ? payer.doc_number.replace(/\D/g, "").slice(0, 9) : payer.doc_number })}
+            onChange={(v) =>
+              set({
+                doc_type: v,
+                doc_number:
+                  v === "NIT"
+                    ? payer.doc_number.replace(/\D/g, "").slice(0, 9)
+                    : payer.doc_number,
+              })
+            }
             {...selectCopy}
           />
         </Field>
@@ -778,7 +1097,11 @@ function PayerFields({
             value={payer.doc_number}
             aria-invalid={bad(payer.doc_number.replace(/\W/g, "").length >= 4)}
             onChange={(e) =>
-              set({ doc_number: company ? e.target.value.replace(/\D/g, "").slice(0, 9) : e.target.value })
+              set({
+                doc_number: company
+                  ? e.target.value.replace(/\D/g, "").slice(0, 9)
+                  : e.target.value,
+              })
             }
           />
         </Field>
@@ -829,7 +1152,11 @@ function PayerFields({
         <Field label={t.flow.country}>
           <Select
             value={payer.phone_country ?? "+57"}
-            options={COUNTRIES.map((c) => ({ value: c.dial, label: `${c.name} ${c.dial}`, short: c.dial }))}
+            options={COUNTRIES.map((c) => ({
+              value: c.dial,
+              label: `${c.name} ${c.dial}`,
+              short: c.dial,
+            }))}
             placeholder="+57"
             title={t.flow.country}
             onChange={(v) => set({ phone_country: v })}
@@ -853,7 +1180,11 @@ function PayerFields({
 }
 
 /** Carga la lista de bancos o de puntos de efectivo una sola vez, y solo si hace falta. */
-function useOptions(code: string, kind: "bancos" | "efectivo", needed: boolean) {
+function useOptions(
+  code: string,
+  kind: "bancos" | "efectivo",
+  needed: boolean,
+) {
   const [options, setOptions] = useState<Option[] | null>(null);
   useEffect(() => {
     if (!needed) return;
