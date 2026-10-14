@@ -42,6 +42,9 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
   const t = PAY_COPY[locale];
   const [link, setLink] = useState(initial);
   const [view, setView] = useState<View>(() => initialView(initial, t));
+  // Cuándo fue la última consulta del estado, para mostrarle a quien paga que
+  // la página sigue viva mientras espera.
+  const [lastCheck, setLastCheck] = useState<number | null>(null);
   const other: Locale = locale === "ES" ? "EN" : "ES";
   const otherHref = other === "EN" ? `/en/pay/${link.code}` : `/es/pagar/${link.code}`;
   const settled = useCallback((attempt: Attempt) => {
@@ -85,6 +88,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
     const tick = async () => {
       const result = await checkAttempt(link.code, attempt.id);
       if (!alive) return;
+      setLastCheck(Date.now());
       if (result.ok && result.data && result.data.status !== attempt.status) {
         settled(result.data);
         return;
@@ -166,6 +170,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
               link={link}
               locale={locale}
               view={view}
+              lastCheck={lastCheck}
               t={t}
               setView={setView}
               onAttempt={onAttempt}
@@ -273,10 +278,12 @@ function ActionPanel({
   setView,
   onAttempt,
   onProgress,
+  lastCheck,
 }: {
   link: PublicLink;
   locale: Locale;
   view: View;
+  lastCheck: number | null;
   t: (typeof PAY_COPY)[Locale];
   setView: (v: View) => void;
   onAttempt: (a: Attempt) => void;
@@ -355,11 +362,10 @@ function ActionPanel({
         </div>
       );
     }
-    // Una tarjeta sin 3D Secure que sigue pendiente quedó en la revisión
-    // antifraude de ePayco: puede tardar minutos u horas. La página sigue
-    // preguntando sola y cambia cuando se resuelva.
-    if (a.method === "tarjeta") return <Outcome tone="wait" title={t.status.cardReview} body={t.status.cardReviewBody} />;
-    return <Orbit steps={t.sequence} label={`${t.status.pending}`} />;
+    // Pendiente: una tarjeta sin 3D Secure quedó en la revisión antifraude de
+    // ePayco; PSE y Daviplata esperan al banco. Puede tardar minutos u horas, y
+    // la página lo cuenta en vivo para que nadie crea que se trabó ni pague dos veces.
+    return <Waiting attempt={a} t={t} locale={locale} lastCheck={lastCheck} />;
   }
 
   if (view.kind === "method") {
@@ -631,6 +637,144 @@ function Stepper({ step, total, label }: { step: number; total: number; label: s
       </div>
     </div>
   );
+}
+
+/** Cada cuánto cambia el mensaje de calma, en minutos de espera. */
+const WAIT_STAGES = [2, 10];
+
+function elapsedText(ms: number): string {
+  const total = Math.floor(ms / 1000);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const sec = total % 60;
+  if (h) return `${h} h ${m} min`;
+  if (m) return `${m} min ${sec} s`;
+  return `${sec} s`;
+}
+
+/** Espera de un pago pendiente: qué pasa, que no se pague de nuevo y que la página sigue viva. */
+function Waiting({
+  attempt,
+  t,
+  locale,
+  lastCheck,
+}: {
+  attempt: Attempt;
+  t: (typeof PAY_COPY)[Locale];
+  locale: Locale;
+  lastCheck: number | null;
+}) {
+  const [mounted] = useState(() => Date.now());
+  const [now, setNow] = useState(mounted);
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const w = t.waiting;
+  const kind = attempt.method === "tarjeta" ? w.card : w.bank;
+  const started = attempt.created_at ? Math.min(Date.parse(attempt.created_at), mounted) : mounted;
+  const elapsed = Math.max(0, now - started);
+  const stage = WAIT_STAGES.filter((minutes) => elapsed >= minutes * 60_000).length;
+  const sentAt = new Date(started).toLocaleTimeString(locale === "ES" ? "es-CO" : "en-US", {
+    timeZone: "America/Bogota",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  const steps: { label: string; detail?: string; state: "done" | "now" | "next" }[] = [
+    { label: kind.sent, detail: sentAt, state: "done" },
+    { label: kind.check, detail: w.since(elapsedText(elapsed)), state: "now" },
+    { label: w.receipt, state: "next" },
+  ];
+
+  return (
+    <div className="flex flex-col items-start">
+      <Seal tone="wait" />
+      <h2 className="mt-8 text-3xl font-semibold tracking-tight">{kind.title}</h2>
+      <p className="mt-3 text-lg leading-relaxed">{kind.body}</p>
+
+      <div className="mt-8 w-full rounded-2xl bg-white px-5 py-4 text-black">
+        <p className="text-base font-semibold">{w.dontRetry}</p>
+        <p className="mt-1 text-sm leading-relaxed">{w.dontRetryBody}</p>
+      </div>
+
+      <ol className="mt-10 grid gap-6">
+        {steps.map((step) => (
+          <li key={step.label} className="flex items-start gap-4">
+            <StepMark state={step.state} />
+            <div>
+              <p className={`text-base ${step.state === "now" ? "font-semibold" : ""}`}>{step.label}</p>
+              {step.detail ? (
+                <p className="mt-0.5 text-sm tabular-nums" suppressHydrationWarning>
+                  {step.detail}
+                </p>
+              ) : null}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={stage}
+          role="status"
+          aria-live="polite"
+          className="mt-10 text-lg leading-relaxed"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.3 }}
+        >
+          {w.stages[Math.min(stage, w.stages.length - 1)]}
+        </motion.p>
+      </AnimatePresence>
+
+      <p className="mt-4 flex items-center gap-2.5 text-sm tabular-nums" suppressHydrationWarning>
+        <motion.span
+          aria-hidden
+          className="h-2 w-2 shrink-0 rounded-full bg-white"
+          animate={{ opacity: [1, 0.25, 1] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        {lastCheck ? w.lastCheck(Math.max(0, Math.floor((now - lastCheck) / 1000))) : w.checking}
+      </p>
+
+      <p className="mt-10 text-base leading-relaxed">{w.close}</p>
+      <p className="mt-4 text-base">
+        {w.help}{" "}
+        <a href="mailto:hello@lumintik.com" className="font-semibold underline underline-offset-4">
+          hello@lumintik.com
+        </a>
+      </p>
+    </div>
+  );
+}
+
+/** Marca de cada paso de la espera: hecho, en curso (con pulso) o por venir. */
+function StepMark({ state }: { state: "done" | "now" | "next" }) {
+  if (state === "done") {
+    return (
+      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white" aria-hidden>
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5">
+          <path d="M6 12.5 L10 16.5 L18 8" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    );
+  }
+  if (state === "now") {
+    return (
+      <span className="relative mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full ring-1 ring-white" aria-hidden>
+        <motion.span
+          className="absolute inset-0 rounded-full ring-1 ring-white"
+          animate={{ scale: [1, 1.6], opacity: [0.6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+        />
+        <span className="h-2 w-2 rounded-full bg-white" />
+      </span>
+    );
+  }
+  return <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full ring-1 ring-white/40" aria-hidden />;
 }
 
 function Outcome({

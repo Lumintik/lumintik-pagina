@@ -134,9 +134,6 @@ const ES = {
     reviewBody: "Avisaste el pago. Lo confirmamos apenas lo veamos en la cuenta y te escribimos.",
     pending: "Esperando confirmación",
     pendingBody: "El banco todavía no confirma. Esta página se actualiza sola.",
-    cardReview: "Pago en revisión",
-    cardReviewBody:
-      "ePayco está revisando este pago con tarjeta por seguridad. Te escribimos apenas quede aprobado; no hace falta pagar de nuevo.",
     rejected: "Pago no aprobado",
     rejectedBody: "No se completó el pago. Puedes intentar de nuevo o elegir otro medio.",
     retry: "Intentar de nuevo",
@@ -147,6 +144,35 @@ const ES = {
     receipt: "Comprobante",
     method: "Medio",
     date: "Fecha",
+  },
+  waiting: {
+    card: {
+      title: "Tu pago está en revisión",
+      body: "ePayco, la plataforma que procesa los pagos con tarjeta, está haciendo una revisión de seguridad de rutina. No es un error ni un problema con tu tarjeta.",
+      sent: "Pago enviado a ePayco",
+      check: "Revisión de seguridad",
+    },
+    bank: {
+      title: "Esperando a tu banco",
+      body: "Tu banco todavía no nos confirma el pago. Pasa a veces y no significa que algo haya fallado.",
+      sent: "Pago iniciado en tu banco",
+      check: "Confirmación de tu banco",
+    },
+    receipt: "Comprobante a tu correo",
+    dontRetry: "No intentes pagar de nuevo",
+    dontRetryBody: "Este pago ya está en proceso. Un segundo intento podría generar un cobro doble.",
+    stages: [
+      "Suele resolverse en pocos minutos. Esta página se actualiza sola.",
+      "Sigue en curso y es normal que tome unos minutos más. Puedes esperar aquí o cerrar esta página.",
+      "Está tomando más de lo habitual, pero sigue en curso. No necesitas quedarte: te escribimos apenas se resuelva.",
+    ],
+    since: (elapsed: string) => `En curso desde hace ${elapsed}`,
+    checking: "Consultando el estado",
+    lastCheck: (seconds: number) =>
+      seconds < 2 ? "Consultamos el estado hace un momento" : `Consultamos el estado hace ${seconds} s`,
+    close:
+      "Puedes cerrar esta página. Cuando se apruebe te enviamos el comprobante al correo que escribiste, y este mismo link mostrará el pago confirmado.",
+    help: "¿Dudas? Escríbenos a",
   },
   sequence: ["Conectando", "Autorizando", "Confirmando"],
   flow: {
@@ -320,9 +346,6 @@ const EN: Copy = {
     reviewBody: "You reported the payment. We confirm it as soon as it shows in the account and email you.",
     pending: "Awaiting confirmation",
     pendingBody: "The bank has not confirmed yet. This page updates on its own.",
-    cardReview: "Payment under review",
-    cardReviewBody:
-      "ePayco is reviewing this card payment for security. We will email you as soon as it is approved; there is no need to pay again.",
     rejected: "Payment not approved",
     rejectedBody: "The payment did not go through. Try again or choose another method.",
     retry: "Try again",
@@ -333,6 +356,35 @@ const EN: Copy = {
     receipt: "Receipt",
     method: "Method",
     date: "Date",
+  },
+  waiting: {
+    card: {
+      title: "Your payment is under review",
+      body: "ePayco, the platform that processes card payments, is running a routine security review. It is not an error or a problem with your card.",
+      sent: "Payment sent to ePayco",
+      check: "Security review",
+    },
+    bank: {
+      title: "Waiting for your bank",
+      body: "Your bank has not confirmed the payment yet. This happens sometimes and does not mean anything went wrong.",
+      sent: "Payment started at your bank",
+      check: "Confirmation from your bank",
+    },
+    receipt: "Receipt to your email",
+    dontRetry: "Do not pay again",
+    dontRetryBody: "This payment is already in progress. A second attempt could charge you twice.",
+    stages: [
+      "It usually clears in a few minutes. This page updates on its own.",
+      "Still in progress, and it is normal for it to take a few more minutes. You can wait here or close this page.",
+      "It is taking longer than usual, but it is still in progress. You do not need to stay: we will email you as soon as it clears.",
+    ],
+    since: (elapsed: string) => `In progress for ${elapsed}`,
+    checking: "Checking the status",
+    lastCheck: (seconds: number) =>
+      seconds < 2 ? "We checked the status a moment ago" : `We checked the status ${seconds} s ago`,
+    close:
+      "You can close this page. Once it is approved we will send the receipt to the email you entered, and this same link will show the payment as confirmed.",
+    help: "Questions? Write to",
   },
   sequence: ["Connecting", "Authorizing", "Confirming"],
   flow: {
