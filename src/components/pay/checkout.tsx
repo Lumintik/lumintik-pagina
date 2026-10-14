@@ -116,14 +116,16 @@ function initialPayer(link: PublicLink): Payer {
     phone: link.client_phone,
     phone_country: "+57",
     doc_type: link.client_doc_type || (link.currency === "USD" ? "PPN" : "CC"),
-    // El NIT se guarda sin el dígito de verificación; ese se calcula aparte.
+    // El NIT se guarda sin el dígito de verificación; ese va aparte.
     doc_number: company
       ? link.client_doc_number.replace(/\D/g, "").slice(0, 9)
       : link.client_doc_number,
+    dv: company ? nitCheckDigit(link.client_doc_number.replace(/\D/g, "").slice(0, 9)) : "",
   };
 }
 
 function payerOk(payer: Payer) {
+  if (payer.doc_type === "NIT" && !/^\d$/.test(payer.dv ?? "")) return false;
   return (
     payer.name.trim().length >= 2 &&
     /^\S+@\S+\.\S+$/.test(payer.email) &&
@@ -928,7 +930,7 @@ export function Checkout({
                   <span className="block">
                     {payer.doc_type} {payer.doc_number}
                     {payer.doc_type === "NIT"
-                      ? `-${nitCheckDigit(payer.doc_number)}`
+                      ? `-${payer.dv ?? ""}`
                       : ""}
                   </span>
                   <span className="block">{payer.email}</span>
@@ -1077,15 +1079,17 @@ function PayerFields({
             options={types.map((type) => ({ value: type, label: type }))}
             placeholder="CC"
             title={t.payer.docType}
-            onChange={(v) =>
+            onChange={(v) => {
+              const number =
+                v === "NIT"
+                  ? payer.doc_number.replace(/\D/g, "").slice(0, 9)
+                  : payer.doc_number;
               set({
                 doc_type: v,
-                doc_number:
-                  v === "NIT"
-                    ? payer.doc_number.replace(/\D/g, "").slice(0, 9)
-                    : payer.doc_number,
-              })
-            }
+                doc_number: number,
+                dv: v === "NIT" ? nitCheckDigit(number) : "",
+              });
+            }}
             {...selectCopy}
           />
         </Field>
@@ -1096,23 +1100,25 @@ function PayerFields({
             autoComplete="off"
             value={payer.doc_number}
             aria-invalid={bad(payer.doc_number.replace(/\W/g, "").length >= 4)}
-            onChange={(e) =>
-              set({
-                doc_number: company
-                  ? e.target.value.replace(/\D/g, "").slice(0, 9)
-                  : e.target.value,
-              })
-            }
+            onChange={(e) => {
+              const number = company
+                ? e.target.value.replace(/\D/g, "").slice(0, 9)
+                : e.target.value;
+              // Al cambiar el NIT, el DV se vuelve a calcular; después se puede corregir a mano.
+              set({ doc_number: number, ...(company ? { dv: nitCheckDigit(number) } : {}) });
+            }}
           />
         </Field>
         {company ? (
           <Field label={t.flow.dv}>
             <input
               className={`${inputClass} text-center tabular-nums`}
-              value={nitCheckDigit(payer.doc_number)}
-              readOnly
-              tabIndex={-1}
-              aria-readonly
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={1}
+              value={payer.dv ?? ""}
+              aria-invalid={bad(/^\d$/.test(payer.dv ?? ""))}
+              onChange={(e) => set({ dv: e.target.value.replace(/\D/g, "").slice(-1) })}
             />
           </Field>
         ) : null}

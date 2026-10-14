@@ -96,6 +96,8 @@ export type Payer = {
   doc_number: string;
   /** Indicativo del celular, "+57" por defecto. */
   phone_country?: string;
+  /** Dígito de verificación del NIT. Se calcula al escribir el NIT, pero se puede corregir. */
+  dv?: string;
 };
 
 /** Lo que devuelve cada acción del servidor a la página. */
