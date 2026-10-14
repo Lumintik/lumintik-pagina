@@ -76,6 +76,7 @@ const ES = {
       "Escribe la llave y el monto exacto.",
       "En la descripción escribe la referencia.",
     ],
+    limit: "Si tu banco no te deja enviar este monto por BreB, elige otro medio de pago.",
     done: "Ya pagué",
   },
   transfer: {
@@ -200,6 +201,7 @@ const EN: Copy = {
       "Enter the key and the exact amount.",
       "Write the reference in the description.",
     ],
+    limit: "If your bank does not let you send this amount through BreB, choose another payment method.",
     done: "I have paid",
   },
   transfer: {

@@ -550,6 +550,7 @@ export function TransferPanel({
               </li>
             ))}
           </ol>
+          <p className="mt-6 text-sm">{t.breb.limit}</p>
         </div>
       ) : null}
 
