@@ -179,6 +179,7 @@ const ES = {
     card: "Revisa los datos de la tarjeta.",
     required: "Completa los campos marcados.",
     threeDs: "No se pudo verificar la tarjeta con tu banco. Intenta de nuevo o usa otro medio.",
+    minimum: "Este medio no acepta un monto tan bajo. Elige otro, como BreB o transferencia.",
   },
   contact: "¿Dudas? Escríbenos a",
 };
@@ -357,6 +358,7 @@ const EN: Copy = {
     card: "Check your card details.",
     required: "Fill in the highlighted fields.",
     threeDs: "Your bank could not verify the card. Try again or use another method.",
+    minimum: "This method does not accept such a small amount. Choose another one, like BreB or bank transfer.",
   },
   contact: "Questions? Write to",
 };

@@ -30,7 +30,7 @@ function initialView(link: PublicLink, t: (typeof PAY_COPY)[Locale]): View {
   if (last.status === "en_revision") return { kind: "attempt", attempt: last };
   if (last.status === "pendiente" && last.method !== "tarjeta") return { kind: "attempt", attempt: last };
   if (last.status === "rechazado" || last.status === "abandonado") {
-    return { kind: "choose", error: last.message || t.status.rejectedBody };
+    return { kind: "choose", error: friendly(last.message, t) || t.status.rejectedBody };
   }
   return { kind: "choose" };
 }
@@ -330,7 +330,7 @@ function ActionPanel({
     if (a.status === "en_revision") return <Outcome tone="wait" title={t.status.review} body={t.status.reviewBody} />;
     if (tone === "fail") {
       return (
-        <Outcome tone="fail" title={t.status.rejected} body={a.message || t.status.rejectedBody}>
+        <Outcome tone="fail" title={t.status.rejected} body={friendly(a.message, t) || t.status.rejectedBody}>
           <PrimaryButton type="button" onClick={() => setView({ kind: "choose" })}>
             {t.status.retry}
           </PrimaryButton>
@@ -712,4 +712,10 @@ function Starfield() {
       <style>{`@keyframes pay-drift { from { background-position: 0 0 } to { background-position: 0 -280px } }`}</style>
     </div>
   );
+}
+
+/** Los mensajes de ePayco que tienen arreglo, dichos para el cliente. */
+function friendly(message: string, t: (typeof PAY_COPY)[Locale]): string {
+  if (/monto\s+m[ií]nimo/i.test(message)) return t.errors.minimum;
+  return message;
 }
