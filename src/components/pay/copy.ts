@@ -38,6 +38,12 @@ const ES = {
   photo: "Lo que pagas",
   /** "A nuestra cuenta bancaria Davivienda". */
   transferTo: (bank: string) => (bank ? `A nuestra cuenta bancaria ${bank}` : "A nuestra cuenta bancaria"),
+  unavailable: {
+    tope: (method: string, limit: string) => `${method} permite hasta ${limit} por pago y este cobro lo supera.`,
+    minimo: (_method: string, limit: string) => `Disponible para pagos desde ${limit}. Este cobro es menor.`,
+    moneda: () => "No disponible para pagos en dólares.",
+    no_configurado: () => "No disponible por ahora.",
+  },
   pci: "ePayco tiene certificación PCI DSS",
   enterHint: "o presiona Enter",
   methods: {
@@ -99,6 +105,9 @@ const ES = {
       "Cuando tu banco confirme el envío, toca “Ya pagué”. Esta página también se actualiza sola apenas llegue el dinero.",
     ],
     limit: "Si tu banco no te deja enviar este monto por BreB, elige otro medio de pago.",
+    slowTitle: "¿Ya enviaste el dinero y no se confirma?",
+    slowBody: (amount: string) =>
+      `Revisa en tu banco que hayas enviado exactamente ${amount}. Si el monto fue distinto, toca “Ya pagué” y lo confirmamos a mano.`,
     done: "Ya pagué",
   },
   transfer: {
@@ -268,6 +277,12 @@ const EN: Copy = {
   certificateCard: { title: "Bank certificate", action: "Download PDF", preview: "Certificate preview" },
   photo: "What you are paying for",
   transferTo: (bank: string) => (bank ? `To our ${bank} bank account` : "To our bank account"),
+  unavailable: {
+    tope: (method: string, limit: string) => `${method} allows up to ${limit} per payment and this one is higher.`,
+    minimo: (_method: string, limit: string) => `Available for payments from ${limit}. This one is lower.`,
+    moneda: () => "Not available for payments in dollars.",
+    no_configurado: () => "Not available right now.",
+  },
   pci: "ePayco is PCI DSS certified",
   enterHint: "or press Enter",
   methods: {
@@ -329,6 +344,9 @@ const EN: Copy = {
       "Once your bank confirms the transfer, tap “I have paid”. This page also updates on its own as soon as the money arrives.",
     ],
     limit: "If your bank does not let you send this amount through BreB, choose another payment method.",
+    slowTitle: "Already sent the money and it is not confirmed?",
+    slowBody: (amount: string) =>
+      `Check in your bank that you sent exactly ${amount}. If the amount was different, tap “I have paid” and we will confirm it by hand.`,
     done: "I have paid",
   },
   transfer: {

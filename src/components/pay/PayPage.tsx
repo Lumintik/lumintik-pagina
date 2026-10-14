@@ -422,6 +422,7 @@ function ActionPanel({
   return (
     <ChooseMethod
       link={link}
+      locale={locale}
       t={t}
       error={view.error}
       onBack={() => setView({ kind: "summary" })}
@@ -436,12 +437,14 @@ function ActionPanel({
  */
 function ChooseMethod({
   link,
+  locale,
   t,
   error,
   onBack,
   onContinue,
 }: {
   link: PublicLink;
+  locale: Locale;
   t: (typeof PAY_COPY)[Locale];
   error?: string;
   onBack: () => void;
@@ -506,6 +509,37 @@ function ChooseMethod({
             </motion.li>
           );
         })}
+        {/* Lo que no aplica queda a la vista, apagado y con el motivo. */}
+        {link.unavailable.map(({ method, reason, limit }, i) => (
+          <motion.li
+            key={method}
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 * (link.methods.length + i), ease: EASE }}
+          >
+            <div
+              role="radio"
+              aria-checked={false}
+              aria-disabled
+              className="flex w-full cursor-not-allowed items-center gap-4 rounded-2xl px-4 py-3.5 text-left opacity-40"
+            >
+              <span className="w-[1.1rem] shrink-0" aria-hidden />
+              <span className="min-w-0 flex-1">
+                <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                  <span className="text-lg font-semibold">{t.methods[method].name}</span>
+                  <BrandRow ids={brandsForMethod(method, link.transfer?.bank)} size="xs" />
+                </span>
+                <span className="mt-0.5 block text-sm">
+                  {t.unavailable[reason](
+                    t.methods[method].name,
+                    limit ? `${formatMoney(limit, link.currency, locale)} ${link.currency}` : "",
+                  )}
+                </span>
+              </span>
+              <span aria-hidden className="h-6 w-6 shrink-0 rounded-full ring-2 ring-white" />
+            </div>
+          </motion.li>
+        ))}
       </ul>
       <PrimaryButton type="button" disabled={!picked} onClick={() => picked && onContinue(picked)}>
         {picked ? `${t.sheet.continueWith} ${t.methods[picked].name}` : t.sheet.pick}

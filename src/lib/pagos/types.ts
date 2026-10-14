@@ -24,6 +24,8 @@ export type BankAccount = {
   bank_address: string;
 };
 
+export type UnavailableReason = "tope" | "minimo" | "moneda" | "no_configurado";
+
 export type Attempt = {
   id: string;
   method: Method;
@@ -55,6 +57,8 @@ export type PublicLink = {
   amount: string;
   currency: Currency;
   methods: Method[];
+  /** Medios que no aplican a este cobro, con su motivo: se muestran apagados. */
+  unavailable: { method: Method; reason: UnavailableReason; limit: string }[];
   status: LinkStatus;
   locale: string;
   expires_at: string | null;

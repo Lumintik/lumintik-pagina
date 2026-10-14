@@ -1,4 +1,4 @@
-import type { Attempt, Currency, LinkStatus, Method, Option, PublicLink } from "./types";
+import type { Attempt, Currency, LinkStatus, Method, Option, PublicLink, UnavailableReason } from "./types";
 
 /**
  * Cliente del servicio de pagos, solo de servidor. La página nunca habla con
@@ -70,7 +70,10 @@ function normalizeAttempt(raw: Record<string, string> | null | undefined): Attem
 export async function getLink(code: string): Promise<PublicLink | null> {
   try {
     const raw = await request<Record<string, never>>(`/v1/pagos/publico/${encodeURIComponent(code)}`);
-    const r = raw as unknown as Record<string, unknown> & { methods?: string[] };
+    const r = raw as unknown as Record<string, unknown> & {
+      methods?: string[];
+      unavailable?: { method?: string; reason?: string; limit?: string }[];
+    };
     return {
       code: String(r.code ?? ""),
       concept: String(r.concept ?? ""),
@@ -82,6 +85,11 @@ export async function getLink(code: string): Promise<PublicLink | null> {
       amount: String(r.amount ?? "0"),
       currency: strip(String(r.currency ?? ""), "CURRENCY_").toUpperCase() as Currency,
       methods: (r.methods ?? []).map((m) => strip(m, "METHOD_") as Method),
+      unavailable: (r.unavailable ?? []).map((u) => ({
+        method: strip(String(u.method ?? ""), "METHOD_") as Method,
+        reason: (u.reason ?? "no_configurado") as UnavailableReason,
+        limit: String(u.limit ?? ""),
+      })),
       status: strip(String(r.status ?? ""), "LINK_STATUS_") as LinkStatus,
       locale: String(r.locale ?? "es"),
       expires_at: utc(r.expires_at as string | undefined),

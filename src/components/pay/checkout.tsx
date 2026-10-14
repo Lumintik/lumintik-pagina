@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 
 import * as actions from "@/app/[locale]/pagar/[code]/actions";
@@ -192,6 +193,14 @@ export function Checkout({
   // Mientras se procesa, el formulario sigue montado (con todo lo escrito) y
   // solo se ve la órbita. Si algo falla, se vuelve a la confirmación con el motivo.
   const [processing, setProcessing] = useState(false);
+  // BreB: si pasan dos minutos en las instrucciones sin que llegue el dinero,
+  // lo más común es un monto mal escrito. Se le dice al cliente qué hacer.
+  const [brebSlow, setBrebSlow] = useState(false);
+  useEffect(() => {
+    if (method !== "breb" || step !== "data") return;
+    const timer = setTimeout(() => setBrebSlow(true), 120_000);
+    return () => clearTimeout(timer);
+  }, [method, step]);
 
   const banks = useOptions(link.code, "bancos", method === "pse");
   const entities = useOptions(link.code, "efectivo", method === "efectivo");
@@ -653,6 +662,22 @@ export function Checkout({
                   ))}
                 </ol>
                 <p className="mt-4 text-sm">{t.breb.limit}</p>
+                <AnimatePresence>
+                  {brebSlow ? (
+                    <motion.div
+                      role="status"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="mt-6 rounded-2xl bg-white px-5 py-4 text-black"
+                    >
+                      <p className="text-base font-semibold">{t.breb.slowTitle}</p>
+                      <p className="mt-1 text-sm leading-relaxed">
+                        {t.breb.slowBody(`${amount} ${link.currency}`)}
+                      </p>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
               </div>
             ) : null}
             {method === "transferencia" && account ? (
