@@ -100,6 +100,7 @@ export async function getLink(code: string): Promise<PublicLink | null> {
       subtotal: String(r.subtotal ?? ""),
       tax: String(r.tax ?? ""),
       withholding: String(r.withholding ?? ""),
+      has_image: Boolean(r.has_image),
     };
   } catch (error) {
     if (error instanceof PagosError && error.status === 404) return null;
@@ -153,3 +154,17 @@ export async function getAttempt(code: string, attemptId: string): Promise<Attem
 }
 
 export type { LinkStatus };
+
+/** Miniatura de la factura o foto de lo entregado, ya decodificada. */
+export async function getMedia(code: string, which: "factura/miniatura" | "imagen") {
+  try {
+    const raw = await request<{ content_type?: string; data?: string }>(
+      `/v1/pagos/publico/${encodeURIComponent(code)}/${which}`,
+    );
+    if (!raw.data) return null;
+    return { contentType: raw.content_type || "image/png", data: Buffer.from(raw.data, "base64") };
+  } catch (error) {
+    if (error instanceof PagosError && error.status === 404) return null;
+    throw error;
+  }
+}

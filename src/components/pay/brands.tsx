@@ -68,7 +68,7 @@ export function BrandTile({ id, size = "sm", className = "" }: { id: BrandId; si
   return (
     <span className={`inline-flex shrink-0 items-center justify-center ${SIZES[size]} ${tile} ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element -- logos de marca, SVG estáticos */}
-      <img src={brand.src} alt={brand.name} className="h-full w-full object-contain" loading="lazy" decoding="async" />
+      <img src={brand.src} alt={brand.name} className="h-full w-full object-contain" decoding="async" />
     </span>
   );
 }

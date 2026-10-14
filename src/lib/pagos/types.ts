@@ -72,6 +72,8 @@ export type PublicLink = {
   subtotal: string;
   tax: string;
   withholding: string;
+  /** Si el cobro trae foto de lo vendido o entregado. */
+  has_image: boolean;
 };
 
 export type Option = { code: string; name: string };
