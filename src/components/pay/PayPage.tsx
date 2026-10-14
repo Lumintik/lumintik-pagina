@@ -431,6 +431,9 @@ function ActionPanel({
   );
 }
 
+/** El orden fijo de los medios en la lista, estén disponibles o no. */
+const METHOD_ORDER: Method[] = ["tarjeta", "pse", "breb", "transferencia", "efectivo", "daviplata"];
+
 /**
  * Elegir medio es marcarlo; continuar es el botón de la hoja fija de abajo.
  * Todo cobro muestra todos los medios disponibles.
@@ -461,85 +464,71 @@ function ChooseMethod({
         </p>
       ) : null}
       <ul className="space-y-1.5" role="radiogroup" aria-label={t.chooseMethod}>
-        {link.methods.map((method, i) => {
-          const on = picked === method;
-          return (
-            <motion.li
-              key={method}
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.05 * i, ease: EASE }}
-            >
-              <button
-                type="button"
-                role="radio"
-                aria-checked={on}
-                onClick={() => setPicked(method)}
-                onDoubleClick={() => onContinue(method)}
-                className={`group flex w-full items-center gap-4 rounded-2xl px-4 py-3.5 text-left ring-1 transition focus-visible:outline-none ${
-                  on ? "bg-white/[0.08] ring-white" : "ring-transparent hover:bg-white/[0.05] focus-visible:ring-white"
-                }`}
+        {/* Siempre el mismo orden. Lo que no aplica queda en su lugar, apagado y con el motivo. */}
+        {METHOD_ORDER.filter((m) => link.methods.includes(m) || link.unavailable.some((u) => u.method === m)).map(
+          (method, i) => {
+            const blocked = link.methods.includes(method) ? undefined : link.unavailable.find((u) => u.method === method);
+            const on = !blocked && picked === method;
+            return (
+              <motion.li
+                key={method}
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.05 * i, ease: EASE }}
               >
-                <span className="text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                    <span className="text-lg font-semibold">{t.methods[method].name}</span>
-                    <BrandRow ids={brandsForMethod(method, link.transfer?.bank)} size="xs" />
-                  </span>
-                  <span className="mt-0.5 block text-sm">
-                    {method === "transferencia" ? t.transferTo(link.transfer?.bank ?? "") : t.methods[method].hint}
-                  </span>
-                </span>
-                <span
-                  aria-hidden
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ring-2 ring-white transition ${on ? "bg-white" : ""}`}
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  aria-disabled={blocked ? true : undefined}
+                  disabled={Boolean(blocked)}
+                  onClick={() => setPicked(method)}
+                  onDoubleClick={() => onContinue(method)}
+                  className={`group flex w-full items-center gap-4 rounded-2xl px-4 py-3.5 text-left ring-1 transition focus-visible:outline-none ${
+                    blocked
+                      ? "cursor-not-allowed opacity-40 ring-transparent"
+                      : on
+                        ? "bg-white/[0.08] ring-white"
+                        : "ring-transparent hover:bg-white/[0.05] focus-visible:ring-white"
+                  }`}
                 >
-                  <AnimatePresence>
-                    {on ? (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        className="h-2.5 w-2.5 rounded-full bg-black"
-                      />
-                    ) : null}
-                  </AnimatePresence>
-                </span>
-              </button>
-            </motion.li>
-          );
-        })}
-        {/* Lo que no aplica queda a la vista, apagado y con el motivo. */}
-        {link.unavailable.map(({ method, reason, limit }, i) => (
-          <motion.li
-            key={method}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 * (link.methods.length + i), ease: EASE }}
-          >
-            <div
-              role="radio"
-              aria-checked={false}
-              aria-disabled
-              className="flex w-full cursor-not-allowed items-center gap-4 rounded-2xl px-4 py-3.5 text-left opacity-40"
-            >
-              <span className="w-[1.1rem] shrink-0" aria-hidden />
-              <span className="min-w-0 flex-1">
-                <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                  <span className="text-lg font-semibold">{t.methods[method].name}</span>
-                  <BrandRow ids={brandsForMethod(method, link.transfer?.bank)} size="xs" />
-                </span>
-                <span className="mt-0.5 block text-sm">
-                  {t.unavailable[reason](
-                    t.methods[method].name,
-                    limit ? `${formatMoney(limit, link.currency, locale)} ${link.currency}` : "",
-                  )}
-                </span>
-              </span>
-              <span aria-hidden className="h-6 w-6 shrink-0 rounded-full ring-2 ring-white" />
-            </div>
-          </motion.li>
-        ))}
+                  <span className="text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                      <span className="text-lg font-semibold">{t.methods[method].name}</span>
+                      <BrandRow ids={brandsForMethod(method, link.transfer?.bank)} size="xs" />
+                    </span>
+                    <span className="mt-0.5 block text-sm">
+                      {blocked
+                        ? t.unavailable[blocked.reason](
+                            t.methods[method].name,
+                            blocked.limit ? `${formatMoney(blocked.limit, link.currency, locale)} ${link.currency}` : "",
+                          )
+                        : method === "transferencia"
+                          ? t.transferTo(link.transfer?.bank ?? "")
+                          : t.methods[method].hint}
+                    </span>
+                  </span>
+                  <span
+                    aria-hidden
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ring-2 ring-white transition ${on ? "bg-white" : ""}`}
+                  >
+                    <AnimatePresence>
+                      {on ? (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          exit={{ scale: 0 }}
+                          className="h-2.5 w-2.5 rounded-full bg-black"
+                        />
+                      ) : null}
+                    </AnimatePresence>
+                  </span>
+                </button>
+              </motion.li>
+            );
+          },
+        )}
       </ul>
       <PrimaryButton type="button" disabled={!picked} onClick={() => picked && onContinue(picked)}>
         {picked ? `${t.sheet.continueWith} ${t.methods[picked].name}` : t.sheet.pick}
