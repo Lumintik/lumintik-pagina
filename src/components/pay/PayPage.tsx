@@ -185,7 +185,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
             </dl>
           </Rise>
           <Rise delay={2.1} className="hidden lg:block">
-            <SecureNote t={t} test={link.epayco_test} />
+            <SecureNote t={t} test={link.epayco_test} card={link.methods.includes("tarjeta")} />
           </Rise>
         </section>
 
@@ -206,7 +206,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
           </Rise>
           {/* En el teléfono la nota va al final, para que los medios se vean primero. */}
           <div className="lg:hidden">
-            <SecureNote t={t} test={link.epayco_test} />
+            <SecureNote t={t} test={link.epayco_test} card={link.methods.includes("tarjeta")} />
           </div>
         </section>
       </main>
@@ -395,16 +395,18 @@ function Outcome({
   );
 }
 
-function SecureNote({ t, test }: { t: (typeof PAY_COPY)[Locale]; test: boolean }) {
+function SecureNote({ t, test, card }: { t: (typeof PAY_COPY)[Locale]; test: boolean; card: boolean }) {
   return (
-    <p className="mt-12 flex max-w-md items-start gap-3 text-sm leading-relaxed">
+    <div className="mt-12 flex max-w-md items-start gap-3 text-sm leading-relaxed">
       <LockIcon />
-      <span>
-        {t.secure}
-        {test ? ` ${t.testMode}` : ""}
-        <BrandTile id="epayco" size="md" className="mt-3 flex w-fit" />
-      </span>
-    </p>
+      <div>
+        <p>
+          {card ? t.secure : t.secureNoCard}
+          {test ? ` ${t.testMode}` : ""}
+        </p>
+        <BrandTile id="epayco" size="md" className="mt-3" />
+      </div>
+    </div>
   );
 }
 

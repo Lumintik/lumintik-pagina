@@ -15,13 +15,29 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/pagar/[c
   const locale = fromSegment(segment) ?? "ES";
   const t = PAY_COPY[locale];
   const link = await getLink(code).catch(() => null);
-  const title = link ? `${t.title} ${formatMoney(link.amount, link.currency, locale)}` : t.title;
+  if (!link) return { title: t.title, robots: { index: false, follow: false, nocache: true } };
+
+  // La vista previa al compartir el link es del cobro, con el cliente y el
+  // monto: es lo que David pidió (2026-10-14). Sigue sin indexarse.
+  const amount = `${formatMoney(link.amount, link.currency, locale)} ${link.currency}`;
+  const en = locale === "EN";
+  const title = link.client_name
+    ? `${en ? "Payment for" : "Cobro para"} ${link.client_name}: ${amount}`
+    : `${t.payTo}: ${amount}`;
+  const description = [
+    link.concept,
+    link.invoice_number ? `${en ? "Invoice" : "Factura"} ${link.invoice_number}` : "",
+    en ? `Reference ${link.reference}. Secure payment with Lumintik.` : `Referencia ${link.reference}. Pago seguro con Lumintik.`,
+  ]
+    .filter(Boolean)
+    .join(". ");
+
   return {
     title,
-    description: link?.concept ?? t.payTo,
-    // Un link de pago no se indexa ni se previsualiza con datos del cliente.
+    description,
     robots: { index: false, follow: false, nocache: true },
-    openGraph: { title: t.payTo, description: t.payTo },
+    openGraph: { type: "website", siteName: "Lumintik", title, description },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
