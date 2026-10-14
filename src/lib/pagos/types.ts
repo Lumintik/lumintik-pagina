@@ -76,6 +76,9 @@ export type PublicLink = {
   has_image: boolean;
   /** Nombre del certificado bancario de la cuenta para transferencias; vacío si no hay. */
   transfer_certificate_filename: string;
+  /** Concepto y descripción en inglés; vacíos si no se dieron. */
+  concept_en: string;
+  description_en: string;
 };
 
 export type Option = { code: string; name: string };

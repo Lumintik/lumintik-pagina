@@ -28,8 +28,9 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/pagar/[c
   const title = link.client_name
     ? `${en ? "Payment for" : "Cobro para"} ${link.client_name}: ${amount}`
     : `${t.payTo}: ${amount}`;
+  const concept = en && link.concept_en ? link.concept_en : link.concept;
   const description = [
-    link.concept,
+    concept,
     link.invoice_number ? `${en ? "Invoice" : "Factura"} ${link.invoice_number}` : "",
     en ? `Reference ${link.reference}. Secure payment with Lumintik.` : `Referencia ${link.reference}. Pago seguro con Lumintik.`,
   ]

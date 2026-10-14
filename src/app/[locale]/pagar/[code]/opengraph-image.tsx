@@ -131,7 +131,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
               </div>
             ) : null}
             <div style={{ display: "flex", marginTop: 6, fontSize: 52, fontWeight: 700, lineHeight: 1.1, maxWidth: 1050 }}>
-              {clip(link.concept, 64)}
+              {clip(locale === "EN" && link.concept_en ? link.concept_en : link.concept, 64)}
             </div>
             <div style={{ display: "flex", alignItems: "flex-end", marginTop: 14 }}>
               <div style={{ display: "flex", fontSize: 128, fontWeight: 300, lineHeight: 1 }}>

@@ -513,6 +513,7 @@ export function TransferPanel({
   const [name, setName] = useState(link.client_name);
   const [email, setEmail] = useState(link.client_email);
   const [note, setNote] = useState("");
+  const [proof, setProof] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const amount = formatMoney(link.amount, link.currency, locale);
@@ -528,8 +529,16 @@ export function TransferPanel({
       setError(t.errors.required);
       return;
     }
+    let proofData: { data: string; name: string } | undefined;
+    if (proof) {
+      if (proof.size > 2_500_000) {
+        setError(t.declare.proofTooBig);
+        return;
+      }
+      proofData = { data: await toBase64(proof), name: proof.name };
+    }
     setBusy(true);
-    const result = await actions.declareTransfer(link.code, { method, name, email, note }, t.errors.generic);
+    const result = await actions.declareTransfer(link.code, { method, name, email, note, proof: proofData }, t.errors.generic);
     setBusy(false);
     if (result.ok) onAttempt(result.data);
     else setError(result.message);
@@ -577,7 +586,7 @@ export function TransferPanel({
             <div className="mt-8">
               <DocumentCard
                 href={`/${link.locale === "en" ? "pay" : "pagar"}/${link.code}/certificado`}
-                thumbnail={`/${link.locale === "en" ? "pay" : "pagar"}/${link.code}/certificado/miniatura`}
+                thumbnail={`/${link.locale === "en" ? "pay" : "pagar"}/${link.code}/certificado-miniatura`}
                 title={t.certificateCard.title}
                 subtitle={account.bank ? `${account.bank}, ${account.account_type}` : link.transfer_certificate_filename}
                 action={t.certificateCard.action}
@@ -602,6 +611,23 @@ export function TransferPanel({
               <input className={inputClass} value={note} onChange={(e) => setNote(e.target.value)} />
             </Field>
           </div>
+          <label className="mt-4 flex cursor-pointer items-center gap-4 rounded-2xl p-4 ring-1 ring-white transition hover:bg-white/[0.06]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black">
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
+                <path d="M12 16V4m0 0l-5 5m5-5l5 5M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-semibold">{proof ? proof.name : t.declare.proof}</span>
+              <span className="block text-sm">{proof ? t.declare.proofChange : t.declare.proofHint}</span>
+            </span>
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,application/pdf"
+              className="sr-only"
+              onChange={(e) => setProof(e.target.files?.[0] ?? null)}
+            />
+          </label>
           <ErrorNote message={error} />
           <PrimaryButton busy={busy}>
             {t.declare.send} {amount}
@@ -614,4 +640,14 @@ export function TransferPanel({
       )}
     </div>
   );
+}
+
+/** Archivo a base64, sin el prefijo `data:`. */
+function toBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
 }

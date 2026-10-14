@@ -115,7 +115,7 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
     <div className="relative min-h-dvh overflow-hidden bg-black text-white">
       <Starfield />
 
-      <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-4 pt-6 sm:px-6 sm:pt-8">
+      <header className="relative z-10 mx-auto grid max-w-6xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-4 pt-6 sm:gap-8 sm:px-6 sm:pt-8">
         <Link href={locale === "ES" ? "/es" : "/en"} aria-label="Lumintik">
           <Image
             id="navbar-logo"
@@ -127,9 +127,14 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
             className="h-9 w-auto"
           />
         </Link>
+        <div className="mx-auto w-full max-w-xs">
+          {link.status === "pendiente" && view.kind !== "attempt" ? (
+            <Stepper step={view.kind === "summary" ? 1 : view.kind === "choose" ? 2 : 3} labels={t.steps} />
+          ) : null}
+        </div>
         <div className="flex items-center gap-3">
           {link.epayco_test ? (
-            <span className="rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-white/40">TEST</span>
+            <span className="hidden rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-white/40 sm:inline">TEST</span>
           ) : null}
           <Link
             href={otherHref}
@@ -140,15 +145,10 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto max-w-6xl px-4 pb-64 pt-10 sm:px-6 sm:pt-14">
-        {link.status === "pendiente" && view.kind !== "attempt" ? (
-          <div className="max-w-md">
-            <Stepper step={view.kind === "summary" ? 1 : view.kind === "choose" ? 2 : 3} labels={t.steps} />
-          </div>
-        ) : null}
+      <main className="relative z-10 mx-auto max-w-6xl px-4 pb-64 pt-10 sm:px-6 sm:pt-16">
         <section
           aria-live="polite"
-          className={`mt-10 min-w-0 sm:mt-14 ${view.kind === "summary" && link.status === "pendiente" ? "" : "max-w-2xl"}`}
+          className={`min-w-0 ${view.kind === "summary" && link.status === "pendiente" ? "" : "max-w-2xl"}`}
         >
           <Panel id={panelKey(link, view)}>
             <ActionPanel
@@ -222,7 +222,9 @@ function PaySheet({ link, locale, t }: { link: PublicLink; locale: Locale; t: (t
               <div className="min-w-0">
                 <p className="text-sm font-semibold">{t.sheet.total}</p>
                 <p className="mt-1 flex items-baseline gap-2 tabular-nums">
-                  <span className="text-3xl font-light tracking-tight">{formatMoney(link.amount, link.currency, locale)}</span>
+                  <span className="text-3xl font-light">
+                    <AmountRoll text={formatMoney(link.amount, link.currency, locale)} delay={2.4} />
+                  </span>
                   <span className="text-sm font-semibold">{link.currency}</span>
                 </p>
               </div>
@@ -410,7 +412,7 @@ function ChooseMethod({
           {error}
         </p>
       ) : null}
-      <ul className="mt-6 space-y-2" role="radiogroup" aria-label={t.chooseMethod}>
+      <ul className="mt-5 space-y-1.5" role="radiogroup" aria-label={t.chooseMethod}>
         {link.methods.map((method, i) => {
           const on = picked === method;
           return (
@@ -426,17 +428,17 @@ function ChooseMethod({
                 aria-checked={on}
                 onClick={() => setPicked(method)}
                 onDoubleClick={() => onContinue(method)}
-                className={`group flex w-full items-center gap-5 rounded-2xl px-4 py-5 text-left ring-1 transition focus-visible:outline-none ${
+                className={`group flex w-full items-center gap-4 rounded-2xl px-4 py-3.5 text-left ring-1 transition focus-visible:outline-none ${
                   on ? "bg-white/[0.08] ring-white" : "ring-transparent hover:bg-white/[0.05] focus-visible:ring-white"
                 }`}
               >
                 <span className="text-sm tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-xl font-semibold transition-transform duration-300 group-hover:translate-x-1">
-                    {t.methods[method].name}
+                  <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                    <span className="text-lg font-semibold">{t.methods[method].name}</span>
+                    <BrandRow ids={METHOD_BRANDS[method]} size="xs" />
                   </span>
-                  <span className="mt-1 block text-sm">{t.methods[method].hint}</span>
-                  <BrandRow ids={METHOD_BRANDS[method]} className="mt-3" />
+                  <span className="mt-0.5 block text-sm">{t.methods[method].hint}</span>
                 </span>
                 <span
                   aria-hidden
@@ -496,33 +498,23 @@ function SummaryStep({
   onContinue: () => void;
 }) {
   useEnter(onContinue);
-  const amount = formatMoney(link.amount, link.currency, locale);
+  const concept = locale === "EN" && link.concept_en ? link.concept_en : link.concept;
+  const description = locale === "EN" && link.description_en ? link.description_en : link.description;
   const base = `/${locale === "EN" ? "pay" : "pagar"}/${link.code}`;
   const visuals = link.has_image || link.invoice_filename;
   return (
     <div className={visuals ? "grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-16" : ""}>
       <div className="min-w-0">
-        <Rise delay={1.5}>
-          <p className="text-sm font-semibold">{t.payTo}</p>
-        </Rise>
         <Rise delay={1.6}>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">{link.concept}</h1>
+          <h1 className="text-balance text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">{concept}</h1>
         </Rise>
-        {link.description ? (
+        {description ? (
           <Rise delay={1.7}>
-            <p className="mt-4 text-lg leading-relaxed">{link.description}</p>
+            <p className="mt-4 text-lg leading-relaxed">{description}</p>
           </Rise>
         ) : null}
-        <Rise delay={1.75}>
-          <p className="mt-10 flex flex-wrap items-baseline gap-x-3 gap-y-2 font-light leading-none tracking-tight">
-            <span className="text-6xl sm:text-8xl">
-              <AmountRoll text={amount} delay={1.8} />
-            </span>
-            <span className="text-xl font-semibold">{link.currency}</span>
-          </p>
-        </Rise>
         <Rise delay={2}>
-          <dl className="mt-10 grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 text-base">
+          <dl className="mt-8 grid grid-cols-[auto_1fr] items-center gap-x-8 gap-y-3 text-base">
             {link.client_name ? (
               <>
                 <dt className="font-semibold">{t.for}</dt>
@@ -534,7 +526,22 @@ function SummaryStep({
             {link.invoice_number ? (
               <>
                 <dt className="font-semibold">{t.invoice}</dt>
-                <dd>{link.invoice_number}</dd>
+                <dd className="flex flex-wrap items-center gap-3">
+                  {link.invoice_number}
+                  {link.invoice_filename ? (
+                    <a
+                      href={`${base}/factura`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-sm font-semibold text-black transition hover:bg-black hover:text-white hover:ring-1 hover:ring-white"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden>
+                        <path d="M12 4v11m0 0l-5-5m5 5l5-5M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      {t.download}
+                    </a>
+                  ) : null}
+                </dd>
               </>
             ) : null}
             {link.expires_at && link.status === "pendiente" ? (
@@ -567,7 +574,7 @@ function SummaryStep({
             <Rise delay={2.05}>
               <DocumentCard
                 href={`${base}/factura`}
-                thumbnail={`${base}/factura/miniatura`}
+                thumbnail={`${base}/factura-miniatura`}
                 title={`${t.invoiceCard.title} ${link.invoice_number}`.trim()}
                 subtitle={link.invoice_filename}
                 action={t.invoiceCard.action}
@@ -588,17 +595,17 @@ function SummaryStep({
   );
 }
 
-/** Indicador de pasos: 01 / 03 y tres barras que se llenan. */
+/** Indicador de pasos en el encabezado: nombre del paso centrado y tres barras. */
 function Stepper({ step, labels }: { step: number; labels: string[] }) {
   return (
-    <div className="flex flex-col gap-3">
-      <p className="flex items-baseline gap-3 text-sm">
+    <div className="flex flex-col items-center gap-2">
+      <p className="flex items-baseline gap-2 whitespace-nowrap text-xs sm:text-sm">
         <span className="tabular-nums">
-          {String(step).padStart(2, "0")} / {String(labels.length).padStart(2, "0")}
+          {step}/{labels.length}
         </span>
         <span className="font-semibold">{labels[step - 1]}</span>
       </p>
-      <div className="grid grid-cols-3 gap-2" aria-hidden>
+      <div className="grid w-full grid-cols-3 gap-1.5" aria-hidden>
         {labels.map((label, i) => (
           <span key={label} className="relative h-1 overflow-hidden rounded-full bg-white/20">
             <motion.span
@@ -655,7 +662,13 @@ function SecureNote({
           {direct ? t.secureDirect : card ? t.secure : t.secureNoCard}
           {test && !direct ? ` ${t.testMode}` : ""}
         </p>
-        {direct ? null : <BrandTile id="epayco" size="md" className="mt-3" />}
+        {direct ? null : (
+          <span className="mt-3 flex items-center gap-2">
+            <BrandTile id="epayco" size="md" />
+            <BrandTile id="pci" size="md" />
+            <span className="sr-only">{t.pci}</span>
+          </span>
+        )}
       </div>
     </div>
   );

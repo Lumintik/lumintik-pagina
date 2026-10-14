@@ -132,7 +132,14 @@ export async function confirmDaviplata(
 
 export async function declareTransfer(
   code: string,
-  input: { method: "breb" | "transferencia"; name: string; email: string; note: string },
+  input: {
+    method: "breb" | "transferencia";
+    name: string;
+    email: string;
+    note: string;
+    /** Comprobante en base64, opcional. */
+    proof?: { data: string; name: string };
+  },
   fallback: string,
 ): Promise<Result<Attempt>> {
   try {
@@ -140,6 +147,7 @@ export async function declareTransfer(
       method: `METHOD_${input.method.toUpperCase()}`,
       payer: { name: input.name, email: input.email },
       note: input.note,
+      ...(input.proof ? { proof: input.proof.data, proof_filename: input.proof.name } : {}),
     });
     return { ok: true, data };
   } catch (error) {

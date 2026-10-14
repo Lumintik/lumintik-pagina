@@ -22,7 +22,8 @@ export type BrandId =
   | "puntored"
   | "epayco"
   | "global66"
-  | "davivienda";
+  | "davivienda"
+  | "pci";
 
 const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "black" | "own" | "red" }> = {
   visa: { src: "/brands/visa.svg", name: "Visa", tile: "white" },
@@ -39,6 +40,8 @@ const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "blac
   global66: { src: "/brands/global66.png", name: "Global66", tile: "own" },
   // Davivienda publica su logo en negativo sobre su rojo; así va.
   davivienda: { src: "/brands/davivienda.svg", name: "Davivienda", tile: "red" },
+  // Sello PCI DSS que publica ePayco (evaluado por ControlCase).
+  pci: { src: "/brands/pci-dss.png", name: "PCI DSS, evaluado por ControlCase", tile: "own" },
 };
 
 /** El logo del banco de una cuenta, si lo tenemos. */
@@ -66,6 +69,7 @@ export const CASH_BRANDS: Record<string, BrandId | undefined> = {
 };
 
 const SIZES = {
+  xs: "h-6 w-9 rounded p-0.5",
   sm: "h-7 w-11 rounded-md p-1",
   wide: "h-9 w-32 rounded-lg px-2.5 py-1.5",
   md: "h-9 w-14 rounded-lg p-1.5",
