@@ -36,6 +36,8 @@ const ES = {
   invoiceCard: { title: "Factura", action: "Descargar PDF", preview: "Vista previa de la factura" },
   certificateCard: { title: "Certificado bancario", action: "Descargar PDF", preview: "Vista previa del certificado" },
   photo: "Lo que pagas",
+  /** "A nuestra cuenta bancaria Davivienda". */
+  transferTo: (bank: string) => (bank ? `A nuestra cuenta bancaria ${bank}` : "A nuestra cuenta bancaria"),
   pci: "ePayco tiene certificación PCI DSS",
   enterHint: "o presiona Enter",
   methods: {
@@ -185,6 +187,7 @@ const EN: Copy = {
   invoiceCard: { title: "Invoice", action: "Download PDF", preview: "Invoice preview" },
   certificateCard: { title: "Bank certificate", action: "Download PDF", preview: "Certificate preview" },
   photo: "What you are paying for",
+  transferTo: (bank: string) => (bank ? `To our ${bank} bank account` : "To our bank account"),
   pci: "ePayco is PCI DSS certified",
   enterHint: "or press Enter",
   methods: {

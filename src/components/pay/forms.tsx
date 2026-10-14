@@ -6,7 +6,7 @@ import * as actions from "@/app/[locale]/pagar/[code]/actions";
 import type { Locale } from "@/lib/locale";
 import type { Attempt, Option, Payer, PublicLink } from "@/lib/pagos/types";
 import { formatMoney, type PayCopy } from "./copy";
-import { BrandTile, CASH_BRANDS, bankBrand } from "./brands";
+import { BrandTile, CASH_BRANDS } from "./brands";
 import { DocumentCard } from "./document-card";
 import { cardBrand, formatCardNumber, luhn, prepareTokenizer, tokenizeCard } from "./epayco";
 import { CopyRow, ErrorNote, Field, PayForm, PrimaryButton, inputClass } from "./ui";
@@ -566,11 +566,6 @@ export function TransferPanel({
 
       {method === "transferencia" && account ? (
         <div>
-          {bankBrand(account.bank) ? (
-            <div className="mb-4 flex items-center gap-4">
-              <BrandTile id={bankBrand(account.bank)!} size="wide" />
-            </div>
-          ) : null}
           <CopyRow label={t.transfer.bank} value={account.bank} {...c} />
           <CopyRow label={t.transfer.type} value={account.account_type} {...c} />
           <CopyRow label={t.transfer.number} value={account.account_number} mono big {...c} />

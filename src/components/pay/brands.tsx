@@ -25,7 +25,10 @@ export type BrandId =
   | "davivienda"
   | "pci";
 
-const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "black" | "own" | "red" }> = {
+const BRANDS: Record<
+  BrandId,
+  { src: string; name: string; tile: "white" | "black" | "own" | "red"; wide?: boolean }
+> = {
   visa: { src: "/brands/visa.svg", name: "Visa", tile: "white" },
   mastercard: { src: "/brands/mastercard.svg", name: "Mastercard", tile: "white" },
   amex: { src: "/brands/amex.svg", name: "American Express", tile: "white" },
@@ -39,7 +42,7 @@ const BRANDS: Record<BrandId, { src: string; name: string; tile: "white" | "blac
   epayco: { src: "/brands/epayco.svg", name: "ePayco", tile: "white" },
   global66: { src: "/brands/global66.png", name: "Global66", tile: "own" },
   // Davivienda publica su logo en negativo sobre su rojo; así va.
-  davivienda: { src: "/brands/davivienda.svg", name: "Davivienda", tile: "red" },
+  davivienda: { src: "/brands/davivienda.svg", name: "Davivienda", tile: "red", wide: true },
   // Sello PCI DSS que publica ePayco (evaluado por ControlCase).
   pci: { src: "/brands/pci-dss.png", name: "PCI DSS, evaluado por ControlCase", tile: "own" },
 };
@@ -68,6 +71,9 @@ export const CASH_BRANDS: Record<string, BrandId | undefined> = {
   PR: "puntored",
 };
 
+/** Logos alargados (Davivienda es 10 a 1): misma altura, más ancho, nunca recortados. */
+const WIDE: Record<string, string> = { xs: "!w-24 px-1.5", sm: "!w-28 px-2", md: "!w-32 px-2.5", lg: "!w-40 px-3", wide: "" };
+
 const SIZES = {
   xs: "h-6 w-9 rounded p-0.5",
   sm: "h-7 w-11 rounded-md p-1",
@@ -87,7 +93,7 @@ export function BrandTile({ id, size = "sm", className = "" }: { id: BrandId; si
           ? "bg-[#ED1C27]"
           : "overflow-hidden !p-0";
   return (
-    <span className={`inline-flex shrink-0 items-center justify-center ${SIZES[size]} ${tile} ${className}`}>
+    <span className={`inline-flex shrink-0 items-center justify-center ${SIZES[size]} ${brand.wide ? WIDE[size] : ""} ${tile} ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element -- logos de marca, SVG estáticos */}
       <img src={brand.src} alt={brand.name} className="h-full w-full object-contain" decoding="async" />
     </span>
@@ -113,6 +119,15 @@ export function usedBrands(method: Method, attempt: { card_brand?: string; cash_
   if (method === "efectivo") {
     const cash = CASH_BRANDS[(attempt?.cash_entity ?? "").toUpperCase()];
     if (cash) return [cash];
+  }
+  return METHOD_BRANDS[method];
+}
+
+/** Los logos de un medio en este cobro: en transferencia, el del banco de la cuenta. */
+export function brandsForMethod(method: Method, bank: string | undefined): BrandId[] {
+  if (method === "transferencia") {
+    const id = bankBrand(bank ?? "");
+    return id ? [id] : [];
   }
   return METHOD_BRANDS[method];
 }

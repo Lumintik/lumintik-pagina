@@ -11,7 +11,7 @@ import type { Attempt, Method, PublicLink } from "@/lib/pagos/types";
 import { PAY_COPY, attemptTone, formatDate, formatMoney } from "./copy";
 import { cleanupThreeDs, runThreeDs } from "./epayco";
 import { CardForm, CashForm, DaviplataForm, PseForm, TransferPanel } from "./forms";
-import { BrandRow, BrandTile, METHOD_BRANDS, usedBrands } from "./brands";
+import { BrandRow, BrandTile, brandsForMethod, usedBrands } from "./brands";
 import { DocumentCard } from "./document-card";
 import { AmountRoll, CopyRow, EASE, GhostButton, Orbit, Panel, PrimaryButton, Rise, SHEET_ACTION_ID, Seal } from "./ui";
 
@@ -354,7 +354,7 @@ function ActionPanel({
         <GhostButton onClick={() => setView({ kind: "choose" })}>← {t.back}</GhostButton>
         <div className="mb-8 mt-6 flex flex-wrap items-center gap-3">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{t.methods[view.method].name}</h2>
-          <BrandRow ids={METHOD_BRANDS[view.method]} size="md" />
+          <BrandRow ids={brandsForMethod(view.method, link.transfer?.bank)} size="md" />
         </div>
         {view.method === "tarjeta" ? <CardForm {...common} /> : null}
         {view.method === "pse" ? <PseForm {...common} /> : null}
@@ -436,9 +436,11 @@ function ChooseMethod({
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                     <span className="text-lg font-semibold">{t.methods[method].name}</span>
-                    <BrandRow ids={METHOD_BRANDS[method]} size="xs" />
+                    <BrandRow ids={brandsForMethod(method, link.transfer?.bank)} size="xs" />
                   </span>
-                  <span className="mt-0.5 block text-sm">{t.methods[method].hint}</span>
+                  <span className="mt-0.5 block text-sm">
+                    {method === "transferencia" ? t.transferTo(link.transfer?.bank ?? "") : t.methods[method].hint}
+                  </span>
                 </span>
                 <span
                   aria-hidden
