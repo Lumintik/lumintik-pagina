@@ -26,6 +26,7 @@ import {
   CopyRow,
   ErrorNote,
   Field,
+  Orbit,
   Panel,
   PayForm,
   PrimaryButton,
@@ -140,7 +141,6 @@ type Props = {
   t: PayCopy;
   method: Method;
   onAttempt: (attempt: Attempt) => void;
-  onBusy: (busy: boolean) => void;
   /** Volver a elegir medio. */
   onChangeMethod: () => void;
   /** Para el indicador del encabezado: número de paso (desde 3) y su nombre. */
@@ -153,7 +153,6 @@ export function Checkout({
   t,
   method,
   onAttempt,
-  onBusy,
   onChangeMethod,
   onProgress,
 }: Props) {
@@ -190,6 +189,9 @@ export function Checkout({
   const [showErrors, setShowErrors] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  // Mientras se procesa, el formulario sigue montado (con todo lo escrito) y
+  // solo se ve la órbita. Si algo falla, se vuelve a la confirmación con el motivo.
+  const [processing, setProcessing] = useState(false);
 
   const banks = useOptions(link.code, "bancos", method === "pse");
   const entities = useOptions(link.code, "efectivo", method === "efectivo");
@@ -277,7 +279,7 @@ export function Checkout({
     setBusy(true);
 
     if (method === "tarjeta") {
-      onBusy(true);
+      setProcessing(true);
       try {
         const token = await tokenizeCard(link.epayco_public_key, {
           name: card.holder,
@@ -300,21 +302,13 @@ export function Checkout({
         if (result.ok) onAttempt(result.data);
         else {
           setError(result.message);
-          onBusy(false);
+          setProcessing(false);
         }
       } catch (failure) {
-        const detail =
-          typeof failure === "string"
-            ? failure
-            : ((
-                failure as {
-                  description?: string;
-                  data?: { description?: string };
-                }
-              )?.data?.description ??
-              (failure as { description?: string })?.description);
-        setError(detail ? `${t.errors.card} ${detail}` : t.errors.generic);
-        onBusy(false);
+        const detail = describeFailure(failure);
+        void actions.reportClientError(link.code, "tokenizar tarjeta", detail || String(failure));
+        setError(detail ? t.errors.cardWithReason(detail) : t.errors.generic);
+        setProcessing(false);
       } finally {
         setBusy(false);
       }
@@ -322,7 +316,7 @@ export function Checkout({
     }
 
     if (method === "pse") {
-      onBusy(true);
+      setProcessing(true);
       const result = await actions.startPse(
         link.code,
         link.locale,
@@ -338,14 +332,14 @@ export function Checkout({
         return;
       }
       setBusy(false);
-      onBusy(false);
+      setProcessing(false);
       if (result.ok) onAttempt(result.data);
       else setError(result.message);
       return;
     }
 
     if (method === "efectivo") {
-      onBusy(true);
+      setProcessing(true);
       const result = await actions.startCash(
         link.code,
         link.locale,
@@ -355,7 +349,7 @@ export function Checkout({
       setBusy(false);
       if (result.ok) onAttempt(result.data);
       else {
-        onBusy(false);
+        setProcessing(false);
         setError(result.message);
       }
       return;
@@ -403,7 +397,7 @@ export function Checkout({
     if (!daviAttempt) return;
     setError("");
     setBusy(true);
-    onBusy(true);
+    setProcessing(true);
     const result = await actions.confirmDaviplata(
       link.code,
       { attemptId: daviAttempt.id, otp },
@@ -412,7 +406,7 @@ export function Checkout({
     setBusy(false);
     if (result.ok) onAttempt(result.data);
     else {
-      onBusy(false);
+      setProcessing(false);
       setError(result.message);
     }
   }
@@ -444,6 +438,8 @@ export function Checkout({
         ) : null}
       </StepHeader>
 
+      {processing ? <Orbit steps={t.sequence} /> : null}
+      <div hidden={processing}>
       <Panel id={step}>
         {step === "data" && method === "tarjeta" ? (
           <PayForm onSubmit={next} className="ph-no-capture" autoComplete="on">
@@ -984,6 +980,7 @@ export function Checkout({
           </PayForm>
         ) : null}
       </Panel>
+      </div>
     </div>
   );
 }
@@ -1213,4 +1210,15 @@ function toBase64(file: File): Promise<string> {
     reader.onerror = () => reject(reader.error);
     reader.readAsDataURL(file);
   });
+}
+
+/** El motivo que da ePayco al rechazar una tarjeta, venga como venga. */
+function describeFailure(failure: unknown): string {
+  if (!failure) return "";
+  if (typeof failure === "string") return failure;
+  const f = failure as Record<string, unknown> & { data?: Record<string, unknown> };
+  const text = [f.data?.description, f.description, f.data?.message, f.message, f.title].find(
+    (v): v is string => typeof v === "string" && v.trim().length > 0,
+  );
+  return text ?? "";
 }

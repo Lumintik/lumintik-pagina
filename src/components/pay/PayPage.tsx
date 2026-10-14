@@ -119,9 +119,6 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
         ? { step: 2, label: t.flow.steps.method }
         : progress;
 
-  const busyFor = (method: Method) => (busy: boolean) =>
-    setView(busy ? { kind: "busy", method } : { kind: "method", method });
-
   return (
     <div className="relative min-h-dvh overflow-hidden bg-black text-white">
       <Starfield />
@@ -169,7 +166,6 @@ export function PayPage({ link: initial, locale }: { link: PublicLink; locale: L
               t={t}
               setView={setView}
               onAttempt={onAttempt}
-              busyFor={busyFor}
               onProgress={onProgress}
             />
           </Panel>
@@ -273,7 +269,6 @@ function ActionPanel({
   t,
   setView,
   onAttempt,
-  busyFor,
   onProgress,
 }: {
   link: PublicLink;
@@ -282,7 +277,6 @@ function ActionPanel({
   t: (typeof PAY_COPY)[Locale];
   setView: (v: View) => void;
   onAttempt: (a: Attempt) => void;
-  busyFor: (m: Method) => (busy: boolean) => void;
   onProgress: (step: number, label: string) => void;
 }) {
   if (link.status === "pagado") {
@@ -370,7 +364,6 @@ function ActionPanel({
           t={t}
           method={view.method}
           onAttempt={onAttempt}
-          onBusy={busyFor(view.method)}
           onChangeMethod={() => setView({ kind: "choose" })}
           onProgress={onProgress}
         />

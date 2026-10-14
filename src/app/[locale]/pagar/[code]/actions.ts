@@ -171,3 +171,16 @@ export async function loadOptions(code: string, kind: "bancos" | "efectivo"): Pr
     return fail(error, "");
   }
 }
+
+/**
+ * Lo que falla en el navegador antes de llegar al servidor (por ejemplo, el
+ * tokenizador de ePayco rechaza la tarjeta) queda en la bitácora del servicio
+ * de pagos para poder entenderlo. Nunca lleva datos de la tarjeta.
+ */
+export async function reportClientError(code: string, stage: string, detail: string): Promise<void> {
+  try {
+    await api.post(code, "error", { stage: stage.slice(0, 80), detail: detail.slice(0, 400) });
+  } catch {
+    // Reportar nunca debe romper el pago.
+  }
+}
