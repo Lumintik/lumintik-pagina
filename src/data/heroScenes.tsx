@@ -192,46 +192,7 @@ export const HERO_SCENES: Scene[] = [
         { who: "bot", text: { ES: "Sí. Leída y validada, sin diferencias.", EN: "Yes. Read and validated, no differences." } },
         { who: "done", text: { ES: "Registrada en el ERP", EN: "Posted to the ERP" } },
       ], dur: 2600 },
-      { t: "wait", dur: 300 },
-      // Griver case: a full day of review down to 10 minutes.
-      { t: "flip", stats: [
-        { big: { ES: "1 día → 10 min", EN: "1 day → 10 min" }, small: { ES: "revisión de documentos en un caso real", EN: "document review in a real case" } },
-      ], dur: 5400 },
-    ],
-  },
-  {
-    id: "forms",
-    eyebrow: { ES: "Trámites y entidades públicas", EN: "Paperwork and public agencies" },
-    title: { ES: "Trámites a nivel de gobierno", EN: "Paperwork at government grade" },
-    line: {
-      ES: "Motores de formularios con prellenado por rol, validación campo a campo y documentos finales listos para presentarse ante entidades públicas, con certificación de una agencia federal ya en producción.",
-      EN: "Form engines with role-aware prefill, field by field validation and final documents ready to file with public agencies, with a federal agency certification already in production.",
-    },
-    steps: [
-      // The form fills itself from the case data.
-      { t: "form", id: "form", at: [26, 44], title: { ES: "Motor de formularios", EN: "Form engine" }, fields: [
-        { ES: "Nombre completo", EN: "Full name" },
-        { ES: "Fecha de nacimiento", EN: "Date of birth" },
-        { ES: "País de origen", EN: "Country of birth" },
-        { ES: "Dirección actual", EN: "Current address" },
-      ], dur: 2600 },
-      // The filings come out of it, ready to file.
-      { t: "extract", from: "form", fields: [
-        { label: { ES: "I-130", EN: "I-130" }, at: [60, 24] },
-        { label: { ES: "I-485", EN: "I-485" }, at: [64, 40] },
-        { label: { ES: "N-400", EN: "N-400" }, at: [60, 56] },
-      ], dur: 900 },
-      // The final PDF is generated and checked.
-      { t: "doc", id: "pdf", at: [84, 36], dur: 400 },
-      { t: "scan", id: "pdf", dur: 1100 },
-      { t: "extract", from: "pdf", fields: [{ label: { ES: "PDF certificado", EN: "Certified PDF" }, at: [80, 66] }], dur: 700 },
-      { t: "chip", chip: { id: "ai", label: { ES: "Reglas + IA", EN: "Rules + AI" }, icon: icon(<SiOpenai style={{ color: "#fff" }} />), at: [40, 86] }, dur: 300 },
-      { t: "lines", from: "ai", to: [{ at: [26, 44] }, { at: [84, 36] }], dur: 700 },
-      { t: "wait", dur: 300 },
-      // EZMig case: USCIS technical evaluation passed on July 30, 2026.
-      { t: "flip", stats: [
-        { big: "USCIS", small: { ES: "evaluación técnica superada: formularios certificados para presentar", EN: "technical evaluation passed: forms certified for filing" } },
-      ], dur: 5400 },
+      { t: "wait", dur: 2400 },
     ],
   },
   {

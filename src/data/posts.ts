@@ -129,92 +129,6 @@ export const POSTS: Post[] = [
     },
   },
   {
-    slug: "una-consola-para-ver-cada-documento",
-    date: "2026-09-22",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/reco/tour/metricas.jpg",
-      width: 1512,
-      height: 806,
-      alt: {
-        ES: "Panel de métricas de la consola de RECO",
-        EN: "Metrics panel of the RECO console",
-      },
-    },
-    tags: [
-      "Comercio exterior",
-      "IA aplicada",
-      "Operación",
-    ],
-    relatedCase: "griver",
-    copy: {
-      ES: {
-        title: "Una consola para ver cada documento: lo que una agencia aduanera obtiene además del OCR",
-        excerpt: "Leer facturas y pedimentos con IA es la mitad. La otra mitad es saber cuántos entran, cuánto tardan, qué falla y quién hizo qué. Así es la consola de operación de RECO.",
-        sections: [
-          {
-            heading: "Más que una API",
-            paragraphs: [
-              "Cuando una agencia aduanera pasa de revisar documentos a mano a procesarlos con inteligencia artificial, la primera pregunta que aparece no es técnica: ¿cuántos van hoy, cuánto tardaron y cuáles se atascaron? La consola de operación de RECO responde eso sin abrir un solo documento: trabaja únicamente con metadatos de negocio, nunca con el contenido.",
-              "En una semana de septiembre de 2026 la consola registró 11.546 documentos y 21.591 páginas. El 74% llegó escaneado, no digital, y aun así el proceso automático por documento estuvo en 18 segundos de mediana.",
-            ],
-          },
-          {
-            heading: "Dónde se va el tiempo",
-            paragraphs: [
-              "La vista de entrenamiento parte el recorrido de cada documento en tramos: proceso automático, espera, revisión humana y total. Se ve de inmediato qué parte es de la máquina y cuál de las personas, por agencia y por periodo. Esa es la conversación que un director de operaciones quiere tener con datos: dónde acortar, a quién apoyar.",
-            ],
-          },
-          {
-            heading: "Quién hizo qué",
-            paragraphs: [
-              "Cada acción administrativa, humana o de máquina, queda en un registro inmutable: accesos, canjes de credencial, planes asignados. Se filtra por tipo de actor y por evento, y se exporta por evento, por día o por usuario. En un sector regulado, poder mostrar ese registro vale tanto como la velocidad.",
-            ],
-          },
-          {
-            heading: "Probar como una agencia",
-            paragraphs: [
-              "La misma consola permite procesar un lote de facturas o conocimientos de embarque por el mismo endpoint público que usan las agencias, con la credencial de cada una. El resultado llega agrupado por factura y los documentos no se guardan. Así el equipo de RECO prueba lo que sus clientes van a ver, antes de que lo vean.",
-              "Las cifras de esta entrada se leyeron en la consola en producción, semana del 14 al 20 de septiembre de 2026.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "A console to see every document: what a customs agency gets beyond OCR",
-        excerpt: "Reading invoices and customs entries with AI is half the job. The other half is knowing how many come in, how long they take, what fails and who did what. This is RECO's operations console.",
-        sections: [
-          {
-            heading: "More than an API",
-            paragraphs: [
-              "When a customs agency moves from reviewing documents by hand to processing them with artificial intelligence, the first question is not technical: how many today, how long did they take and which ones got stuck? RECO's operations console answers that without opening a single document: it works only with business metadata, never with the content.",
-              "In one week of September 2026 the console logged 11,546 documents and 21,591 pages. 74% arrived scanned, not digital, and the automatic processing per document still sat at a median of 18 seconds.",
-            ],
-          },
-          {
-            heading: "Where the time goes",
-            paragraphs: [
-              "The training view splits each document's journey into stages: automatic processing, waiting, human review and total. It shows at a glance which part belongs to the machine and which to people, by agency and by period. That is the conversation an operations director wants to have with data: where to cut, whom to support.",
-            ],
-          },
-          {
-            heading: "Who did what",
-            paragraphs: [
-              "Every administrative action, human or machine, lands in an immutable record: logins, credential exchanges, assigned plans. It filters by actor and by event and exports by event, by day or by user. In a regulated sector, being able to show that record is worth as much as speed.",
-            ],
-          },
-          {
-            heading: "Testing like an agency",
-            paragraphs: [
-              "The same console can process a batch of invoices or bills of lading through the same public endpoint the agencies use, with each one's credential. The result comes back grouped by invoice and the documents are not stored. That is how RECO's team tests what their clients will see, before they see it.",
-              "The figures in this post were read from the live console, week of September 14 to 20, 2026.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
     slug: "37-tiendas-en-un-solo-panel",
     date: "2026-09-22",
     author: LUMINTIK,
@@ -383,90 +297,6 @@ export const POSTS: Post[] = [
     },
   },
   {
-    slug: "formularios-de-uscis-sin-errores",
-    date: "2026-09-22",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/ezmig/tour/formularios-demo.jpg",
-      width: 1512,
-      height: 806,
-      alt: {
-        ES: "Formularios de un caso en el portal del abogado de EZMig",
-        EN: "Case forms in the EZMig attorney portal",
-      },
-    },
-    tags: [
-      "Inmigración",
-      "IA aplicada",
-      "Producto",
-    ],
-    relatedCase: "ezmig",
-    copy: {
-      ES: {
-        title: "Formularios de USCIS sin errores: cómo EZMig guía al abogado, al cliente y al despacho",
-        excerpt: "Diecinueve formularios, tres idiomas y tres portales. Cómo un despacho de inmigración pasa de llenar PDF a mano a un flujo guiado que valida antes de generar el documento oficial.",
-        sections: [
-          {
-            heading: "Diecinueve formularios, un flujo",
-            paragraphs: [
-              "Un despacho de inmigración vive de formularios largos de USCIS: I-130, I-485, N-400 y otros dieciséis. EZMig los convierte en un flujo guiado, parte por parte, con validación antes de generar el PDF oficial. Lo que el abogado ya sabe del cliente no se vuelve a escribir.",
-            ],
-          },
-          {
-            heading: "El cliente, desde el teléfono",
-            paragraphs: [
-              "El cliente del abogado entra desde un enlace de invitación, sin instalar nada, escanea su documento y completa su parte desde el teléfono en español, inglés o portugués. Retoma el formulario donde lo dejó el abogado, y lo que corrige actualiza su perfil. Un asistente de inteligencia artificial responde sus dudas sin llamar al despacho.",
-            ],
-          },
-          {
-            heading: "El despacho, con control",
-            paragraphs: [
-              "El portal de administración define los formularios, su mapeo al PDF de USCIS y la analítica del despacho. Cuando USCIS cambia una versión, el cambio se hace una vez y aplica a todos los casos.",
-            ],
-          },
-          {
-            heading: "Por qué importa",
-            paragraphs: [
-              "Un error en un formulario de inmigración se paga en meses. Un flujo que valida, que reutiliza lo que ya se sabe y que habla el idioma del cliente reduce ese riesgo en cada caso, no solo en los que revisa el abogado más experimentado.",
-              "Verificable en el producto en producción, septiembre de 2026.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "USCIS forms without mistakes: how EZMig guides the attorney, the client and the firm",
-        excerpt: "Nineteen forms, three languages and three portals. How an immigration firm goes from filling PDFs by hand to a guided flow that validates before generating the official document.",
-        sections: [
-          {
-            heading: "Nineteen forms, one flow",
-            paragraphs: [
-              "An immigration firm lives on long USCIS forms: I-130, I-485, N-400 and sixteen more. EZMig turns them into a guided flow, part by part, with validation before the official PDF is generated. What the attorney already knows about the client is never typed twice.",
-            ],
-          },
-          {
-            heading: "The client, from the phone",
-            paragraphs: [
-              "The attorney's client comes in from an invitation link, without installing anything, scans their document and completes their part from the phone in Spanish, English or Portuguese. They pick the form up where the attorney left it, and whatever they correct updates their profile. An AI assistant answers their questions without calling the firm.",
-            ],
-          },
-          {
-            heading: "The firm, in control",
-            paragraphs: [
-              "The admin portal defines the forms, their mapping to the USCIS PDF and the firm's analytics. When USCIS changes a version, the change is made once and applies to every case.",
-            ],
-          },
-          {
-            heading: "Why it matters",
-            paragraphs: [
-              "A mistake on an immigration form costs months. A flow that validates, reuses what is already known and speaks the client's language lowers that risk on every case, not only on the ones the most experienced attorney reviews.",
-              "Verifiable in the live product, September 2026.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
     slug: "recorridos-de-producto-con-pantallas-reales",
     date: "2026-09-21",
     author: LUMINTIK,
@@ -488,19 +318,19 @@ export const POSTS: Post[] = [
     copy: {
       ES: {
         title: "Recorridos de producto con pantallas reales, sin exponer un solo dato",
-        excerpt: "Cómo documentamos cinco productos con capturas de producción: cuentas de prueba, difuminado desde el DOM y una regla simple sobre credenciales.",
+        excerpt: "Cómo documentamos nuestros productos con capturas de producción: cuentas de prueba, difuminado desde el DOM y una regla simple sobre credenciales.",
         sections: [
           {
             heading: "Por qué pantallas reales",
             paragraphs: [
-              "Un mockup promete; una pantalla de producción demuestra. Para los casos de este sitio grabamos cada producto tal como está hoy: la consola de RECO, el panel de Imagiq, los tres portales de EZMig, el editor de EZDocuAI y la app de FUTTEM en un iPhone. Cada recorrido tiene paradas con cámara y cursor, como una demo guiada.",
+              "Un mockup promete; una pantalla de producción demuestra. Para los casos de este sitio grabamos cada producto tal como está hoy: el panel de Imagiq y la app de FUTTEM en un iPhone. Cada recorrido tiene paradas con cámara y cursor, como una demo guiada.",
               "El problema es que producción tiene datos de clientes. Nombres, cédulas, importes, correos. Nada de eso puede salir en una captura.",
             ],
           },
           {
             heading: "Tres reglas",
             paragraphs: [
-              "Primera: cuentas de prueba siempre que existan. En EZMig creamos un despacho ficticio con un caso y un formulario de demostración; en FUTTEM usamos un club de pruebas; en la tienda de Imagiq compramos como invitado con datos inventados y sin llegar al pago.",
+              "Primera: cuentas de prueba siempre que existan. En FUTTEM usamos un club de pruebas; en la tienda de Imagiq compramos como invitado con datos inventados y sin llegar al pago.",
               "Segunda: cuando la pantalla mezcla datos reales, se difuminan antes de capturar, desde el DOM. Un pequeño script marca importes, columnas de cliente, correos y nombres con un filtro de desenfoque; la captura sale limpia y la interfaz intacta. Lo que se escapa se corrige en la imagen.",
               "Tercera: nadie del equipo teclea contraseñas ni crea cuentas en nombre del cliente para grabar. La sesión la abre el dueño del producto; la grabación la hace quien documenta. Y un formulario que crea usuarios no se envía, aunque los datos sean ficticios.",
             ],
@@ -516,19 +346,19 @@ export const POSTS: Post[] = [
       },
       EN: {
         title: "Product tours with real screens, without exposing a single record",
-        excerpt: "How we documented five products with production screenshots: test accounts, blurring from the DOM and one simple rule about credentials.",
+        excerpt: "How we document our products with production screenshots: test accounts, blurring from the DOM and one simple rule about credentials.",
         sections: [
           {
             heading: "Why real screens",
             paragraphs: [
-              "A mockup promises; a production screen proves. For the cases on this site we recorded each product as it is today: RECO's console, Imagiq's panel, EZMig's three portals, EZDocuAI's editor and the FUTTEM app on an iPhone. Every tour has stops with a camera and a cursor, like a guided demo.",
+              "A mockup promises; a production screen proves. For the cases on this site we recorded each product as it is today: Imagiq's panel and the FUTTEM app on an iPhone. Every tour has stops with a camera and a cursor, like a guided demo.",
               "The problem is that production holds customer data. Names, ID numbers, amounts, emails. None of it can appear in a capture.",
             ],
           },
           {
             heading: "Three rules",
             paragraphs: [
-              "First: test accounts whenever they exist. In EZMig we created a fictional firm with a demo case and form; in FUTTEM we used a test club; in Imagiq's store we bought as a guest with made up details and never reached payment.",
+              "First: test accounts whenever they exist. In FUTTEM we used a test club; in Imagiq's store we bought as a guest with made up details and never reached payment.",
               "Second: when a screen mixes real data, it is blurred before capture, from the DOM. A small script marks amounts, customer columns, emails and names with a blur filter; the capture comes out clean and the interface intact. Whatever slips through is fixed on the image.",
               "Third: nobody on the team types passwords or creates accounts on the client's behalf to record. The product owner opens the session; the documenter records. And a form that creates users is not submitted, even with fictional data.",
             ],
@@ -621,249 +451,6 @@ export const POSTS: Post[] = [
     },
   },
   {
-    slug: "por-que-quitamos-las-rayas",
-    date: "2026-09-21",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/ezmig/tour/asistente-ia.jpg",
-      width: 1512,
-      height: 806,
-      alt: {
-        ES: "Asistente de IA del portal de EZMig",
-        EN: "AI assistant in the EZMig portal",
-      },
-    },
-    tags: [
-      "Redacción",
-      "IA",
-      "Producto",
-    ],
-    relatedCase: "ezmig",
-    copy: {
-      ES: {
-        title: "Por qué quitamos las rayas de todos nuestros productos",
-        excerpt: "Una raya en medio de una frase se ha vuelto la marca de agua del texto generado. Cómo las sacamos de interfaces, formularios, centro de ayuda y de las respuestas de un asistente de IA.",
-        sections: [
-          {
-            heading: "La señal",
-            paragraphs: [
-              "Hay un signo que en los últimos años se volvió sinónimo de texto escrito por una máquina: la raya larga en medio de una frase. Los lectores la reconocen sin saber por qué, y desconfían. Nuestros productos, escritos en parte con ayuda de modelos, estaban llenos de ellas.",
-              "Decidimos que ningún contenido visible, en ningún idioma, llevaría una raya. Los guiones que forman parte de un nombre se quedan: un formulario I-130 sigue siendo I-130.",
-            ],
-          },
-          {
-            heading: "No es un buscar y reemplazar",
-            paragraphs: [
-              "Una raya cumple funciones distintas y cada una tiene un reemplazo distinto. Un inciso se convierte en paréntesis. Una etiqueta corta seguida de raya pide dos puntos. Una frase larga se parte en dos oraciones. Un rango de números se escribe con la palabra a. Un título con marca usa una barra vertical.",
-              "Escribimos un script con esas reglas gramaticales y lo pasamos por 325 cadenas de interfaz, los esquemas de 19 formularios, los asuntos de correo, los títulos de pestaña y 84 artículos del centro de ayuda de EZMig. Cada archivo se revisó a mano después: el script propone, una persona decide.",
-            ],
-          },
-          {
-            heading: "El asistente también",
-            paragraphs: [
-              "Con un asistente de IA, cambiar el prompt no basta: el modelo obedece la mayoría de las veces, no todas. Añadimos un saneado en el servidor que quita las rayas de cada respuesta y de cada cita antes de que lleguen al cliente, con una prueba que lo garantiza.",
-              "El resultado no se nota, y esa es la idea. El texto se lee como lo escribiría una persona con cuidado, porque una persona con cuidado lo revisó.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "Why we removed the dashes from every product we make",
-        excerpt: "A dash in the middle of a sentence has become the watermark of generated text. How we took them out of interfaces, forms, a help center and the replies of an AI assistant.",
-        sections: [
-          {
-            heading: "The tell",
-            paragraphs: [
-              "There is a mark that in recent years became synonymous with machine written text: the long dash in the middle of a sentence. Readers recognize it without knowing why, and they trust the text less. Our products, written partly with the help of models, were full of them.",
-              "We decided that no visible content, in any language, would carry a dash. Hyphens that belong to a name stay: an I-130 form is still an I-130.",
-            ],
-          },
-          {
-            heading: "Not a find and replace",
-            paragraphs: [
-              "A dash does different jobs and each one has a different replacement. An aside becomes parentheses. A short label followed by a dash asks for a colon. A long sentence splits in two. A numeric range is written with the word to. A title with a brand uses a vertical bar.",
-              "We wrote a script with those grammar rules and ran it over 325 interface strings, the schemas of 19 forms, email subjects, tab titles and 84 help center articles in EZMig. Every file was then reviewed by hand: the script proposes, a person decides.",
-            ],
-          },
-          {
-            heading: "The assistant too",
-            paragraphs: [
-              "With an AI assistant, changing the prompt is not enough: the model obeys most of the time, not always. We added a server side pass that strips dashes from every reply and every citation before they reach the client, with a test that guarantees it.",
-              "The result goes unnoticed, and that is the point. The text reads the way a careful person would write it, because a careful person reviewed it.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
-    slug: "medir-en-produccion-sin-adivinar",
-    date: "2026-09-22",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/reco/tour/auditoria.jpg",
-      width: 1512,
-      height: 806,
-      alt: {
-        ES: "Auditoría y trazabilidad en la consola de RECO",
-        EN: "Audit and traceability in the RECO console",
-      },
-    },
-    tags: [
-      "Observabilidad",
-      "Serverless",
-      "Buenas prácticas",
-    ],
-    relatedCase: "griver",
-    copy: {
-      ES: {
-        title: "Cómo cuidamos un producto después de lanzarlo: cinco hábitos para medir en producción",
-        excerpt: "Lanzar es la mitad del trabajo. Estos son los hábitos con los que mantenemos rápidas y estables las plataformas que ya usan nuestros clientes: medir en producción, publicar los tiempos y decidir con números.",
-        sections: [
-          {
-            heading: "1. Publicar el reparto del tiempo",
-            paragraphs: [
-              "Una cabecera Server-Timing cuesta una línea y se lee en la pestaña Red del navegador. La nuestra dice cuánto tardó la lectura, cuántos días salieron de la caché, cuánto costó descomprimir, mapear, agregar y recolectar. Sin eso, habríamos optimizado la base de datos cuando el problema era un formateador de fechas.",
-            ],
-          },
-          {
-            heading: "2. Leer las líneas REPORT",
-            paragraphs: [
-              "Cada ejecución de una función serverless deja en CloudWatch una línea con duración, arranque y memoria máxima. Es la fuente que dice cuánto margen queda antes de que un pico de uso se note en la pantalla de alguien.",
-            ],
-          },
-          {
-            heading: "3. Exponer la memoria",
-            paragraphs: [
-              "Añadimos al Server-Timing la memoria viva, la comprometida y el techo real del proceso. Con eso las decisiones sobre caché y concurrencia dejan de ser opiniones.",
-            ],
-          },
-          {
-            heading: "4. Presupuestos que se cuentan desde la entrada",
-            paragraphs: [
-              "Un presupuesto de tiempo que arranca cuando empieza el trabajo pesado ignora el arranque en frío, las credenciales y la serialización. El reloj debe arrancar cuando entra la petición, y la respuesta parcial debe decir que lo es.",
-            ],
-          },
-          {
-            heading: "5. Medir donde corre",
-            paragraphs: [
-              "Una Lambda de 1024 MB tiene poco más de media CPU. Un bucle que en un portátil tarda un segundo allí tarda diez. Medimos localmente contra datos de producción para entender la memoria, pero las decisiones de CPU se tomaron con números de la función real.",
-              "Con esos cinco hábitos, la consola de operación de uno de nuestros clientes pasó a entregar un mes completo de métricas en seis segundos. Ninguno requiere herramientas nuevas: solo mirar lo que ya está ahí, todas las semanas.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "How we look after a product after launch: five habits for measuring in production",
-        excerpt: "Launching is half the work. These are the habits that keep the platforms our clients already use fast and stable: measuring in production, publishing timings and deciding with numbers.",
-        sections: [
-          {
-            heading: "1. Publish the time split",
-            paragraphs: [
-              "A Server-Timing header costs one line and is readable in the browser's Network tab. Ours states how long the read took, how many days came from the cache, how much went to decompressing, mapping, aggregating and collecting. Without it we would have optimized the database when the problem was a date formatter.",
-            ],
-          },
-          {
-            heading: "2. Read the REPORT lines",
-            paragraphs: [
-              "Every serverless execution leaves a line in CloudWatch with duration, init time and peak memory. It is the source that says how much headroom is left before a usage spike shows up on someone's screen.",
-            ],
-          },
-          {
-            heading: "3. Expose memory",
-            paragraphs: [
-              "We added live memory, committed memory and the real ceiling of the process to Server-Timing. With that, decisions about caching and concurrency stop being opinions.",
-            ],
-          },
-          {
-            heading: "4. Budgets counted from entry",
-            paragraphs: [
-              "A time budget that starts when the heavy work begins ignores cold start, credentials and serialization. The clock must start when the request enters, and a partial response must say it is one.",
-            ],
-          },
-          {
-            heading: "5. Measure where it runs",
-            paragraphs: [
-              "A 1024 MB Lambda has a little over half a CPU. A loop that takes one second on a laptop takes ten there. We measured locally against production data to understand memory, but CPU decisions were made with numbers from the real function.",
-              "With those five habits, the operations console of one of our clients went on to deliver a full month of metrics in six seconds. None of them needs new tools: only looking at what is already there, every week.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
-    slug: "revision-aduanera-con-ia",
-    date: "2026-09-19",
-    tags: ["IA aplicada", "OCR", "Comercio exterior"],
-    relatedCase: "griver",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/reco/plataforma-desktop.webp",
-      width: 2000,
-      height: 1250,
-      alt: { ES: "Plataforma RECO de Griver", EN: "Griver's RECO platform" },
-    },
-    copy: {
-      ES: {
-        title: "De un día a diez minutos: revisar pedimentos con IA sin sacar los datos de casa",
-        excerpt:
-          "Cómo un modelo de lenguaje auto hospedado y una API de OCR convirtieron una revisión manual de un día en diez minutos para una agencia aduanera mexicana.",
-        sections: [
-          {
-            heading: "El problema",
-            paragraphs: [
-              "Las agencias aduaneras mexicanas revisan cada pedimento y cada factura a mano. Hay que leer los documentos, cruzar cantidades, valores y claves, y detectar cualquier diferencia antes de que llegue a la aduana. En Griver, ese proceso tomaba un día completo.",
-              "Además, los documentos son confidenciales: contienen datos de clientes, proveedores y mercancía. Enviarlos a un servicio de IA externo no era una opción.",
-            ],
-          },
-          {
-            heading: "Lo que construimos",
-            paragraphs: [
-              "Construimos una API de OCR con inteligencia artificial para el prevalidador RECO, la plataforma de comercio exterior de Griver. La API lee el documento, extrae los campos y los entrega listos para cruzar.",
-              "La lectura la hace un modelo de lenguaje auto hospedado, servido con vLLM sobre GPU en AWS y empaquetado en Docker. Los datos no salen de la infraestructura del cliente y no se almacenan: cada documento se procesa y se descarta.",
-            ],
-          },
-          {
-            heading: "El resultado",
-            paragraphs: [
-              "Lo que tomaba un día entero de revisión ahora toma diez minutos con el prevalidador RECO. El equipo dedica ese tiempo a resolver las diferencias que el sistema marca, no a encontrarlas.",
-              "Para nosotros la lección fue clara: cuando los datos son sensibles, la pregunta no es si usar IA, sino dónde corre. Un modelo propio, dentro de la infraestructura del cliente, resuelve las dos cosas.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "From a day to ten minutes: reviewing customs entries with AI without the data leaving home",
-        excerpt:
-          "How a self hosted language model and an OCR API turned a full day of manual review into ten minutes for a Mexican customs agency.",
-        sections: [
-          {
-            heading: "The problem",
-            paragraphs: [
-              "Mexican customs agencies review every customs entry and every invoice by hand. The documents have to be read, quantities, values and codes cross-checked, and any difference caught before it reaches customs. At Griver, that process took a full day.",
-              "The documents are also confidential: they hold data about clients, suppliers and goods. Sending them to an external AI service was not an option.",
-            ],
-          },
-          {
-            heading: "What we built",
-            paragraphs: [
-              "We built an AI OCR API for the RECO prevalidator, Griver's foreign trade platform. The API reads the document, extracts the fields and hands them over ready to cross-check.",
-              "The reading is done by a self hosted language model, served with vLLM on GPU in AWS and packaged with Docker. The data never leaves the client's infrastructure and is not stored: each document is processed and discarded.",
-            ],
-          },
-          {
-            heading: "The result",
-            paragraphs: [
-              "What took a full day of review now takes ten minutes with the RECO prevalidator. The team spends that time resolving the differences the system flags, not finding them.",
-              "The lesson for us was clear: when the data is sensitive, the question is not whether to use AI but where it runs. A model of your own, inside the client's infrastructure, solves both.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
     slug: "un-solo-inventario-para-toda-la-red",
     tags: ["Logística", "Comercio electrónico", "Algoritmos"],
     relatedCase: "imagiq",
@@ -924,73 +511,6 @@ export const POSTS: Post[] = [
             heading: "The result",
             paragraphs: [
               "The whole network works as a single inventory, with deliveries in 24 hours at most. A product is available as long as it exists in any store, and ships from the one that can get there first.",
-            ],
-          },
-        ],
-      },
-    },
-  },
-  {
-    slug: "traducir-sin-transcribir",
-    tags: ["IA aplicada", "Documentos", "Traducción"],
-    relatedCase: "ezdocuai",
-    date: "2026-09-19",
-    author: LUMINTIK,
-    cover: {
-      src: "/projects/ezdocu/home-desktop.webp",
-      width: 2000,
-      height: 1250,
-      alt: { ES: "Página de inicio de EZDocuAI", EN: "EZDocuAI home page" },
-    },
-    copy: {
-      ES: {
-        title: "De 20 a 3 minutos por página: OCR con IA para traductores certificados",
-        excerpt:
-          "Los traductores certificados perdían horas formateando documentos escaneados antes de traducir. EZDocuAI extrae y formatea cada página automáticamente, con cifrado de extremo a extremo.",
-        sections: [
-          {
-            heading: "El problema",
-            paragraphs: [
-              "Un traductor certificado recibe actas, diplomas y contratos escaneados. Antes de traducir una sola palabra tiene que reconstruir el documento a mano: tablas, sellos, columnas, numeración. Ese formateo se llevaba la mayor parte del tiempo de cada página.",
-            ],
-          },
-          {
-            heading: "Lo que construimos",
-            paragraphs: [
-              "EZDocuAI usa OCR con inteligencia artificial para extraer el contenido y reconstruir el formato automáticamente. El traductor recibe el documento listo para editar y se concentra en la traducción.",
-              "Como los documentos son personales, la seguridad es parte del producto: cifrado TLS 1.3 en tránsito y AES 256 en reposo, borrado programado y un certificado de eliminación con hash SHA 256. Ningún documento queda guardado ni se usa para entrenar modelos.",
-            ],
-          },
-          {
-            heading: "El resultado",
-            paragraphs: [
-              "Cada página pasa de 20 a 3 minutos para el traductor certificado. Y el cliente puede comprobar, con el certificado de eliminación, que su documento ya no existe en el sistema.",
-            ],
-          },
-        ],
-      },
-      EN: {
-        title: "From 20 to 3 minutes per page: AI OCR for certified translators",
-        excerpt:
-          "Certified translators lost hours formatting scanned documents before translating. EZDocuAI extracts and formats every page automatically, with end to end encryption.",
-        sections: [
-          {
-            heading: "The problem",
-            paragraphs: [
-              "A certified translator receives scanned certificates, diplomas and contracts. Before translating a single word they have to rebuild the document by hand: tables, stamps, columns, numbering. That formatting took most of the time on every page.",
-            ],
-          },
-          {
-            heading: "What we built",
-            paragraphs: [
-              "EZDocuAI uses AI OCR to extract the content and rebuild the layout automatically. The translator gets the document ready to edit and focuses on the translation.",
-              "Since the documents are personal, security is part of the product: TLS 1.3 encryption in transit and AES 256 at rest, scheduled deletion and a deletion certificate with a SHA 256 hash. No document is kept or used to train models.",
-            ],
-          },
-          {
-            heading: "The result",
-            paragraphs: [
-              "Every page goes from 20 to 3 minutes for the certified translator. And the client can check, with the deletion certificate, that their document no longer exists in the system.",
             ],
           },
         ],

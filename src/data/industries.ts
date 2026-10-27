@@ -43,29 +43,6 @@ export const INDUSTRIES: Industry[] = [
     ],
   },
   {
-    id: "trade",
-    image: "/projects/reco/plataforma-mobile.webp",
-    path: paths.caseStudy("griver"),
-    stack: ["OCR con IA", "vLLM", "Qwen", "Docker", "GPU en AWS", "Cloudflare Tunnel"],
-    gallery: [{ src: "/projects/reco/plataforma-desktop.webp", width: 2400, height: 1500 }],
-  },
-  {
-    id: "legal",
-    image: "/projects/ezmig/home.webp",
-    path: paths.caseStudy("ezmig"),
-    stack: ["Next.js", "NestJS", "PostgreSQL", "Motor de formularios", "Generación de PDF"],
-  },
-  {
-    id: "translation",
-    image: "/projects/ezdocu/home-mobile.webp",
-    path: paths.caseStudy("ezdocuai"),
-    stack: ["OCR con IA", "Reconstrucción de diseño", "TLS 1.3", "AES 256", "SHA 256"],
-    gallery: [
-      { src: "/projects/ezdocu/home-desktop.webp", width: 2880, height: 1800 },
-      { src: "/projects/ezdocu/editor-mobile.webp", width: 780, height: 1688 },
-    ],
-  },
-  {
     id: "telecom",
     image: "/projects/claro/home.webp",
     path: paths.caseStudy("claro"),

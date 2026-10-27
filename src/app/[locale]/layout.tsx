@@ -59,7 +59,6 @@ export async function generateMetadata({
       "web performance",
       "Samsung Imagiq",
       "Claro",
-      "EZDocuAI",
     ],
     authors: [{ name: SITE_NAME, url: SITE_URL }],
     creator: SITE_NAME,

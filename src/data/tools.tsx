@@ -42,12 +42,6 @@ const languageModelGlyph = (
   </svg>
 );
 
-const apiGlyph = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-    <path d="M8 6l-6 6 6 6M16 6l6 6-6 6" />
-  </svg>
-);
-
 export const TOOLS = {
   gcp: { name: "Google Cloud", logo: { kind: "icon", icon: SiGooglecloud, color: "#4285F4" } },
   aws: { name: "AWS", logo: { kind: "icon", icon: FaAws, color: "#FF9900" } },
@@ -64,10 +58,6 @@ export const TOOLS = {
   languageModels: {
     name: { ES: "Modelos de lenguaje", EN: "Language models" },
     logo: { kind: "glyph", node: languageModelGlyph },
-  },
-  uscis: {
-    name: { ES: "API oficial de USCIS", EN: "Official USCIS API" },
-    logo: { kind: "glyph", node: apiGlyph },
   },
   flutter: { name: "Flutter", logo: { kind: "icon", icon: SiFlutter, color: "#02569B" } },
   socketio: { name: "Socket.IO", logo: { kind: "icon", icon: SiSocketdotio, color: "#010101" } },

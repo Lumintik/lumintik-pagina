@@ -248,7 +248,7 @@ const en: Messages = {
     home: {
       title: "Lumintik SAS, software studio that builds inevitable products",
       description:
-        "Lumintik SAS is a software engineering studio for companies that care about craft. Headless commerce, applied AI, web engineering and design systems for Samsung, Claro, Coca-Cola, EZDocuAI and more.",
+        "Lumintik SAS is a software engineering studio for companies that care about craft. Headless commerce, applied AI, web engineering and design systems for Samsung, Claro, Coca-Cola and more.",
     },
     service: { titleTemplate: "%s, Services" },
   },
@@ -554,45 +554,6 @@ const en: Messages = {
           { title: "Systems from several eras coexist", desc: "The new has to talk to what has been running for years, without breaking it." },
         ],
       },
-      trade: {
-        category: "Foreign trade and logistics",
-        title: "Customs documents reviewed by AI.",
-        body: [
-          "For Griver we built an AI OCR pipeline that reads customs entries and invoices, cross-checks them and flags the differences, with a self hosted model so the data never leaves their infrastructure.",
-          "A review that took a full day now takes about ten minutes.",
-        ],
-        demands: [
-          { title: "The data cannot leave", desc: "Customs entries and invoices carry client and cargo information. The model runs inside the client's infrastructure." },
-          { title: "An error costs fines", desc: "A misread figure reaches customs. The system flags differences instead of approving them silently." },
-          { title: "The volume is daily", desc: "It is not ten documents a month; it is hundreds a day, and the process has to hold that pace." },
-        ],
-      },
-      legal: {
-        category: "Legal and immigration",
-        title: "USCIS forms completed in minutes.",
-        body: [
-          "Immigration attorneys in the United States were filling in long USCIS forms by hand.",
-          "EZMig is a guided flow with AI that completes and validates the forms in minutes, with output certified by USCIS.",
-        ],
-        demands: [
-          { title: "The format is the law", desc: "An agency rejects a form over one misplaced field. Validation happens per field, not at the end." },
-          { title: "Sensitive data about real people", desc: "Passports, addresses and histories. We process the minimum needed and keep a record of every change." },
-          { title: "The filing has stages", desc: "A case lives for months and passes through several hands. The state of every document has to be obvious." },
-        ],
-      },
-      translation: {
-        category: "Translation and documents",
-        title: "Translators editing instead of retyping.",
-        body: [
-          "EZDocuAI translates documents keeping the original layout, so a translator's time per page went from about twenty minutes to three.",
-          "Document parsing, layout reconstruction and a review editor built for professionals.",
-        ],
-        demands: [
-          { title: "Layout is content", desc: "Stamps, tables and columns mean something. Rebuilding them by hand takes most of the time." },
-          { title: "The document is private", desc: "Personal certificates, diplomas and contracts. Encrypted in transit and at rest, and deleted with proof." },
-          { title: "The professional reviews, does not retype", desc: "The tool hands over an editable draft so the certified translator can apply their judgement." },
-        ],
-      },
       sports: {
         category: "Sports and communities",
         title: "A live app that could not stop for each change.",
@@ -686,8 +647,8 @@ const en: Messages = {
     stats: [
       { value: 100, suffix: "%", label: "Work completed in house" },
       { value: 2, suffix: "+", label: "Years crafting digital products" },
-      { value: 15, suffix: "", label: "Clients in Colombia, the United States and Mexico" },
-      { value: 9, suffix: "", label: "Industries shipped: trade, legal, telecom, retail and five more" },
+      { value: 11, suffix: "", label: "Clients in Colombia and the United States" },
+      { value: 6, suffix: "", label: "Industries shipped: aerospace, retail, telecom, sports and two more" },
     ],
   },
   footer: {
@@ -732,7 +693,7 @@ const es: Messages = {
     home: {
       title: "Lumintik SAS, estudio de software que construye productos inevitables",
       description:
-        "Lumintik SAS es un estudio de ingeniería de software para empresas que cuidan el detalle. Headless commerce, IA aplicada, ingeniería web y design systems para Samsung, Claro, Coca-Cola, EZDocuAI y más.",
+        "Lumintik SAS es un estudio de ingeniería de software para empresas que cuidan el detalle. Headless commerce, IA aplicada, ingeniería web y design systems para Samsung, Claro, Coca-Cola y más.",
     },
     service: { titleTemplate: "%s, Servicios" },
   },
@@ -1038,45 +999,6 @@ const es: Messages = {
           { title: "Conviven sistemas de varias épocas", desc: "Lo nuevo tiene que hablar con lo que lleva años funcionando, sin romperlo." },
         ],
       },
-      trade: {
-        category: "Comercio exterior y logística",
-        title: "Documentos aduaneros revisados con IA.",
-        body: [
-          "Para Griver construimos un pipeline de OCR con IA que lee pedimentos y facturas, los cruza y marca las diferencias, con un modelo auto hospedado para que los datos no salgan de su infraestructura.",
-          "Una revisión que tomaba un día completo ahora toma unos diez minutos.",
-        ],
-        demands: [
-          { title: "Los datos no pueden salir", desc: "Pedimentos y facturas llevan información de clientes y mercancía. El modelo corre dentro de la infraestructura del cliente." },
-          { title: "Un error cuesta multas", desc: "Una cifra mal leída llega a la aduana. El sistema marca diferencias en vez de aprobarlas en silencio." },
-          { title: "El volumen es diario", desc: "No son diez documentos al mes; son cientos al día, y el proceso tiene que sostener ese ritmo." },
-        ],
-      },
-      legal: {
-        category: "Legal y migración",
-        title: "Formularios de USCIS completos en minutos.",
-        body: [
-          "Abogados de inmigración en Estados Unidos llenaban a mano formularios largos de USCIS.",
-          "EZMig es un flujo guiado con IA que completa y valida los formularios en minutos, con salida certificada por USCIS.",
-        ],
-        demands: [
-          { title: "El formato es la ley", desc: "Una entidad rechaza un formulario por un campo mal puesto. La validación es por campo, no al final." },
-          { title: "Datos sensibles de personas reales", desc: "Pasaportes, direcciones e historiales. Se procesa el mínimo necesario y queda registro de cada cambio." },
-          { title: "El trámite tiene etapas", desc: "Un caso vive meses y pasa por varias manos. El estado de cada documento tiene que ser evidente." },
-        ],
-      },
-      translation: {
-        category: "Traducción y documentos",
-        title: "Traductores que editan en vez de transcribir.",
-        body: [
-          "EZDocuAI traduce documentos conservando el diseño original, así que el tiempo de un traductor por página pasó de unos veinte minutos a tres.",
-          "Lectura de documentos, reconstrucción del diseño y un editor de revisión hecho para profesionales.",
-        ],
-        demands: [
-          { title: "El diseño es contenido", desc: "Sellos, tablas y columnas significan algo. Reconstruirlos a mano se lleva la mayor parte del tiempo." },
-          { title: "El documento es privado", desc: "Actas, diplomas y contratos personales. Se cifran en tránsito y en reposo, y se borran con constancia." },
-          { title: "El profesional revisa, no transcribe", desc: "La herramienta entrega un borrador editable para que el traductor certificado aporte su criterio." },
-        ],
-      },
       sports: {
         category: "Deporte y comunidades",
         title: "Una app en producción que no podía detenerse.",
@@ -1170,8 +1092,8 @@ const es: Messages = {
     stats: [
       { value: 100, suffix: "%", label: "Trabajo hecho con equipo propio" },
       { value: 2, suffix: "+", label: "Años creando productos digitales" },
-      { value: 15, suffix: "", label: "Clientes en Colombia, Estados Unidos y México" },
-      { value: 9, suffix: "", label: "Industrias atendidas: comercio exterior, legal, telco, retail y cinco más" },
+      { value: 11, suffix: "", label: "Clientes en Colombia y Estados Unidos" },
+      { value: 6, suffix: "", label: "Industrias atendidas: aeroespacial, retail, telco, deporte y dos más" },
     ],
   },
   footer: {

@@ -72,7 +72,7 @@ export default async function OpenGraphImage() {
             fontSize: 24,
           }}
         >
-          <div>Samsung, Claro, Coca-Cola, EZDocuAI</div>
+          <div>Samsung, Claro, Coca-Cola</div>
           <div>lumintik.com</div>
         </div>
       </div>
