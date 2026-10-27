@@ -18,7 +18,7 @@ function Mark({ client }: { client: Client }) {
   }
   // Wide wordmarks get less height than square marks so they read at a similar size.
   const ratio = logo.width / logo.height;
-  const height = ratio > 3 ? "h-5 md:h-6" : ratio > 1.6 ? "h-8 md:h-9" : "h-11 md:h-12";
+  const height = ratio > 3.4 ? "h-5 md:h-6" : ratio > 1.6 ? "h-8 md:h-9" : "h-11 md:h-12";
   return (
     <Image
       src={logo.src}
