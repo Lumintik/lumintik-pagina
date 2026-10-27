@@ -45,8 +45,10 @@ export function LanguageSwitcher({ className }: Props) {
               href={swapLocale(pathname, code)}
               hrefLang={LOCALE_TAGS[code]}
               aria-current={isActive ? "true" : undefined}
-              className={`relative block px-2 py-1 cursor-pointer transition-colors duration-200 ${
-                isActive ? "text-slate-900" : "text-slate-900 hover:text-slate-700"
+              // Toma el color de quien lo contiene: blanco sobre el encabezado
+              // oscuro, oscuro cuando el encabezado se vuelve claro.
+              className={`relative block px-2 py-1 cursor-pointer text-current transition-opacity duration-200 ${
+                isActive ? "" : "hover:opacity-70"
               }`}
             >
               <span className={isActive ? "line-through decoration-1 underline-offset-2" : ""}>
