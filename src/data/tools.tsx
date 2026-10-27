@@ -7,9 +7,11 @@ import {
   SiFirebase,
   SiFlutter,
   SiGooglecloud,
+  SiGooglegemini,
   SiGooglemaps,
   SiInstagram,
   SiLanggraph,
+  SiMedusa,
   SiMeta,
   SiNestjs,
   SiNextdotjs,
@@ -17,7 +19,10 @@ import {
   SiOpentelemetry,
   SiPostgresql,
   SiPosthog,
+  SiRailway,
   SiRedis,
+  SiResend,
+  SiSentry,
   SiSocketdotio,
   SiWhatsapp,
 } from "react-icons/si";
@@ -82,6 +87,12 @@ export const TOOLS = {
   },
   instagram: { name: "Instagram", logo: { kind: "icon", icon: SiInstagram, color: "#E4405F" } },
   metaGraphApi: { name: "Meta Graph API", logo: { kind: "icon", icon: SiMeta, color: "#0866FF" } },
+  medusa: { name: "Medusa", logo: { kind: "icon", icon: SiMedusa, color: "#000000" } },
+  railway: { name: "Railway", logo: { kind: "icon", icon: SiRailway, color: "#0B0D0E" } },
+  cloudflare: { name: "Cloudflare", logo: { kind: "icon", icon: SiCloudflare, color: "#F38020" } },
+  resend: { name: "Resend", logo: { kind: "icon", icon: SiResend, color: "#000000" } },
+  sentry: { name: "Sentry", logo: { kind: "icon", icon: SiSentry, color: "#362D59" } },
+  gemini: { name: "Gemini", logo: { kind: "icon", icon: SiGooglegemini, color: "#8E75B2" } },
 } satisfies Record<string, Tool>;
 
 export type ToolId = keyof typeof TOOLS;

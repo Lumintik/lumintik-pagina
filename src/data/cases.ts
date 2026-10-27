@@ -414,6 +414,145 @@ export const CASES: CaseStudy[] = [
     },
   },
   {
+    slug: "tata",
+    country: "CO",
+    links: [{ label: "Tata", href: "https://www.tata.com.co/" }],
+    metrics: [
+      { value: "41", label: { ES: "días del primer commit a la primera venta real", EN: "days from the first commit to the first real sale" } },
+      { value: "9", label: { ES: "medios de pago con Wompi, sin salir de la tienda", EN: "payment methods through Wompi, without leaving the store" } },
+      { value: "3", label: { ES: "caminos independientes para confirmar cada pago", EN: "independent paths to confirm every payment" } },
+    ],
+    metricsSource: { ES: "Verificable en el código y en tata.com.co, octubre de 2026.", EN: "Verifiable in the code and on tata.com.co, October 2026." },
+    tools: ["medusa", "nextjs", "postgresql", "redis", "railway", "cloudflare", "whatsappBusiness", "resend", "gemini", "posthog", "sentry"],
+    howItWorks: {
+      title: { ES: "Cómo funciona la tienda", EN: "How the store works" },
+      intro: {
+        ES: "Una tienda propia sobre Medusa y Next.js, pensada para que la marca venda tranquila: el catálogo se mantiene desde el admin, cada pago se confirma por más de un camino y cada venta llega al equipo en el momento.",
+        EN: "A store of its own on Medusa and Next.js, built so the brand can sell with peace of mind: the catalog is kept from the admin, every payment is confirmed through more than one path and every sale reaches the team the moment it happens.",
+      },
+      steps: [
+        {
+          title: { ES: "El catálogo sale del archivo de la marca", EN: "The catalog comes from the brand's own file" },
+          body: {
+            ES: "Precios, colores y tallas se cargan desde la hoja de cálculo de Tata. Una sincronización cambia precios y fotos sin recrear productos, así el inventario y los enlaces no se pierden, y cada cambio de precio limpia la caché de la tienda.",
+            EN: "Prices, colors and sizes are loaded from Tata's spreadsheet. A sync updates prices and photos without recreating products, so inventory and links are never lost, and every price change clears the store's cache.",
+          },
+        },
+        {
+          title: { ES: "Fotos que se ven igual en cualquier pantalla", EN: "Photos that look the same on any screen" },
+          body: {
+            ES: "Cada foto se normaliza a sRGB y se guarda en varias medidas WebP, de 320 a 2048 píxeles, servidas desde Cloudflare. Cada color tiene sus propias fotos, y el admin genera imágenes nuevas con IA a partir de la prenda real: quedan en borrador hasta que alguien del equipo las aprueba.",
+            EN: "Every photo is normalized to sRGB and stored in several WebP sizes, from 320 to 2048 pixels, served from Cloudflare. Each color has its own photos, and the admin generates new images with AI from the real garment: they stay as drafts until someone on the team approves them.",
+          },
+        },
+        {
+          title: { ES: "Un checkout con todos los medios de pago", EN: "A checkout with every payment method" },
+          body: {
+            ES: "El pago va por la API de Wompi sin salir de la tienda: tarjeta, PSE, Nequi, transferencia Bancolombia, QR, DaviPlata y más. El total lo calcula el servidor y lo firma, y si el carrito cambió después de intentar pagar, el pago no se marca como aprobado.",
+            EN: "Payment goes through Wompi's API without leaving the store: card, PSE, Nequi, Bancolombia transfer, QR, DaviPlata and more. The server computes and signs the total, and if the cart changed after the payment attempt, the payment is not marked as approved.",
+          },
+        },
+        {
+          title: { ES: "Ningún pago aprobado se queda sin pedido", EN: "No approved payment is left without an order" },
+          body: {
+            ES: "Cada pago se confirma por tres caminos independientes: la verificación al volver del banco, el aviso firmado de Wompi y una revisión cada cinco minutos de los pagos aprobados que no tienen pedido. Los tres comparten un candado, así un pedido nunca se crea dos veces.",
+            EN: "Every payment is confirmed through three independent paths: the check when the buyer returns from the bank, Wompi's signed notice and a review every five minutes of approved payments that have no order. The three share a lock, so an order is never created twice.",
+          },
+        },
+        {
+          title: { ES: "Cada venta llega por WhatsApp", EN: "Every sale arrives on WhatsApp" },
+          body: {
+            ES: "Al confirmarse el pago, el cliente recibe su pedido por WhatsApp con un resumen en PDF y por correo, y el equipo recibe el aviso de la venta con los productos, el total y un botón directo al admin.",
+            EN: "Once the payment is confirmed, the customer gets the order on WhatsApp with a PDF summary and by email, and the team gets the sale alert with the products, the total and a button straight to the admin.",
+          },
+        },
+        {
+          title: { ES: "Pruebas y producción, separadas del todo", EN: "Testing and production, fully apart" },
+          body: {
+            ES: "La tienda corre en Railway detrás de Cloudflare, con un ambiente de pruebas propio: su base de datos, su caché, sus fotos y sus llaves de pago de prueba. Cada cambio se compila en cada revisión y solo se despliega desde el repositorio.",
+            EN: "The store runs on Railway behind Cloudflare, with its own testing environment: its database, its cache, its photos and its test payment keys. Every change is built on every review and is only deployed from the repository.",
+          },
+        },
+      ],
+      note: {
+        ES: "Del primer commit a la primera venta real pasaron 41 días.",
+        EN: "Forty one days went by from the first commit to the first real sale.",
+      },
+    },
+    images: [
+      {
+        src: "/projects/tata/home-desktop.webp",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "La página de inicio de la tienda de Tata", EN: "The home page of Tata's store" },
+      },
+      {
+        src: "/projects/tata/home-mobile.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "La tienda de Tata en un iPhone", EN: "Tata's store on an iPhone" },
+      },
+      {
+        src: "/projects/tata/categoria-desktop.webp",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "La categoría de conjuntos, con colores por producto", EN: "The sets category, with colors per product" },
+      },
+      {
+        src: "/projects/tata/producto-mobile.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "Una ficha de producto en el celular: color, talla y bolsa", EN: "A product page on the phone: color, size and bag" },
+      },
+      {
+        src: "/projects/tata/producto-desktop.webp",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "Ficha de producto con galería, colores y tallas", EN: "Product page with gallery, colors and sizes" },
+      },
+      {
+        src: "/projects/tata/carrito-desktop.webp",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "La bolsa con el resumen del pedido, los medios de pago y los de envío", EN: "The bag with the order summary, payment methods and shipping options" },
+      },
+      {
+        src: "/projects/tata/checkout-desktop.webp",
+        width: 2880,
+        height: 1800,
+        alt: { ES: "El checkout en tres pasos: información, envío y pago", EN: "The three step checkout: details, shipping and payment" },
+      },
+      {
+        src: "/projects/tata/categoria-mobile.webp",
+        width: 603,
+        height: 1311,
+        alt: { ES: "La categoría de conjuntos en el celular", EN: "The sets category on the phone" },
+      },
+    ],
+    copy: {
+      ES: {
+        topic: "Comercio electrónico",
+        client: "Tata",
+        about: "Marca de ropa deportiva para mujer, Colombia.",
+        sector: "Moda y retail",
+        problem: "Una marca de ropa deportiva quería vender en línea con la calma de las grandes marcas, sin perder un solo pago.",
+        solution: "Una tienda propia sobre Medusa y Next.js, con Wompi, WhatsApp y fotos con IA que el equipo aprueba antes de publicar.",
+        why: "Del primer commit a la primera venta real pasaron 41 días. Cada pago se confirma por tres caminos independientes, cada venta llega al equipo por WhatsApp y el catálogo se mantiene desde el admin, sin tocar código.",
+        headline: "Del primer commit a la primera venta real en 41 días.",
+      },
+      EN: {
+        topic: "Ecommerce",
+        client: "Tata",
+        about: "Women's activewear brand, Colombia.",
+        sector: "Fashion and retail",
+        problem: "An activewear brand wanted to sell online with the calm of the big brands, without losing a single payment.",
+        solution: "A store of its own on Medusa and Next.js, with Wompi, WhatsApp and AI photos the team approves before they go live.",
+        why: "Forty one days went by from the first commit to the first real sale. Every payment is confirmed through three independent paths, every sale reaches the team on WhatsApp and the catalog is kept from the admin, without touching code.",
+        headline: "From the first commit to the first real sale in 41 days.",
+      },
+    },
+  },
+  {
     slug: "ia-multicanal",
     country: "CO",
     links: [

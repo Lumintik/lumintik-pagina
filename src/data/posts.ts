@@ -32,6 +32,104 @@ const LUMINTIK = { name: "Lumintik", avatar: "/lumintik-icon.png" };
  */
 export const POSTS: Post[] = [
   {
+    slug: "una-tienda-que-no-pierde-pagos",
+    date: "2026-10-27",
+    author: LUMINTIK,
+    cover: {
+      src: "/projects/tata/carrito-desktop.webp",
+      width: 2880,
+      height: 1800,
+      alt: {
+        ES: "La bolsa de la tienda de Tata con los medios de pago y de envío",
+        EN: "The bag in Tata's store with its payment and shipping options",
+      },
+    },
+    tags: ["Comercio electrónico", "Pagos", "Medusa"],
+    relatedCase: "tata",
+    copy: {
+      ES: {
+        title: "Una tienda que no pierde pagos: cómo construimos la de Tata en 41 días",
+        excerpt: "Tres caminos para confirmar cada pago, un candado para no crear pedidos dobles y una venta que llega al equipo por WhatsApp en el momento. Así es la tienda en línea de Tata.",
+        sections: [
+          {
+            heading: "Vender con calma",
+            paragraphs: [
+              "Tata es una marca colombiana de ropa deportiva para mujer: conjuntos, tops, shorts y accesorios, con una estética tranquila y cuidada. Cuando decidió vender en línea, la meta no era solo tener una tienda bonita. Era que comprar se sintiera igual de sereno que la marca, y que ningún pago se perdiera en el camino.",
+              "Partimos de una base que ya conocíamos a fondo, Medusa con un frente en Next.js, y la convertimos en la tienda de Tata: su catálogo, su diseño, sus correos y su forma de vender. Del primer commit a la primera venta real pasaron 41 días.",
+            ],
+          },
+          {
+            heading: "Todos los medios de pago, sin salir de la tienda",
+            paragraphs: [
+              "En Colombia cada cliente paga distinto: tarjeta, PSE, Nequi, transferencia Bancolombia, QR, DaviPlata. Integramos Wompi por su API directa, así que el pago ocurre dentro de la tienda y no en una página ajena.",
+              "El servidor calcula el total y lo firma antes de cobrar. Y hay un detalle que protege a la marca: si el carrito cambió después de intentar pagar, ese pago no se marca como aprobado.",
+            ],
+          },
+          {
+            heading: "Tres caminos para cada pago",
+            paragraphs: [
+              "Un pago aprobado tiene que convertirse en un pedido, siempre. Por eso cada pago se confirma por tres caminos independientes: la verificación cuando el comprador vuelve del banco, el aviso firmado que manda Wompi y una revisión cada cinco minutos de los pagos aprobados en las últimas 48 horas que todavía no tienen pedido.",
+              "Los tres caminos comparten un candado, así que si dos llegan al mismo tiempo, el pedido se crea una sola vez. Si uno falla, los otros dos siguen ahí. Es la diferencia entre confiar en que todo salga bien y diseñar para que salga bien aunque algo falle.",
+            ],
+          },
+          {
+            heading: "La venta llega al equipo en el momento",
+            paragraphs: [
+              "Cuando el pago se confirma, el cliente recibe su pedido por WhatsApp con un resumen en PDF, y también por correo. Al mismo tiempo, el equipo de Tata recibe el aviso de la venta con los productos, el total y un botón que abre el pedido en el admin.",
+              "El catálogo se mantiene desde ese mismo admin: precios y fotos se actualizan sin recrear productos, y las fotos nuevas que se generan con IA a partir de la prenda real quedan en borrador hasta que alguien del equipo las aprueba.",
+            ],
+          },
+          {
+            heading: "Lo que se queda",
+            paragraphs: [
+              "La tienda corre con un ambiente de pruebas separado del todo, con su propia base de datos y sus llaves de pago de prueba, y cada cambio se despliega solo desde el repositorio. Así se puede seguir mejorando sin poner en riesgo lo que ya vende.",
+            ],
+          },
+        ],
+      },
+      EN: {
+        title: "A store that does not lose payments: how we built Tata's in 41 days",
+        excerpt: "Three paths to confirm every payment, a lock so orders are never created twice and every sale reaching the team on WhatsApp the moment it happens. This is Tata's online store.",
+        sections: [
+          {
+            heading: "Selling with calm",
+            paragraphs: [
+              "Tata is a Colombian women's activewear brand: sets, tops, shorts and accessories, with a calm and careful look. When it decided to sell online, the goal was not just a beautiful store. It was for buying to feel as serene as the brand, and for no payment to get lost along the way.",
+              "We started from a base we already knew in depth, Medusa with a Next.js front end, and turned it into Tata's store: its catalog, its design, its emails and its way of selling. Forty one days went by from the first commit to the first real sale.",
+            ],
+          },
+          {
+            heading: "Every payment method, without leaving the store",
+            paragraphs: [
+              "In Colombia every customer pays differently: card, PSE, Nequi, Bancolombia transfer, QR, DaviPlata. We integrated Wompi through its direct API, so payment happens inside the store and not on someone else's page.",
+              "The server computes and signs the total before charging. And one detail protects the brand: if the cart changed after the payment attempt, that payment is not marked as approved.",
+            ],
+          },
+          {
+            heading: "Three paths for every payment",
+            paragraphs: [
+              "An approved payment has to become an order, always. That is why every payment is confirmed through three independent paths: the check when the buyer returns from the bank, the signed notice Wompi sends and a review every five minutes of the payments approved in the last 48 hours that still have no order.",
+              "The three paths share a lock, so if two arrive at the same time, the order is created only once. If one fails, the other two are still there. It is the difference between hoping everything goes well and designing it to go well even when something fails.",
+            ],
+          },
+          {
+            heading: "The sale reaches the team the moment it happens",
+            paragraphs: [
+              "When the payment is confirmed, the customer gets the order on WhatsApp with a PDF summary, and by email too. At the same time, Tata's team gets the sale alert with the products, the total and a button that opens the order in the admin.",
+              "The catalog is kept from that same admin: prices and photos update without recreating products, and new photos generated with AI from the real garment stay as drafts until someone on the team approves them.",
+            ],
+          },
+          {
+            heading: "What stays",
+            paragraphs: [
+              "The store runs with a fully separate testing environment, with its own database and test payment keys, and every change is deployed only from the repository. That way it can keep improving without putting at risk what already sells.",
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
     slug: "todas-tus-cuentas-en-una-sola-pantalla",
     date: "2026-09-21",
     author: LUMINTIK,

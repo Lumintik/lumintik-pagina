@@ -29,6 +29,6 @@ export const CLIENTS: Client[] = [
   { key: "futtem", country: "CO", name: "FUTTEM", logo: { kind: "image", src: "/clients/futtem.svg", width: 136, height: 25 }, page: paths.caseStudy("futtem") },
   { key: "accesify", country: "CO", name: "Accesify", logo: { kind: "image", src: "/clients/accesify-mono.png", width: 419, height: 240, mono: true }, page: paths.caseStudy("ia-multicanal") },
   { key: "fridoom", country: "CO", name: "Fridoom", logo: { kind: "image", src: "/clients/fridoom.png", width: 320, height: 162 }, page: paths.project("fridoom") },
-  { key: "tata", country: "CO", name: "Tata", logo: { kind: "image", src: "/clients/tata.png", width: 414, height: 288, mono: true } },
+  { key: "tata", country: "CO", name: "Tata", logo: { kind: "image", src: "/clients/tata.png", width: 414, height: 288, mono: true }, page: paths.caseStudy("tata") },
   { key: "tincadia", country: "CO", name: "Tincadia", logo: { kind: "image", src: "/clients/tincadia.png", width: 600, height: 187 } },
 ];
