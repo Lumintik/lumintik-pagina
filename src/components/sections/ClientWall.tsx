@@ -53,10 +53,10 @@ export function ClientWall() {
             );
             return (
               <li key={client.key} className="border border-white/30 -m-px">
-                {client.href ? (
-                  <a href={client.href} target="_blank" rel="noopener noreferrer" className={cell}>
+                {client.page ? (
+                  <Link href={href(locale, client.page)} className={cell}>
                     {inner}
-                  </a>
+                  </Link>
                 ) : (
                   <div className={cell}>{inner}</div>
                 )}
