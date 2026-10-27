@@ -30,4 +30,5 @@ export const CLIENTS: Client[] = [
   { key: "accesify", country: "CO", name: "Accesify", logo: { kind: "image", src: "/clients/accesify-mono.png", width: 419, height: 240, mono: true }, page: paths.caseStudy("ia-multicanal") },
   { key: "fridoom", country: "CO", name: "Fridoom", logo: { kind: "image", src: "/clients/fridoom.png", width: 320, height: 162 }, page: paths.project("fridoom") },
   { key: "tata", country: "CO", name: "Tata", logo: { kind: "image", src: "/clients/tata.png", width: 414, height: 288, mono: true } },
+  { key: "tincadia", country: "CO", name: "Tincadia", logo: { kind: "image", src: "/clients/tincadia.png", width: 600, height: 187 } },
 ];
