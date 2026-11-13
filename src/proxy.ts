@@ -42,6 +42,13 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Los cuestionarios para clientes van siempre en español, abra quien los abra
+  if (pathname.startsWith("/cuestionario/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/es${pathname}`;
+    return NextResponse.redirect(url);
+  }
+
   const stored = fromSegment(request.cookies.get(STORAGE_KEY)?.value ?? "");
   const locale = stored ?? detectLocaleFromHeader(request.headers.get("accept-language"));
 
