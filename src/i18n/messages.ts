@@ -667,7 +667,7 @@ const en: Messages = {
     stats: [
       { value: 100, suffix: "%", label: "Work completed in house" },
       { value: 2, suffix: "+", label: "Years crafting digital products" },
-      { value: 11, suffix: "", label: "Clients in Colombia and the United States" },
+      { value: 11, suffix: "", label: "Clients in Colombia, the United States and Mexico" },
       { value: 6, suffix: "", label: "Industries shipped: aerospace, retail, telecom, sports and two more" },
     ],
   },
@@ -709,7 +709,7 @@ const en: Messages = {
   guideLead: {
     anchor: "Get the guide as a PDF",
     title: "Got an idea? Let's talk.",
-    proof: "Companies in Colombia and the United States already trust Lumintik",
+    proof: "Companies in Colombia, the United States and Mexico already trust Lumintik",
     call: "Book a 30 min call",
     newTab: "(opens in a new tab)",
     formTitle: "Get the full guide as a PDF",
@@ -1131,7 +1131,7 @@ const es: Messages = {
     stats: [
       { value: 100, suffix: "%", label: "Trabajo hecho con equipo propio" },
       { value: 2, suffix: "+", label: "Años creando productos digitales" },
-      { value: 11, suffix: "", label: "Clientes en Colombia y Estados Unidos" },
+      { value: 11, suffix: "", label: "Clientes en Colombia, Estados Unidos y México" },
       { value: 6, suffix: "", label: "Industrias atendidas: aeroespacial, retail, telco, deporte y dos más" },
     ],
   },
@@ -1173,7 +1173,7 @@ const es: Messages = {
   guideLead: {
     anchor: "Recibe la guía en PDF",
     title: "¿Tienes una idea? Hablemos.",
-    proof: "Empresas de Colombia y Estados Unidos ya confían en Lumintik",
+    proof: "Empresas de Colombia, Estados Unidos y México ya confían en Lumintik",
     call: "Agenda una llamada de 30 min",
     newTab: "(se abre en una pestaña nueva)",
     formTitle: "Recibe la guía completa en PDF",
