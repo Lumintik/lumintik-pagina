@@ -241,6 +241,26 @@ export type Messages = {
     errorEmail: string;
     errorFile: string;
   };
+  /** The guide form and call to book a call at the end of a lead magnet post. */
+  guideLead: {
+    anchor: string;
+    title: string;
+    proof: string;
+    call: string;
+    newTab: string;
+    formTitle: string;
+    formIntro: string;
+    name: string;
+    whatsapp: string;
+    countryCode: string;
+    email: string;
+    idea: string;
+    ideaPlaceholder: string;
+    submit: string;
+    successTitle: string;
+    successBody: string;
+    download: string;
+  };
 };
 
 const en: Messages = {
@@ -686,6 +706,25 @@ const en: Messages = {
     errorEmail: "Please enter a valid email address.",
     errorFile: "The attachment is too large (max 8 MB).",
   },
+  guideLead: {
+    anchor: "Get the guide as a PDF",
+    title: "Got an idea? Let's talk.",
+    proof: "Companies in Colombia and the United States already trust Lumintik",
+    call: "Book a 30 min call",
+    newTab: "(opens in a new tab)",
+    formTitle: "Get the full guide as a PDF",
+    formIntro: "Leave your details and download it right away. The guide is in Spanish.",
+    name: "Name *",
+    whatsapp: "WhatsApp *",
+    countryCode: "Country code",
+    email: "Email address *",
+    idea: "Tell us about your idea (optional)",
+    ideaPlaceholder: "For example: an app for neighborhood shops to take orders",
+    submit: "Get the guide",
+    successTitle: "Thanks! Your guide is ready.",
+    successBody: "Download it here. If you'd like to go over your idea with us, book the 30 minute call.",
+    download: "Download the guide (PDF)",
+  },
 };
 
 const es: Messages = {
@@ -1130,6 +1169,25 @@ const es: Messages = {
     errorRequired: "Por favor completa los campos obligatorios.",
     errorEmail: "Por favor ingresa un correo electrónico válido.",
     errorFile: "El archivo adjunto es demasiado grande (máx. 8 MB).",
+  },
+  guideLead: {
+    anchor: "Recibe la guía en PDF",
+    title: "¿Tienes una idea? Hablemos.",
+    proof: "Empresas de Colombia y Estados Unidos ya confían en Lumintik",
+    call: "Agenda una llamada de 30 min",
+    newTab: "(se abre en una pestaña nueva)",
+    formTitle: "Recibe la guía completa en PDF",
+    formIntro: "Déjanos tus datos y descárgala de una vez.",
+    name: "Nombre *",
+    whatsapp: "WhatsApp *",
+    countryCode: "Indicativo",
+    email: "Correo electrónico *",
+    idea: "Cuéntanos tu idea (opcional)",
+    ideaPlaceholder: "Por ejemplo: una app para que las tiendas del barrio reciban pedidos",
+    submit: "Recibir la guía",
+    successTitle: "¡Gracias! Tu guía está lista.",
+    successBody: "Descárgala aquí. Si quieres revisar tu idea con nosotros, agenda la llamada de 30 minutos.",
+    download: "Descargar la guía (PDF)",
   },
 };
 

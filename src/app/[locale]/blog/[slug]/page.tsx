@@ -69,7 +69,9 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
     author: { "@type": "Organization", name: post.author.name, url: SITE_URL },
     publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL, logo: { "@type": "ImageObject", url: `${SITE_URL}${post.author.avatar}` } },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    articleBody: copy.sections.map((s) => `${s.heading}\n${s.paragraphs.join("\n")}`).join("\n\n"),
+    articleBody: copy.sections
+      .map((s) => [s.heading, ...s.paragraphs, ...(s.items ?? []).map((i) => `${i.title} ${i.text}`), ...(s.closing ?? [])].join("\n"))
+      .join("\n\n"),
   };
   const t = messages[locale];
   const breadcrumbs = {

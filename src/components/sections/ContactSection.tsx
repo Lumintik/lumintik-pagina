@@ -7,6 +7,16 @@ import { sendContact, type ContactState } from "@/app/actions/contact";
 
 const initialState: ContactState = { status: "idle" };
 
+/** Dialling codes offered next to a phone field; the first one is the default. */
+export const COUNTRY_CODES = [
+  { code: "+57", flag: "🇨🇴" },
+  { code: "+1", flag: "🇺🇸" },
+  { code: "+52", flag: "🇲🇽" },
+  { code: "+34", flag: "🇪🇸" },
+  { code: "+54", flag: "🇦🇷" },
+  { code: "+56", flag: "🇨🇱" },
+] as const;
+
 export function ContactSection() {
   const t = useT();
   const [state, formAction, pending] = useActionState(sendContact, initialState);
@@ -144,12 +154,11 @@ export function ContactSection() {
                   defaultValue="+57"
                   aria-label="Country code"
                 >
-                  <option value="+57" className="bg-[#171717]">🇨🇴 +57</option>
-                  <option value="+1" className="bg-[#171717]">🇺🇸 +1</option>
-                  <option value="+52" className="bg-[#171717]">🇲🇽 +52</option>
-                  <option value="+34" className="bg-[#171717]">🇪🇸 +34</option>
-                  <option value="+54" className="bg-[#171717]">🇦🇷 +54</option>
-                  <option value="+56" className="bg-[#171717]">🇨🇱 +56</option>
+                  {COUNTRY_CODES.map(({ code, flag }) => (
+                    <option key={code} value={code} className="bg-[#171717]">
+                      {`${flag} ${code}`}
+                    </option>
+                  ))}
                 </select>
                 <input
                   id="phone"

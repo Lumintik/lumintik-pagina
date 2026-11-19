@@ -5,12 +5,14 @@ import Link from "next/link";
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { GUIDE_ANCHOR, GuiaLeadForm } from "@/components/sections/GuiaLeadForm";
 import { PostCard, coverAddress } from "@/components/sections/PostCard";
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "@/components/providers/LocaleProvider";
-import type { Post } from "@/data/posts";
+import type { Post, PostSection } from "@/data/posts";
 import { LOCALE_TAGS } from "@/lib/locale";
 import { href, paths } from "@/lib/routes";
+import { absoluteUrl } from "@/lib/seo";
 import { CASES } from "@/data/cases";
 import { cn } from "@/lib/cn";
 import { IphoneFrame, MacWindowFrame } from "@/components/ui/DeviceFrames";
@@ -28,8 +30,11 @@ export function headingId(heading: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-export function readingMinutes(sections: { heading: string; paragraphs: string[] }[]): number {
-  const words = sections.reduce((n, s) => n + s.heading.split(/\s+/).length + s.paragraphs.join(" ").split(/\s+/).length, 0);
+export function readingMinutes(sections: PostSection[]): number {
+  const words = sections.reduce((n, s) => {
+    const text = [s.heading, ...s.paragraphs, ...(s.items ?? []).flatMap((i) => [i.title, i.text]), ...(s.closing ?? [])];
+    return n + text.join(" ").split(/\s+/).length;
+  }, 0);
   return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
 }
 
@@ -65,9 +70,9 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
     return () => window.removeEventListener("scroll", update);
   }, [copy.sections]);
 
-  // Read after mount so the server and the first client render agree.
-  const [pageUrl, setPageUrl] = useState("");
-  useEffect(() => setPageUrl(window.location.href), []);
+  // The canonical address, the same on the server and the client, without the
+  // query or hash a visitor may have arrived with.
+  const pageUrl = absoluteUrl(locale, paths.post(post.slug));
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -137,6 +142,17 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                 ))}
               </ul>
             ) : null}
+            {post.leadMagnet ? (
+              <a
+                href={`#${GUIDE_ANCHOR}`}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+              >
+                {t.guideLead.anchor}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M12 5v14M6 13l6 6 6-6" />
+                </svg>
+              </a>
+            ) : null}
 
             <div className="mt-12 md:mt-16 flex flex-col gap-10 md:gap-14 max-w-[72ch]">
               {copy.sections.map((section) => (
@@ -145,6 +161,26 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
                   <div className="mt-4 flex flex-col gap-5">
                     {section.paragraphs.map((p, i) => (
                       <p key={i} className="text-slate-900 text-lg md:text-xl leading-relaxed">
+                        {p}
+                      </p>
+                    ))}
+                    {section.items?.length ? (
+                      <ol className="flex flex-col border-t border-slate-900/15">
+                        {section.items.map((item, i) => (
+                          <li key={item.title} className="grid grid-cols-[2.25rem_1fr] gap-x-3 border-b border-slate-900/10 py-4 md:grid-cols-[2.75rem_1fr]">
+                            <span className="text-lg md:text-xl font-semibold tabular-nums text-slate-400" aria-hidden>
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <div>
+                              <p className="text-slate-900 text-lg md:text-xl font-semibold leading-snug">{item.title}</p>
+                              <p className="mt-1 text-slate-900 text-base md:text-lg leading-relaxed">{item.text}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
+                    ) : null}
+                    {section.closing?.map((p, i) => (
+                      <p key={`closing-${i}`} className="text-slate-900 text-lg md:text-xl leading-relaxed">
                         {p}
                       </p>
                     ))}
@@ -248,8 +284,15 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
           </aside>
           </div>
 
+          {/* A guide post ends on its own lead block instead of the quote form. */}
+          {post.leadMagnet ? (
+            <div className="w-full mt-8 md:mt-12">
+              <GuiaLeadForm slug={post.slug} leadMagnet={post.leadMagnet} />
+            </div>
+          ) : null}
+
           {others.length > 0 ? (
-            <div className="w-full max-w-[1600px] px-5 md:px-12 mt-20 md:mt-28 lg:hidden">
+            <div className={cn("w-full max-w-[1600px] px-5 md:px-12 mt-20 md:mt-28 lg:hidden", post.leadMagnet && "pb-20 md:pb-32")}>
               <h2 className="text-slate-900 text-2xl md:text-3xl font-semibold">{t.pages.blog.more}</h2>
               <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {others.map((p) => (
@@ -261,9 +304,11 @@ export function PostDetail({ post, others }: { post: Post; others: Post[] }) {
             </div>
           ) : null}
 
-          <div className="w-full mt-8 md:mt-12">
-            <ContactSection />
-          </div>
+          {post.leadMagnet ? null : (
+            <div className="w-full mt-8 md:mt-12">
+              <ContactSection />
+            </div>
+          )}
         </article>
       </main>
 

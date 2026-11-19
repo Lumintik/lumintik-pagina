@@ -1,6 +1,26 @@
 import type { Locale } from "@/lib/locale";
 
-export type PostSection = { heading: string; paragraphs: string[] };
+/** A numbered point inside a section: a short lead in bold and its explanation. */
+export type PostItem = { title: string; text: string };
+
+export type PostSection = {
+  heading: string;
+  paragraphs: string[];
+  /** A numbered list shown after the paragraphs. */
+  items?: PostItem[];
+  /** Paragraphs that follow the list. */
+  closing?: string[];
+};
+
+/** A downloadable guide behind a short form, with a call to book a call. */
+export type LeadMagnet = {
+  /** Public path of the PDF, shown once the form is sent. */
+  pdf: string;
+  /** Booking page, always visible. */
+  calendly: string;
+  /** What the lead email names as the service, so the lead is told apart from a quote. */
+  service: string;
+};
 
 export type PostCopy = {
   title: string;
@@ -18,6 +38,8 @@ export type Post = {
   tags?: string[];
   /** Slug of the case study the post expands on, linked at the end. */
   relatedCase?: string;
+  /** A guide offered at the end of the post in exchange for contact details. */
+  leadMagnet?: LeadMagnet;
   author: { name: string; avatar: string };
   cover: { src: string; width: number; height: number; alt: Record<Locale, string> };
   copy: Record<Locale, PostCopy>;
@@ -26,11 +48,250 @@ export type Post = {
 const LUMINTIK = { name: "Lumintik", avatar: "/lumintik-icon.png" };
 
 /**
- * The posts, newest first. Each one expands on a published case study or on
- * work done for it; every figure was measured on the live product or is
- * verifiable in its code, and nothing here goes beyond that.
+ * The posts, newest first. Most expand on a published case study or on work
+ * done for it; every figure in those was measured on the live product or is
+ * verifiable in its code, and nothing here goes beyond that. The rest are
+ * practical guides on how we work, with no clients, results or prices in them.
  */
 export const POSTS: Post[] = [
+  {
+    slug: "como-empezar-tu-app",
+    date: "2026-11-18",
+    author: LUMINTIK,
+    cover: {
+      src: "/blog/como-empezar-tu-app.png",
+      width: 2000,
+      height: 1250,
+      alt: {
+        ES: "Portada de la guía de Lumintik «Cómo empezar tu app»",
+        EN: "Cover of Lumintik's guide on how to start your app",
+      },
+    },
+    tags: ["Emprendimiento", "MVP", "Desarrollo de apps"],
+    leadMagnet: {
+      pdf: "/guias/lumintik-guia-como-empezar-tu-app.pdf",
+      calendly: "https://calendly.com/andrey-lumintik/30min",
+      service: "Guía: cómo empezar tu app",
+    },
+    copy: {
+      ES: {
+        title: "Cómo empezar tu app: los primeros pasos antes de programar",
+        excerpt:
+          "Tienes una idea para una app y no sabes por dónde empezar. Estos son los pasos que damos con cada emprendedor antes de escribir una línea de código: validar el problema, definir el MVP, escoger cómo construirla, seguir una ruta de 90 días y esquivar los errores más comunes.",
+        sections: [
+          {
+            heading: "Valida el problema",
+            paragraphs: [
+              "Antes de pensar en pantallas, confirma que el problema existe y que a alguien le duele lo suficiente como para cambiar lo que hace hoy. Busca tres cosas: que pase seguido, que hoy lo resuelvan a medias (con WhatsApp, Excel o a mano) y que les cueste tiempo o plata.",
+              "Pregúntales a personas que viven el problema hoy. No a tu familia ni a tus amigos: te quieren y te van a decir que sí. Entre 10 y 15 conversaciones de unos 20 minutos, una por una, suelen bastar. Cuando las respuestas se empiezan a repetir, ya tienes un patrón.",
+              "Estas son las cinco preguntas para esas conversaciones:",
+            ],
+            items: [
+              { title: "«Cuéntame de la última vez que te pasó. ¿Qué hiciste?»", text: "Habla de hechos, no de opiniones." },
+              { title: "«¿Cómo lo resuelves hoy?»", text: "Te muestra tu competencia real: a veces es un cuaderno o un grupo de WhatsApp." },
+              { title: "«¿Qué es lo más molesto de hacerlo así?»", text: "Te da el dolor con sus propias palabras." },
+              { title: "«¿Has buscado o pagado algo para resolverlo?»", text: "Si nunca buscó una solución, quizá no le duele tanto." },
+              { title: "«¿Conoces a alguien más a quien le pase?»", text: "Te consigue la siguiente entrevista." },
+            ],
+            closing: [
+              "Evita las preguntas que empujan la respuesta, como «¿Usarías una app que…?» o «¿Cuánto pagarías por…?». Por cortesía, casi todo el mundo dice que sí. Pregunta por lo que la gente hizo, no por lo que haría.",
+              "Vas bien cuando la gente te cuenta el problema antes de que se lo menciones, ya intentó resolverlo por su cuenta y te pide que le avises cuando esté listo.",
+            ],
+          },
+          {
+            heading: "Define tu MVP",
+            paragraphs: [
+              "El MVP (producto mínimo viable) es la versión más pequeña de tu app que resuelve el problema principal. No es una versión mala de la app completa: es la parte que tiene que funcionar sí o sí para que alguien la use y vuelva. Todo lo demás puede esperar.",
+              "Una prueba rápida: si tu app solo hiciera eso, ¿alguien la usaría? Si la respuesta es sí, ahí está tu primera versión.",
+              "Un ejemplo inventado: «Mandados del barrio», una app de domicilios para las tiendas de un barrio. En la primera versión entra lo esencial: ver las tiendas y sus productos, armar un pedido y pagar en efectivo al recibir, que la tienda lo confirme, saber si va en camino y entrar con el número de celular. Las reseñas, el pago en línea, el panel de estadísticas, el mapa en tiempo real y los cupones quedan para después.",
+              "Ese MVP tiene que probar una sola cosa: que los vecinos piden y las tiendas despachan. Si eso funciona con unas pocas tiendas, lo demás se construye sobre algo que ya sirve.",
+            ],
+          },
+          {
+            heading: "Elige cómo construirla",
+            paragraphs: [
+              "Hay tres caminos. Ninguno es el mejor siempre: depende de qué tan única es tu idea y de qué tan rápido necesitas probarla.",
+            ],
+            items: [
+              {
+                title: "Sin código (no-code)",
+                text: "Herramientas visuales para armar la app sin programar. Sirve para validar rápido una idea sencilla, con pocos usuarios: arrancas pronto y haces cambios tú mismo. Se queda corto con lógica compleja o mucho uso, y dependes de la plataforma.",
+              },
+              {
+                title: "Plantilla",
+                text: "Una app base ya hecha (tienda, reservas, directorio) que se adapta a tu marca. Conviene cuando tu negocio funciona como muchos otros que ya existen: buena parte está resuelta y sales antes. A cambio, cuesta salirse de lo que trae y tu app se parece a otras.",
+              },
+              {
+                title: "Desarrollo a la medida",
+                text: "Un equipo diseña y programa la app para tu caso. Conviene cuando lo que te diferencia es cómo funciona la app, o cuando necesitas crecer sin rehacerla. Hace exactamente lo que necesitas y el código es tuyo; pide más tiempo al inicio y un equipo de confianza.",
+              },
+            ],
+            closing: [
+              "Un camino no cierra el otro. Muchas apps arrancan sin código para validar y pasan a desarrollo a la medida cuando ya tienen usuarios que lo justifican.",
+              "Para decidir, respóndete tres preguntas: ¿lo que hace especial a tu idea ya existe en una plantilla? ¿Qué pasa si la idea funciona y llegan muchos usuarios de golpe? ¿Quién va a mantener la app cuando ya esté en uso?",
+            ],
+          },
+          {
+            heading: "Tu ruta de 90 días",
+            paragraphs: [
+              "Una ruta de referencia para pasar de la idea a tus primeros usuarios en unos tres meses. Los tiempos cambian según el alcance; el orden, no.",
+            ],
+            items: [
+              {
+                title: "Semanas 1 y 2: descubrimiento",
+                text: "Entrevistas, problema y usuario definidos, funciones priorizadas. Terminas con un documento corto con el problema, el usuario y la lista del MVP.",
+              },
+              {
+                title: "Semanas 3 y 4: diseño",
+                text: "Flujos y pantallas, y un prototipo que se puede tocar, probado con cinco personas.",
+              },
+              {
+                title: "Semanas 5 a 10: construcción del MVP",
+                text: "Se programa por partes y cada semana revisas algo que ya funciona. Al final tienes la app funcionando en un ambiente de pruebas.",
+              },
+              {
+                title: "Semanas 11 y 12: primeros usuarios",
+                text: "Publicas para un grupo pequeño y abres un canal para escuchar sus comentarios.",
+              },
+              {
+                title: "Semana 13 en adelante: medición",
+                text: "Revisas qué usan, dónde se traban y quién vuelve, y armas la lista de lo que sigue.",
+              },
+            ],
+            closing: [
+              "Al cierre de cada fase decides: seguir, ajustar o parar. Parar a tiempo también es un buen resultado.",
+              "Al principio bastan tres números: cuántas personas se registran y completan la acción principal, cuántas vuelven la semana siguiente y cuántas la recomiendan o invitan a alguien más.",
+            ],
+          },
+          {
+            heading: "Los errores más comunes",
+            paragraphs: ["Todos tienen arreglo, y sale más barato evitarlos desde el principio."],
+            items: [
+              { title: "Construir antes de validar", text: "Meses de trabajo para descubrir que el problema no le dolía a nadie." },
+              { title: "Meter todo en la primera versión", text: "Cada función extra retrasa el lanzamiento y confunde a quien la usa." },
+              {
+                title: "Copiar a las apps grandes",
+                text: "Lo que ves hoy es el resultado de años de versiones. WhatsApp empezó mostrando solo el estado de tus contactos.",
+              },
+              { title: "Escoger la tecnología por moda", text: "Lo que importa es qué necesita tu usuario y quién va a mantener la app." },
+              { title: "Lanzar sin medir", text: "Si no sabes qué hacen las personas dentro de la app, no sabes qué arreglar." },
+            ],
+            closing: [
+              "Si quieres tener todo esto a mano, aquí abajo puedes recibir la guía completa en PDF. Y si ya tienes una idea, agenda una llamada y la revisamos juntos.",
+            ],
+          },
+        ],
+      },
+      EN: {
+        title: "How to start your app: the first steps before writing code",
+        excerpt:
+          "You have an idea for an app and don't know where to start. These are the steps we take with every founder before writing a line of code: validate the problem, define the MVP, choose how to build it, follow a 90 day roadmap and avoid the most common mistakes.",
+        sections: [
+          {
+            heading: "Validate the problem",
+            paragraphs: [
+              "Before thinking about screens, make sure the problem exists and that it hurts someone enough to change what they do today. Look for three things: that it happens often, that people solve it halfway today (with WhatsApp, a spreadsheet or by hand) and that it costs them time or money.",
+              "Ask people who live with the problem today. Not your family or friends: they love you and will tell you yes. Between 10 and 15 one to one conversations of about 20 minutes are usually enough. When the answers start repeating, you have a pattern.",
+              "These are the five questions for those conversations:",
+            ],
+            items: [
+              { title: "“Tell me about the last time it happened. What did you do?”", text: "It talks about facts, not opinions." },
+              { title: "“How do you solve it today?”", text: "It shows you your real competition: sometimes it is a notebook or a WhatsApp group." },
+              { title: "“What is the most annoying part of doing it that way?”", text: "It gives you the pain in their own words." },
+              { title: "“Have you looked for or paid for something to solve it?”", text: "If they never looked for a solution, maybe it doesn't hurt that much." },
+              { title: "“Do you know anyone else it happens to?”", text: "It gets you your next interview." },
+            ],
+            closing: [
+              "Avoid questions that push the answer, like “Would you use an app that…?” or “How much would you pay for…?”. Out of politeness, almost everyone says yes. Ask about what people did, not what they would do.",
+              "You are on the right track when people describe the problem before you mention it, have already tried to solve it on their own and ask you to let them know when it is ready.",
+            ],
+          },
+          {
+            heading: "Define your MVP",
+            paragraphs: [
+              "The MVP (minimum viable product) is the smallest version of your app that solves the main problem. It is not a bad version of the full app: it is the part that has to work no matter what for someone to use it and come back. Everything else can wait.",
+              "A quick test: if your app only did that, would anyone use it? If the answer is yes, that is your first version.",
+              "A made up example: “Neighborhood errands”, a delivery app for the shops in a neighborhood. The first version holds the essentials: browse the shops and their products, place an order and pay cash on delivery, have the shop confirm it, see whether it is on its way and sign in with a phone number. Reviews, online payment, a sales dashboard, a live map and coupons come later.",
+              "That MVP has to prove one thing only: that neighbors order and shops deliver. If that works with a few shops, everything else is built on something that already works.",
+            ],
+          },
+          {
+            heading: "Choose how to build it",
+            paragraphs: [
+              "There are three paths. None is always the best: it depends on how unique your idea is and how fast you need to test it.",
+            ],
+            items: [
+              {
+                title: "No-code",
+                text: "Visual tools to put the app together without programming. Good for quickly validating a simple idea with few users: you start soon and make changes yourself. It falls short with complex logic or heavy use, and you depend on the platform.",
+              },
+              {
+                title: "Template",
+                text: "A ready made base app (store, bookings, directory) adapted to your brand. It fits when your business works like many others that already exist: much of it is solved and you launch sooner. In exchange, it is hard to go beyond what it ships with and your app looks like others.",
+              },
+              {
+                title: "Custom development",
+                text: "A team designs and builds the app for your case. It fits when what sets you apart is how the app works, or when you need to grow without rebuilding it. It does exactly what you need and the code is yours; it takes more time up front and a team you trust.",
+              },
+            ],
+            closing: [
+              "One path does not rule out the other. Many apps start with no-code to validate and move to custom development once they have users who justify it.",
+              "To decide, answer three questions: does what makes your idea special already exist in a template? What happens if the idea works and lots of users arrive at once? Who will maintain the app once it is in use?",
+            ],
+          },
+          {
+            heading: "Your 90 day roadmap",
+            paragraphs: [
+              "A reference roadmap to go from the idea to your first users in about three months. The timing changes with the scope; the order does not.",
+            ],
+            items: [
+              {
+                title: "Weeks 1 and 2: discovery",
+                text: "Interviews, a defined problem and user, prioritized features. You finish with a short document with the problem, the user and the MVP list.",
+              },
+              {
+                title: "Weeks 3 and 4: design",
+                text: "Flows and screens, and a prototype you can tap through, tested with five people.",
+              },
+              {
+                title: "Weeks 5 to 10: building the MVP",
+                text: "It is built in parts and every week you review something that already works. At the end the app runs in a testing environment.",
+              },
+              {
+                title: "Weeks 11 and 12: first users",
+                text: "You release it to a small group and open a channel to hear what they say.",
+              },
+              {
+                title: "Week 13 onward: measuring",
+                text: "You look at what people use, where they get stuck and who comes back, and draw up the list of what comes next.",
+              },
+            ],
+            closing: [
+              "At the end of each phase you decide: keep going, adjust or stop. Stopping in time is also a good outcome.",
+              "At first three numbers are enough: how many people sign up and complete the main action, how many come back the following week and how many recommend it or invite someone else.",
+            ],
+          },
+          {
+            heading: "The most common mistakes",
+            paragraphs: ["They can all be fixed, and avoiding them from the start is cheaper."],
+            items: [
+              { title: "Building before validating", text: "Months of work to find out the problem didn't hurt anyone." },
+              { title: "Putting everything in the first version", text: "Every extra feature delays the launch and confuses the people using it." },
+              {
+                title: "Copying the big apps",
+                text: "What you see today is the result of years of versions. WhatsApp started out showing only your contacts' status.",
+              },
+              { title: "Picking technology because it is trendy", text: "What matters is what your user needs and who will maintain the app." },
+              { title: "Launching without measuring", text: "If you don't know what people do inside the app, you don't know what to fix." },
+            ],
+            closing: [
+              "If you want all of this at hand, you can get the full guide as a PDF below. And if you already have an idea, book a call and we will go over it together.",
+            ],
+          },
+        ],
+      },
+    },
+  },
   {
     slug: "una-tienda-que-no-pierde-pagos",
     date: "2026-10-27",

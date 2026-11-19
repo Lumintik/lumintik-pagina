@@ -9,16 +9,22 @@ import { cn } from "@/lib/cn";
 import { Flag } from "@/components/ui/Flag";
 import { NoiseBackground } from "@/components/ui/noise-background";
 
-/** Every mark is forced to white so the wall reads as one set. */
-function Mark({ client }: { client: Client }) {
+/**
+ * Every mark is forced to white so the wall reads as one set. `compact` is the
+ * smaller size used in a row of logos outside the wall.
+ */
+export function Mark({ client, compact }: { client: Client; compact?: boolean }) {
   const { logo, name } = client;
   if (logo.kind === "icon") {
     // These wordmarks sit inside a square icon box, so they are sized by width.
-    return <logo.icon role="img" aria-label={name} className="w-[120px] h-auto text-white md:w-[140px]" />;
+    const width = compact ? "w-[76px] md:w-[92px]" : "w-[120px] md:w-[140px]";
+    return <logo.icon role="img" aria-label={name} className={cn("h-auto text-white", width)} />;
   }
   // Wide wordmarks get less height than square marks so they read at a similar size.
   const ratio = logo.width / logo.height;
-  const height = ratio > 3.4 ? "h-5 md:h-6" : ratio > 1.6 ? "h-8 md:h-9" : "h-11 md:h-12";
+  const height = compact
+    ? ratio > 3.4 ? "h-4 md:h-5" : ratio > 1.6 ? "h-6 md:h-7" : "h-8 md:h-9"
+    : ratio > 3.4 ? "h-5 md:h-6" : ratio > 1.6 ? "h-8 md:h-9" : "h-11 md:h-12";
   return (
     <Image
       src={logo.src}
@@ -26,7 +32,7 @@ function Mark({ client }: { client: Client }) {
       width={logo.width}
       height={logo.height}
       sizes="160px"
-      className={cn("w-auto max-w-[140px] object-contain", logo.mono ? "" : "[filter:brightness(0)_invert(1)]", height)}
+      className={cn("w-auto object-contain", compact ? "max-w-[96px]" : "max-w-[140px]", logo.mono ? "" : "[filter:brightness(0)_invert(1)]", height)}
     />
   );
 }
